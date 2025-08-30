@@ -4,9 +4,22 @@
 
 namespace fintamath::detail {
 
-Converter::ConverterMultiMethod &Converter::getConverter() {
-  static ConverterMultiMethod converter;
-  return converter;
+Shared<IMathObject> Converter::convert(MathObjectClass toClass, const Shared<IMathObject> &from) {
+  assert(from);
+
+  const MathObjectClass fromClass = from->getClass();
+  if (toClass == from->getClass()) {
+    return from;
+  }
+
+  const auto &map = getClassPairToCallbackMap();
+  auto iter = map.find(ClassPair{toClass, fromClass});
+  return iter != map.end() ? iter->second(from) : nullptr;
+}
+
+Converter::ClassPairToCallbackMap &Converter::getClassPairToCallbackMap() {
+  static ClassPairToCallbackMap classPairToCallbackMap;
+  return classPairToCallbackMap;
 }
 
 }

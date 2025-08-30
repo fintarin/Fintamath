@@ -2,25 +2,24 @@
 
 #include <compare>
 #include <cstddef>
-#include <cstdint>
-#include <memory>
 #include <string>
 #include <string_view>
 
 #include <boost/multiprecision/fwd.hpp>
 #include <boost/multiprecision/mpfr.hpp>
 
-#include "fintamath/core/IArithmetic.hpp"
-#include "fintamath/core/IComparable.hpp"
-#include "fintamath/core/IMathObject.hpp"
-#include "fintamath/core/MathObjectClass.hpp"
+#include "fintamath/core/ClassBody.hpp"
+#include "fintamath/core/Hash.hpp"
+#include "fintamath/core/IWithArithmeticOperators.hpp"
+#include "fintamath/core/IWithCompareOperators.hpp"
 #include "fintamath/numbers/INumber.hpp"
-#include "fintamath/numbers/Integer.hpp"
-#include "fintamath/numbers/Rational.hpp"
 
 namespace fintamath {
 
-class Real : public INumberCRTP<Real> {
+class Integer;
+class Rational;
+
+class Real : public INumber, public IWithArithmeticOperators<Real>, public IWithCompareOperators<Real> {
   FINTAMATH_CLASS_BODY(Real, INumber)
 
 public:
@@ -52,7 +51,7 @@ public:
 
   explicit Real(std::string_view str);
 
-  std::string toString() const override;
+  std::string toString() const noexcept override;
 
   std::string toString(unsigned precision) const;
 
@@ -76,22 +75,20 @@ public:
 
   static void setPrecisionStatic(unsigned precision);
 
+  static void setPrecisionStaticForAllThreads(unsigned precision);
+
 protected:
+  void registerDefaultObject() const override;
+
   bool equals(const Real &rhs) const override;
 
-  bool equalsAbstract(const IMathObject &rhs) const override;
-
   std::strong_ordering compare(const Real &rhs) const override;
-
-  std::strong_ordering compareAbstract(const IComparable &rhs) const override;
 
   Real &add(const Real &rhs) override;
 
   Real &substract(const Real &rhs) override;
 
   Real &multiply(const Real &rhs) override;
-
-  std::unique_ptr<IArithmetic> multiplyAbstract(const IArithmetic &rhs) const override;
 
   Real &divide(const Real &rhs) override;
 

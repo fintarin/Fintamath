@@ -5,14 +5,13 @@
 #include <cstddef>
 #include <cstdint>
 #include <iterator>
-#include <memory>
 #include <string>
 #include <string_view>
 #include <utility>
 
 #include <fmt/core.h>
 
-#include "fintamath/core/IMathObject.hpp"
+#include "fintamath/core/Converter.hpp"
 #include "fintamath/exceptions/InvalidInputException.hpp"
 #include "fintamath/exceptions/UndefinedException.hpp"
 #include "fintamath/numbers/Integer.hpp"
@@ -31,51 +30,69 @@ Rational::Rational(Integer inNumer, Integer inDenom)
 
   if (denom == 0) {
     throw UndefinedException(fmt::format(
-        R"(div({}, {}) is undefined (division by zero))",
-        numer.toString(),
-        denom.toString()));
+      R"(div({}, {}) is undefined (division by zero))",
+      numer.toString(),
+      denom.toString()
+    ));
   }
 
   toIrreducibleRational();
 }
 
-Rational::Rational(const std::string_view str) try {
+Rational::Rational(const std::string_view str) {
+  constexpr auto throwInvalidInputException = [](const std::string_view invalidStr) {
+    throw InvalidInputException(fmt::format(
+      R"(Unable to parse {} from "{}")",
+      getClassStatic()->getName(),
+      invalidStr
+    ));
+  };
+
   if (str.empty()) {
-    throw InvalidInputException("");
+    throwInvalidInputException(str);
   }
 
   if (str.empty() || str == ".") {
-    throw InvalidInputException("");
+    throwInvalidInputException(str);
   }
 
-  int64_t firstDigitNum = 0;
-  const int64_t firstDotNum = std::ranges::distance(str.begin(), std::ranges::find(str, '.'));
+  int64_t firstDigitIndex = 0;
+  const int64_t firstDotIndex = std::ranges::distance(str.begin(), std::ranges::find(str, '.'));
 
   bool isNegative = false;
   if (str.front() == '-') {
     isNegative = true;
-    firstDigitNum++;
+    firstDigitIndex++;
   }
 
-  const std::string intPartStr(str.substr(static_cast<size_t>(firstDigitNum),
-                                          static_cast<size_t>(firstDotNum - firstDigitNum)));
+  const std::string intPartStr(str.substr(
+    static_cast<size_t>(firstDigitIndex),
+    static_cast<size_t>(firstDotIndex - firstDigitIndex)
+  ));
   Integer intPart;
 
-  if (!intPartStr.empty()) {
-    intPart = Integer(str.substr(static_cast<size_t>(firstDigitNum),
-                                 static_cast<size_t>(firstDotNum - firstDigitNum)));
-  }
+  try {
+    if (!intPartStr.empty()) {
+      intPart = Integer(str.substr(
+        static_cast<size_t>(firstDigitIndex),
+        static_cast<size_t>(firstDotIndex - firstDigitIndex)
+      ));
+    }
 
-  if (firstDotNum + 1 < std::ssize(str)) {
-    const std::string numeratorStr(str.substr(static_cast<size_t>(firstDotNum) + 1));
-    std::string denominatorStr(numeratorStr.size() + 1, '0');
-    denominatorStr.front() = '1';
-    numer = Integer(numeratorStr);
-    denom = Integer(denominatorStr);
+    if (firstDotIndex + 1 < std::ssize(str)) {
+      const std::string numeratorStr(str.substr(static_cast<size_t>(firstDotIndex) + 1));
+      std::string denominatorStr(numeratorStr.size() + 1, '0');
+      denominatorStr.front() = '1';
+      numer = Integer(numeratorStr);
+      denom = Integer(denominatorStr);
+    }
+  }
+  catch (const InvalidInputException &) {
+    throwInvalidInputException(str);
   }
 
   if (intPart < 0 || numer < 0) {
-    throw InvalidInputException("");
+    throwInvalidInputException(str);
   }
 
   toIrreducibleRational();
@@ -85,14 +102,8 @@ Rational::Rational(const std::string_view str) try {
     numer *= -1;
   }
 }
-catch (const InvalidInputException &) {
-  throw InvalidInputException(fmt::format(
-      R"(Unable to parse {} from "{}")",
-      getClassStatic()->getName(),
-      str));
-}
 
-std::string Rational::toString() const {
+std::string Rational::toString() const noexcept {
   std::string res = numer.toString();
 
   if (denom != 1) {
@@ -102,11 +113,12 @@ std::string Rational::toString() const {
   return res;
 }
 
-std::unique_ptr<IMathObject> Rational::toMinimalObject() const {
+Shared<IMathObject> Rational::unwrapp() const noexcept {
   if (denom == 1) {
     return numer.clone();
   }
-  return clone();
+
+  return {};
 }
 
 int Rational::sign() const {
@@ -119,6 +131,12 @@ const Integer &Rational::numerator() const noexcept {
 
 const Integer &Rational::denominator() const noexcept {
   return denom;
+}
+
+void Rational::registerDefaultObject() const noexcept {
+  using detail::Converter;
+
+  Converter::add<Rational, Integer>();
 }
 
 bool Rational::equals(const Rational &rhs) const {
@@ -158,9 +176,10 @@ Rational &Rational::multiply(const Rational &rhs) {
 Rational &Rational::divide(const Rational &rhs) {
   if (rhs == 0) {
     throw UndefinedException(fmt::format(
-        R"(div({}, {}) is undefined (division by zero))",
-        toString(),
-        rhs.toString()));
+      R"(div({}, {}) is undefined (division by zero))",
+      toString(),
+      rhs.toString()
+    ));
   }
 
   numer *= rhs.denom;

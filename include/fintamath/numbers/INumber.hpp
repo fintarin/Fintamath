@@ -1,21 +1,13 @@
 #pragma once
 
-#include <concepts>
-#include <memory>
 #include <optional>
-#include <string>
-#include <utility>
 
-#include "fintamath/core/IArithmetic.hpp"
-#include "fintamath/core/IComparable.hpp"
-#include "fintamath/core/MathObjectClass.hpp"
-#include "fintamath/core/MathObjectUtils.hpp"
-#include "fintamath/core/Parser.hpp"
+#include "fintamath/core/IMathObject.hpp"
 
 namespace fintamath {
 
-class INumber : public IComparable {
-  FINTAMATH_PARENT_CLASS_BODY(INumber, IComparable)
+class INumber : public IMathObject {
+  FINTAMATH_INTERFACE_BODY(INumber, IMathObject)
 
 public:
   virtual std::optional<unsigned> getPrecision() const noexcept {
@@ -25,43 +17,6 @@ public:
   virtual bool isComplex() const noexcept {
     return false;
   }
-};
-
-inline std::unique_ptr<INumber> operator+(const INumber &lhs, const INumber &rhs) {
-  auto res = lhs + cast<IArithmetic>(rhs);
-  return cast<INumber>(std::move(res));
-}
-
-inline std::unique_ptr<INumber> operator-(const INumber &lhs, const INumber &rhs) {
-  auto res = lhs - cast<IArithmetic>(rhs);
-  return cast<INumber>(std::move(res));
-}
-
-inline std::unique_ptr<INumber> operator*(const INumber &lhs, const INumber &rhs) {
-  auto res = lhs * cast<IArithmetic>(rhs);
-  return cast<INumber>(std::move(res));
-}
-
-inline std::unique_ptr<INumber> operator/(const INumber &lhs, const INumber &rhs) {
-  auto res = lhs / cast<IArithmetic>(rhs);
-  return cast<INumber>(std::move(res));
-}
-
-template <std::same_as<INumber> Rhs>
-std::unique_ptr<INumber> operator+(const Rhs &rhs) {
-  return cast<INumber>(+cast<IArithmetic>(rhs));
-}
-
-template <std::same_as<INumber> Rhs>
-std::unique_ptr<INumber> operator-(const Rhs &rhs) {
-  return cast<INumber>(-cast<IArithmetic>(rhs));
-}
-
-template <typename Derived>
-class INumberCRTP : public INumber {
-#define I_NUMBER_CRTP INumberCRTP<Derived>
-#include "fintamath/numbers/INumberCRTP.hpp"
-#undef I_NUMBER_CRTP
 };
 
 }

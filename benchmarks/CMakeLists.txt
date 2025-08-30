@@ -15,4 +15,6 @@ foreach(source ${SOURCES})
   set_target_properties(${PROJECT_NAME}_${bench} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
   suppress_compiler_warnings(${PROJECT_NAME}_${bench})
+
+  target_clangformat_setup(${PROJECT_NAME}_${bench})
 endforeach()
