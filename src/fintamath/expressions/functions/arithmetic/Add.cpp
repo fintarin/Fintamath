@@ -7,7 +7,7 @@ namespace fintamath {
 Add::Add(Children inChildren) : Super(std::move(inChildren)) {
 }
 
-std::unique_ptr<Function> Add::makeFunction(Children inChildren) const {
+std::unique_ptr<IFunction> Add::makeFunction(Children inChildren) const {
   return makeObject<Add>(std::move(inChildren));
 }
 

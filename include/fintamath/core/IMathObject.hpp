@@ -8,11 +8,11 @@
 
 namespace fintamath {
 
-class MathObject {
+class IMathObject {
   FINTAMATH_INTERFACE_BODY(MathObject, None)
 
 public:
-  virtual ~MathObject() = default;
+  virtual ~IMathObject() = default;
 
   virtual constexpr MathObjectClass getClass() const noexcept = 0;
 
@@ -22,6 +22,6 @@ protected:
   virtual void registerDefaultObject() const;
 };
 
-std::ostream &operator<<(std::ostream &out, const MathObject &rhs);
+std::ostream &operator<<(std::ostream &out, const IMathObject &rhs);
 
 }

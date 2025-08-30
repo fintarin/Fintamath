@@ -2,13 +2,13 @@
 
 #include <string>
 
-#include "fintamath/core/MathObject.hpp"
+#include "fintamath/core/IMathObject.hpp"
 #include "fintamath/core/MathObjectClassBody.hpp"
 
 namespace fintamath {
 
-class Boolean : public MathObject {
-  FINTAMATH_CLASS_BODY(Boolean, MathObject)
+class Boolean : public IMathObject {
+  FINTAMATH_CLASS_BODY(Boolean, IMathObject)
 
 public:
   Boolean();

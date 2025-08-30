@@ -1,14 +1,13 @@
 #pragma once
 
 #include "fintamath/core/MathObjectClassBody.hpp"
-#include "fintamath/expressions/ExpressionBase.hpp"
-#include "fintamath/expressions/functions/Function.hpp"
-#include "fintamath/numbers/Number.hpp"
+#include "fintamath/expressions/functions/IFunction.hpp"
+#include "fintamath/numbers/INumber.hpp"
 
 namespace fintamath {
 
-class Add : public Function {
-  FINTAMATH_CLASS_BODY(Add, Function)
+class Add : public IFunction {
+  FINTAMATH_CLASS_BODY(Add, IFunction)
 
 protected:
   Add() = default;
@@ -18,7 +17,7 @@ public:
 
 public:
   constexpr FunctionDeclaration getFunctionDeclaration() const noexcept override {
-    constexpr MathObjectClass numberClass = Number::getClassStatic();
+    constexpr MathObjectClass numberClass = INumber::getClassStatic();
     return {
       .expressionDeclarion = {
         .domainAndRangeVariants = {{
@@ -30,7 +29,7 @@ public:
     };
   }
 
-  std::unique_ptr<Function> makeFunction(Children children) const override;
+  std::unique_ptr<IFunction> makeFunction(Children children) const override;
 };
 
 }
