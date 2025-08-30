@@ -14,12 +14,12 @@ class IExpression : public IMathObject {
 public:
   struct ExpressionDeclaration {
     struct DomainAndRange {
-      MathObjectClass returnClass;
+      MathObjectClass returnClass = {};
       std::vector<MathObjectClass> childClasses;
     };
 
     std::vector<DomainAndRange> domainAndRangeVariants;
-    bool isVariadic;
+    bool isVariadic = false;
   };
 
   using Child = std::shared_ptr<IMathObject>;
