@@ -2,8 +2,6 @@
 
 #include <string_view>
 
-#include "fintamath/config/Config.hpp"
-
 namespace fintamath {
 
 namespace detail {
@@ -41,9 +39,6 @@ private:
 
   Ptr parent;
 };
-
-inline static const Config globalConfig;
-
 }
 
 using MathObjectClass = detail::MathObjectClassData::Ptr;

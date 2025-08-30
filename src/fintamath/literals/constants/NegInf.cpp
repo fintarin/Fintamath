@@ -6,7 +6,7 @@
 
 namespace fintamath {
 
-FINTAMATH_CHILD_CLASS_IMPLEMENTATION(NegInf)
+FINTAMATH_CLASS_IMPLEMENTATION(NegInf)
 
 MathObjectClass NegInf::getValueClass() const noexcept {
   return INumber::getClassStatic();
