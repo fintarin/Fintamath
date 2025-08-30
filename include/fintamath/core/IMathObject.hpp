@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <optional>
 #include <ostream>
 #include <string>
 
@@ -23,7 +24,7 @@ public:
 
   virtual std::unique_ptr<IMathObject> clone() && noexcept = 0;
 
-  virtual std::unique_ptr<IMathObject> toMinimalObject() const noexcept;
+  virtual std::shared_ptr<const IMathObject> unwrapp() const noexcept;
 
 protected:
   virtual const IMathObject &getDefaultObject() const noexcept = 0;

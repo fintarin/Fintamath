@@ -6,81 +6,106 @@
 
 namespace fintamath::detail {
 
+void Token::clear() {
+  name.clear();
+  type = TokenType::Unknown;
+}
+
 TokenVector Tokenizer::tokenize(std::string str) {
   handleSpaces(str);
 
   TokenVector tokens;
+  Token unknownToken;
   Token numberToken;
-  Token specialToken;
 
   for (const char ch : str) {
-    if (isDigitOrPoint(ch)) {
-      appendToken(tokens, specialToken, true);
-      numberToken.push_back(ch);
+    if (ch >= '0' && ch <= '9') {
+      appendToken(tokens, unknownToken);
+      numberToken.name.push_back(ch);
+
+      if (numberToken.type != TokenType::Decimal) {
+        numberToken.type = TokenType::Integer;
+      }
     }
-    else if (isSpace(ch)) {
-      appendToken(tokens, specialToken, true);
-      appendToken(tokens, numberToken, false);
+    else if (ch == '.') {
+      appendToken(tokens, unknownToken);
+      numberToken.name.push_back(ch);
+      numberToken.type = TokenType::Decimal;
+    }
+    else if (ch == ' ') {
+      appendToken(tokens, unknownToken);
+      appendToken(tokens, numberToken);
     }
     else {
-      appendToken(tokens, numberToken, false);
-      specialToken.push_back(ch);
+      appendToken(tokens, numberToken);
+      unknownToken.name.push_back(ch);
     }
   }
 
-  appendToken(tokens, numberToken, false);
-  appendToken(tokens, specialToken, true);
+  appendToken(tokens, numberToken);
+  appendToken(tokens, unknownToken);
 
   return tokens;
 }
 
-void Tokenizer::registerToken(const Token &token) {
-  auto &tokens = getRegisteredTokens();
-  tokens.insert(std::ranges::upper_bound(tokens, token, [](const Token &lhs, const Token &rhs) {
-                  return lhs.size() > rhs.size();
-                }),
-                token);
+void Tokenizer::registerToken(const std::string &tokenName) {
+  auto &registeredTokenNames = getRegisteredTokenNames();
+  const auto upperBound = std::ranges::upper_bound(
+    registeredTokenNames, tokenName, [](const std::string &lhs, const std::string &rhs) {
+      return lhs.size() > rhs.size();
+    }
+  );
+
+  // TODO: check already registered tokens
+  registeredTokenNames.insert(upperBound, tokenName);
 }
 
-bool Tokenizer::appendToken(TokenVector &tokens, Token &token, const bool shouldSplit) {
-  if (token.empty()) {
+bool Tokenizer::appendToken(TokenVector &tokens, Token &token) {
+  if (token.name.empty()) {
     return false;
   }
 
-  if (!shouldSplit) {
-    tokens.emplace_back(token);
-    token.clear();
+  if (token.type != TokenType::Unknown) {
+    tokens.emplace_back(std::move(token));
     return true;
   }
 
-  while (!token.empty()) {
-    std::string nestedToken = token.substr(0, getRegisteredTokens().front().size());
-    bool isNestedTokenFind = false;
+  while (!token.name.empty()) {
+    std::vector<std::string> &registeredTokenNames = getRegisteredTokenNames();
 
-    for (const auto &registeredToken : getRegisteredTokens()) {
-      if (nestedToken.size() < registeredToken.size()) {
+    Token nestedToken = {
+      .name = token.name.substr(0, registeredTokenNames.front().size()),
+      .type = TokenType::Unknown,
+    };
+
+    for (const auto &registeredTokenName : registeredTokenNames) {
+      if (nestedToken.name.size() < registeredTokenName.size()) {
         continue;
       }
 
-      if (nestedToken.size() > registeredToken.size()) {
-        nestedToken = token.substr(0, registeredToken.size());
+      if (nestedToken.name.size() > registeredTokenName.size()) {
+        nestedToken.name = token.name.substr(0, registeredTokenName.size());
       }
 
-      if (nestedToken == registeredToken) {
-        isNestedTokenFind = true;
+      if (nestedToken.name == registeredTokenName) {
+        nestedToken.type = TokenType::Registered;
         break;
       }
     }
 
-    if (!isNestedTokenFind) {
-      nestedToken = token.substr(0, 1);
+    if (nestedToken.type == TokenType::Unknown) {
+      nestedToken.name = token.name.substr(0, 1);
+      nestedToken.type = getUnregisteredTokenType(nestedToken.name);
     }
 
-    tokens.emplace_back(nestedToken);
-    token = token.substr(nestedToken.size());
+    token.name = token.name.substr(nestedToken.name.size());
+    tokens.emplace_back(std::move(nestedToken));
+    nestedToken.clear();
   }
 
-  token.clear();
+  token.name.clear();
+  token.type = TokenType::Unknown;
+
   return true;
 }
 
@@ -88,17 +113,22 @@ void Tokenizer::handleSpaces(std::string &str) {
   str = std::regex_replace(str, std::regex(R"([\s\r\n]+)"), " ");
 }
 
-bool Tokenizer::isDigitOrPoint(const char ch) {
-  return ch == '.' || (ch >= '0' && ch <= '9');
+TokenType Tokenizer::getUnregisteredTokenType(const std::string &tokenName) {
+  if (tokenName.size() == 1 && tokenName.front() >= 'a' && tokenName.front() <= 'z') {
+    return TokenType::Variable;
+  }
+  if (tokenName == "(") {
+    return TokenType::RoundBracketOpen;
+  }
+  if (tokenName == ")") {
+    return TokenType::RoundBracketClose;
+  }
+  return TokenType::Unknown;
 }
 
-bool Tokenizer::isSpace(const char ch) {
-  return ch == ' ';
-}
-
-TokenVector &Tokenizer::getRegisteredTokens() {
-  static TokenVector registeredTokens;
-  return registeredTokens;
+std::vector<std::string> &Tokenizer::getRegisteredTokenNames() {
+  static std::vector<std::string> registeredTokenNames;
+  return registeredTokenNames;
 }
 
 }

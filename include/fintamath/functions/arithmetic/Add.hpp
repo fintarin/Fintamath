@@ -11,15 +11,18 @@ class Add : public IFunction {
 protected:
   Add() = default;
 
-  explicit Add(Arguments inArgs);
+public:
+  static std::unique_ptr<Add> make(Arguments inArgs);
+};
+
+class AddOper : public IFunction {
+  FINTAMATH_FUNCTION_CLASS_BODY(AddOper, IFunction)
+
+protected:
+  AddOper() = default;
 
 public:
-  const FunctionDeclaration &getFunctionDeclaration() const noexcept override;
-
   static std::unique_ptr<Add> make(Arguments inArgs);
-
-private:
-  static const FunctionDeclaration addDeclaration;
 };
 
 }

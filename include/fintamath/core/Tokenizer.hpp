@@ -1,29 +1,45 @@
 #pragma once
 
+#include <cstdint>
 #include <string>
 #include <vector>
 
 namespace fintamath::detail {
 
-using Token = std::string;
+enum class TokenType : uint8_t {
+  Unknown,
+  Registered,
+  Variable,
+  Integer,
+  Decimal,
+  RoundBracketOpen,
+  RoundBracketClose,
+};
+
+struct Token {
+  std::string name;
+  TokenType type = TokenType::Unknown;
+
+public:
+  void clear();
+};
+
 using TokenVector = std::vector<Token>;
 
 class Tokenizer final {
 public:
   static TokenVector tokenize(std::string str);
 
-  static void registerToken(const Token &token);
+  static void registerToken(const std::string &token);
 
 private:
-  static bool appendToken(TokenVector &tokens, Token &token, bool shouldSplit = false);
+  static bool appendToken(TokenVector &tokens, Token &token);
 
   static void handleSpaces(std::string &str);
 
-  static bool isDigitOrPoint(char ch);
+  static TokenType getUnregisteredTokenType(const std::string &tokenName);
 
-  static bool isSpace(char ch);
-
-  static TokenVector &getRegisteredTokens();
+  static std::vector<std::string> &getRegisteredTokenNames();
 };
 
 }
