@@ -8,7 +8,7 @@
 
 namespace fintamath {
 
-class FINTAMATH_EXPORT IMathObject {
+class IMathObject {
   FINTAMATH_INTERFACE_BODY(IMathObject, None)
 
 public:
