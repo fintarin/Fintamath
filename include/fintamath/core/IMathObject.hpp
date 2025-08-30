@@ -19,8 +19,6 @@ public:
 
   virtual std::string toString() const noexcept;
 
-  virtual const IMathObject &getDefaultObject() const noexcept = 0;
-
   virtual std::unique_ptr<IMathObject> clone() const & noexcept = 0;
 
   virtual std::unique_ptr<IMathObject> clone() && noexcept = 0;
@@ -28,6 +26,8 @@ public:
   virtual std::unique_ptr<IMathObject> toMinimalObject() const noexcept;
 
 protected:
+  virtual const IMathObject &getDefaultObject() const noexcept = 0;
+
   virtual void registerDefaultObject() const;
 };
 

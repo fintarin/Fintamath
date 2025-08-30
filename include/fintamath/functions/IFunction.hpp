@@ -20,9 +20,16 @@ public:
     std::string name;
   };
 
-  struct FunctionMaker {
-    std::function<std::shared_ptr<const IFunction>(Arguments args)> maker;
-    std::reference_wrapper<const IFunction> defaultObject;
+  class FunctionMaker {
+  public:
+    FunctionMaker(const IFunction &inDefaultFunc);
+
+    std::unique_ptr<IFunction> makeFunction(Arguments inArgs);
+
+    std::unique_ptr<IFunction> doArgumentsMatch(Arguments inArgs);
+
+  private:
+    std::reference_wrapper<const IFunction> defaultFunc;
   };
 
   using FunctionMakers = std::vector<FunctionMaker>;
@@ -42,24 +49,18 @@ public:
 
   static const FunctionMakers *parseFunctionMakers(const std::string &str);
 
-  template <typename T>
-  friend std::unique_ptr<IFunction> makeFunction(IFunction::Arguments inArgs);
-
 protected:
-  virtual std::unique_ptr<IFunction> makeFunctionSelf(Arguments inArgs) const = 0;
+  virtual std::unique_ptr<IFunction> makeSelf(Arguments inArgs) const = 0;
 
   void registerDefaultObject() const override;
 
 private:
+  bool doArgumentsMatch(Arguments inArgs) const;
+
   static NameToFunctionMakersMap &getNameToFunctionMakersMap();
 
 private:
   Arguments args;
 };
-
-template <typename T>
-std::unique_ptr<IFunction> makeFunction(IFunction::Arguments inArgs) {
-  return T::getDefaultObjectStatic().makeFunctionSelf(std::move(inArgs));
-}
 
 }
