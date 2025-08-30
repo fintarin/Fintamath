@@ -19,15 +19,16 @@ public:
   using Parents = std::array<Ptr, parentsMaxSize>;
 
 public:
+  constexpr MathObjectClassData(Name inName, std::nullptr_t inParent) noexcept
+      : name(inName),
+        parent(inParent),
+        parentsSize(0) {}
+
   constexpr MathObjectClassData(Name inName, Ptr inParent) noexcept
       : name(inName),
-        parent(inParent) {
+        parent(inParent), 
+        parentsSize(parent->parentsSize) {
 
-    if (!parent) {
-      return;
-    }
-
-    parentsSize = parent->parentsSize;
     assert(parentsSize < parentsMaxSize);
 
     for (size_t i = 0; i < parentsSize; i++) {
@@ -67,13 +68,13 @@ private:
   }
 
 private:
+  Parents parents = getEmptyParents();
+
   Name name;
 
   Ptr parent;
 
-  Parents parents = getEmptyParents();
-
-  size_t parentsSize = 0;
+  size_t parentsSize;
 };
 
 }
