@@ -31,7 +31,7 @@ public:
     constexpr auto funcId = FunctionId(RemoveQualifiers<Args>::getClassStatic()...);
 
     idToFunctionMap[funcId] = [func = std::move(func)](ArgsBase... args) -> ResBase {
-      return func(cast<Args>(std::forward<ArgsBase>(args))...);
+      return func(cast<Args>(args)...);
     };
   }
 
