@@ -8,7 +8,7 @@ namespace fintamath {
 
 FINTAMATH_CLASS_IMPLEMENTATION(AddOper)
 
-const AddOper::OperatorDeclaration addOperDeclaration = {
+const AddOper::OperatorDeclaration AddOper::addOperDeclaration = {
   .functionDeclarion = {
     .expressionDeclarion = {
       .domainAndRangeVariants = {{
