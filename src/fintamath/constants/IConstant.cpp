@@ -18,7 +18,12 @@ std::shared_ptr<IConstant> IConstant::parseConstant(const std::string &str) {
 void IConstant::registerDefaultObject() const {
   std::string name = toString();
   auto object = cast<IConstant>(std::shared_ptr(clone()));
-  const auto empaceResult = getNameToConstantMap().emplace(std::move(name), std::move(object));
+
+  [[maybe_unused]] const auto empaceResult = getNameToConstantMap().emplace(
+    std::move(name),
+    std::move(object)
+  );
+
   assert(empaceResult.second);
 }
 
