@@ -9,7 +9,14 @@ class Expression : public ExpressionBase {
   FINTAMATH_CLASS_BODY(Expression, ExpressionBase)
 
 public:
-  const ExpressionBaseDeclaration &getDeclaration() const noexcept override;
+  constexpr ExpressionDeclaration getExpressionDeclaration() const noexcept override {
+    return {
+      .domainAndRangeVariants = {{
+        .returnClass = nullptr,
+        .childClasses = {MathObject::getClassStatic()},
+      }}
+    };
+  }
 };
 
 }
