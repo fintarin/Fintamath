@@ -1,17 +1,21 @@
-#include "fintamath/literals/constants/I.hpp"
+// #include "fintamath/literals/constants/I.hpp"
 
-#include <memory>
+// #include <memory>
 
-#include "fintamath/core/IMathObject.hpp"
-#include "fintamath/numbers/Complex.hpp"
-#include "fintamath/numbers/Integer.hpp"
+// #include "fintamath/core/IMathObject.hpp"
+// #include "fintamath/numbers/Complex.hpp"
+// #include "fintamath/numbers/Integer.hpp"
 
-namespace fintamath {
+// namespace fintamath {
 
-FINTAMATH_CLASS_IMPLEMENTATION(I)
+// FINTAMATH_CHILD_CLASS_IMPLEMENTATION(I)
 
-std::unique_ptr<IMathObject> I::call() const {
-  return std::make_unique<Complex>(Integer(0), Integer(1));
-}
+// MathObjectClass I::getValueClass() const noexcept {
+//   return Real::getClassStatic();
+// }
 
-}
+// std::unique_ptr<IMathObject> I::getValue(bool /*shouldApproximate*/) const noexcept {
+//   return std::make_unique<Complex>(Integer(0), Integer(1));
+// }
+
+// }

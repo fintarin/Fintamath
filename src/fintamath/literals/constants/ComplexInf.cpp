@@ -2,14 +2,18 @@
 
 #include <memory>
 
-#include "fintamath/core/IMathObject.hpp"
+#include "fintamath/numbers/INumber.hpp"
 
 namespace fintamath {
 
-FINTAMATH_CLASS_IMPLEMENTATION(ComplexInf)
+FINTAMATH_CHILD_CLASS_IMPLEMENTATION(ComplexInf)
 
-std::unique_ptr<IMathObject> ComplexInf::call() const {
-  return clone();
+MathObjectClass ComplexInf::getValueClass() const noexcept {
+  return INumber::getClassStatic();
+}
+
+std::unique_ptr<IMathObject> ComplexInf::getValue(const bool /*shouldApproximate*/) const noexcept {
+  return nullptr;
 }
 
 }

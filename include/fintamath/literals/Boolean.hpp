@@ -2,25 +2,24 @@
 
 #include <string>
 
-#include "fintamath/core/MathObjectClass.hpp"
 #include "fintamath/literals/ILiteral.hpp"
 
 namespace fintamath {
 
-class Boolean : public ILiteralCRTP<Boolean> {
-  FINTAMATH_CLASS_BODY(Boolean, ILiteral)
+class Boolean : public ILiteral {
+  FINTAMATH_CHILD_CLASS_BODY(Boolean, ILiteral)
 
 public:
   Boolean();
 
   template <std::same_as<bool> Bool>
-  Boolean(const Bool rhs) : val(rhs) {}
+  Boolean(const Bool rhs) noexcept : val(rhs) {}
 
   explicit Boolean(std::string_view str);
 
-  std::string toString() const override;
+  std::string toString() const noexcept override;
 
-  explicit operator bool() const;
+  operator bool() const noexcept;
 
 private:
   bool val;

@@ -1,11 +1,6 @@
 #pragma once
 
-#include <compare>
-#include <cstddef>
-#include <optional>
 #include <string_view>
-#include <unordered_map>
-#include <unordered_set>
 
 #include "fintamath/config/Config.hpp"
 
@@ -13,25 +8,25 @@ namespace fintamath {
 
 namespace detail {
 
-class MathObjectClassImpl final {
+class MathObjectClassData final {
 public:
   using Name = std::string_view;
 
-  using Ptr = const MathObjectClassImpl *;
+  using Ptr = const MathObjectClassData *;
 
 public:
-  constexpr MathObjectClassImpl(const Name inName, const Ptr inParent = nullptr) noexcept
+  constexpr MathObjectClassData(Name inName, Ptr inParent = nullptr) noexcept
       : name(inName),
         parent(inParent) {
   }
 
-  constexpr MathObjectClassImpl(const MathObjectClassImpl &) noexcept = delete;
+  constexpr MathObjectClassData(const MathObjectClassData &) noexcept = delete;
 
-  constexpr MathObjectClassImpl(MathObjectClassImpl &&) noexcept = delete;
+  constexpr MathObjectClassData(MathObjectClassData &&) noexcept = delete;
 
-  constexpr MathObjectClassImpl &operator=(const MathObjectClassImpl &) noexcept = delete;
+  constexpr MathObjectClassData &operator=(const MathObjectClassData &) noexcept = delete;
 
-  constexpr MathObjectClassImpl &operator=(MathObjectClassImpl &&) noexcept = delete;
+  constexpr MathObjectClassData &operator=(MathObjectClassData &&) noexcept = delete;
 
   constexpr Name getName() const noexcept {
     return name;
@@ -45,12 +40,12 @@ private:
   Name name;
 
   Ptr parent;
-
-  [[maybe_unused]] inline static const Config config;
 };
+
+inline static const Config globalConfig;
 
 }
 
-using MathObjectClass = detail::MathObjectClassImpl::Ptr;
+using MathObjectClass = detail::MathObjectClassData::Ptr;
 
 }
