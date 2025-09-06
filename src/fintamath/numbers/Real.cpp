@@ -42,27 +42,36 @@ Real::Real(const Rational &rhs) : Real(Real(rhs.numerator()) / Real(rhs.denomina
 
 Real::Real(const Integer &rhs) : backend(rhs.getBackend()) {}
 
-Real::Real(const std::string_view str) try : Real() {
+Real::Real(const std::string_view str) {
+  constexpr auto throwInvalidInputException = [](const std::string_view invalidStr) {
+    throw InvalidInputException(fmt::format(
+        R"(Unable to parse {} from "{}")",
+        getClassStatic()->getName(),
+        invalidStr));
+  };
+
   if (str.empty() || str == ".") {
-    throw InvalidInputException("");
+    throwInvalidInputException(str);
   }
 
-  std::string mutableStr = removeLeadingZeroes(std::string(str));
-
+  const std::string processedStr = [&str]
   {
+    std::string outProcessedStr = removeLeadingZeroes(std::string(str));
     const std::string expStr = "*10^";
-    const size_t expPos = mutableStr.find(expStr);
+    const size_t expPos = outProcessedStr.find(expStr);
 
     if (expPos != std::string::npos) {
-      mutableStr.replace(expPos, expStr.length(), "e");
+      outProcessedStr.replace(expPos, expStr.length(), "e");
     }
-  }
+
+    return outProcessedStr;
+  }();
 
   try {
-    backend.assign(mutableStr);
+    backend.assign(processedStr);
   }
   catch (const std::runtime_error &) {
-    throw InvalidInputException("");
+    throwInvalidInputException(str);
   }
 
   if (!isFinite()) {
@@ -70,12 +79,6 @@ Real::Real(const std::string_view str) try : Real() {
         R"(Undefined "{}" (overflow))",
         str));
   }
-}
-catch (const InvalidInputException &) {
-  throw InvalidInputException(fmt::format(
-      R"(Unable to parse {} from "{}")",
-      getClassStatic()->getName(),
-      str));
 }
 
 std::string Real::toString() const noexcept {

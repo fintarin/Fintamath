@@ -39,13 +39,20 @@ Rational::Rational(Integer inNumer, Integer inDenom)
   toIrreducibleRational();
 }
 
-Rational::Rational(const std::string_view str) try {
+Rational::Rational(const std::string_view str) {
+  constexpr auto throwInvalidInputException = [](const std::string_view invalidStr) {
+    throw InvalidInputException(fmt::format(
+        R"(Unable to parse {} from "{}")",
+        getClassStatic()->getName(),
+        invalidStr));
+  };
+
   if (str.empty()) {
-    throw InvalidInputException("");
+    throwInvalidInputException(str);
   }
 
   if (str.empty() || str == ".") {
-    throw InvalidInputException("");
+    throwInvalidInputException(str);
   }
 
   int64_t firstDigitNum = 0;
@@ -61,21 +68,26 @@ Rational::Rational(const std::string_view str) try {
                                           static_cast<size_t>(firstDotNum - firstDigitNum)));
   Integer intPart;
 
-  if (!intPartStr.empty()) {
-    intPart = Integer(str.substr(static_cast<size_t>(firstDigitNum),
-                                 static_cast<size_t>(firstDotNum - firstDigitNum)));
-  }
+  try {
+    if (!intPartStr.empty()) {
+      intPart = Integer(str.substr(static_cast<size_t>(firstDigitNum),
+                                   static_cast<size_t>(firstDotNum - firstDigitNum)));
+    }
 
-  if (firstDotNum + 1 < std::ssize(str)) {
-    const std::string numeratorStr(str.substr(static_cast<size_t>(firstDotNum) + 1));
-    std::string denominatorStr(numeratorStr.size() + 1, '0');
-    denominatorStr.front() = '1';
-    numer = Integer(numeratorStr);
-    denom = Integer(denominatorStr);
+    if (firstDotNum + 1 < std::ssize(str)) {
+      const std::string numeratorStr(str.substr(static_cast<size_t>(firstDotNum) + 1));
+      std::string denominatorStr(numeratorStr.size() + 1, '0');
+      denominatorStr.front() = '1';
+      numer = Integer(numeratorStr);
+      denom = Integer(denominatorStr);
+    }
+  }
+  catch (const InvalidInputException &) {
+    throwInvalidInputException(str);
   }
 
   if (intPart < 0 || numer < 0) {
-    throw InvalidInputException("");
+    throwInvalidInputException(str);
   }
 
   toIrreducibleRational();
@@ -84,12 +96,6 @@ Rational::Rational(const std::string_view str) try {
   if (isNegative) {
     numer *= -1;
   }
-}
-catch (const InvalidInputException &) {
-  throw InvalidInputException(fmt::format(
-      R"(Unable to parse {} from "{}")",
-      getClassStatic()->getName(),
-      str));
 }
 
 std::string Rational::toString() const noexcept {
