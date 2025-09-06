@@ -3,11 +3,12 @@
 #include <compare>
 
 #include "fintamath/core/CoreConcepts.hpp"
+#include "fintamath/core/IWithEqualsOperators.hpp"
 
 namespace fintamath {
 
 template <typename Derived>
-class IWithCompareOperators {
+class IWithCompareOperators : public IWithEqualsOperators<Derived> {
 
 public:
   virtual ~IWithCompareOperators() = default;
