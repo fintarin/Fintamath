@@ -8,7 +8,7 @@ std::string IMathObject::toString() const noexcept {
   return std::string(getClass()->getName());
 }
 
-std::unique_ptr<IMathObject> IMathObject::toMinimalObject() const noexcept {
+std::shared_ptr<const IMathObject> IMathObject::unwrapp() const noexcept {
   return nullptr;
 }
 
