@@ -58,7 +58,7 @@ SharedPtr<IMathObject> IFunction::unwrapp() const noexcept {
     return args.front();
   }
 
-  return {};
+  return nullptr;
 }
 
 const IFunction::Arguments &IFunction::getArguments() const noexcept {
@@ -169,19 +169,19 @@ SharedPtr<IMathObject> IFunction::compressSelf() const {
 }
 
 SharedPtr<IMathObject> IFunction::preSimplifySelf() const {
-  return {};
+  return nullptr;
 }
 
 SharedPtr<IMathObject> IFunction::simplifySelf() const {
-  return {};
+  return nullptr;
 }
 
 SharedPtr<IMathObject> IFunction::solveSelf() const {
-  return {};
+  return nullptr;
 }
 
 SharedPtr<IMathObject> IFunction::approximateSelf() const {
-  return {};
+  return nullptr;
 }
 
 bool IFunction::equals(const SharedRef<IMathObject> & /*lhs*/, const SharedRef<IMathObject> &rhs) const noexcept {

@@ -9,7 +9,7 @@ std::string IMathObject::toString() const noexcept {
 }
 
 SharedPtr<IMathObject> IMathObject::unwrapp() const noexcept {
-  return {};
+  return nullptr;
 }
 
 void IMathObject::registerDefaultObject() const {

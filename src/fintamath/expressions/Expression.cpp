@@ -93,7 +93,7 @@ Expression::TermStack Expression::parseTermsRPN(TokenToTermVector &tokensToTerms
         funcTermStack.emplace();
       }
       else if (token.type == detail::TokenType::RoundBracketClose) {
-        moveFunctionTerms(outTermStack, funcTermStack, {});
+        moveFunctionTerms(outTermStack, funcTermStack, nullptr);
 
         if (funcTermStack.empty()) {
           throw InvalidInputException("bracket mismatch");
@@ -125,7 +125,7 @@ Expression::TermStack Expression::parseTermsRPN(TokenToTermVector &tokensToTerms
     );
   }
 
-  moveFunctionTerms(outTermStack, funcTermStack, {});
+  moveFunctionTerms(outTermStack, funcTermStack, nullptr);
 
   if (!funcTermStack.empty()) {
     throw InvalidInputException("bracket mismatch");
@@ -204,7 +204,7 @@ std::optional<Expression::Term> Expression::parseTerm(const detail::Token &token
       throw InvalidInputException(fmt::format(R"(invalid term {})", token.name));
     }
     default: {
-      return {};
+      return std::nullopt;
     }
   }
 }

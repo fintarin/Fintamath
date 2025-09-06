@@ -118,7 +118,7 @@ SharedPtr<IMathObject> Rational::unwrapp() const noexcept {
     return numer.clone();
   }
 
-  return {};
+  return nullptr;
 }
 
 int Rational::sign() const {

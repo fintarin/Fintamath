@@ -8,7 +8,6 @@ FINTAMATH_FUNCTION_CLASS_IMPLEMENTATION_WITH_MAKE(
     .name = "",
     .argumentClasses = {IMathObject::getClassStatic(), IMathObject::getClassStatic()},
     .returnClass = IMathObject::getClassStatic(),
-    .operatorPriority = {},
     .isVariadic = true,
   }
 )

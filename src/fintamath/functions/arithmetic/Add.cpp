@@ -10,7 +10,6 @@ FINTAMATH_FUNCTION_CLASS_IMPLEMENTATION_WITH_MAKE(
     .name = "add",
     .argumentClasses = {INumber::getClassStatic()},
     .returnClass = INumber::getClassStatic(),
-    .operatorPriority = {},
     .isVariadic = true,
   }
 )

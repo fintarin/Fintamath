@@ -8,11 +8,11 @@ namespace fintamath {
 FINTAMATH_INTERFACE_IMPLEMENTATION(IConstant)
 
 SharedPtr<IMathObject> IConstant::getValue() const noexcept {
-  return {};
+  return nullptr;
 }
 
 SharedPtr<IMathObject> IConstant::approximateValue() const noexcept {
-  return {};
+  return nullptr;
 }
 
 SharedPtr<IMathObject> IConstant::unwrapp() const noexcept {

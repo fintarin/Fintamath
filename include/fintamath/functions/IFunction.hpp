@@ -39,7 +39,7 @@ public:
   struct Declaration {
     std::string name;
     std::vector<MathObjectClass> argumentClasses;
-    MathObjectClass returnClass = {};
+    MathObjectClass returnClass;
     std::optional<OperatorPriority> operatorPriority = std::nullopt;
     bool isVariadic = false;
   };
