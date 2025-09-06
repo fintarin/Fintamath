@@ -6,6 +6,7 @@
 
 #include "fintamath/core/Hash.hpp"
 #include "fintamath/core/MathObjectClass.hpp"
+#include "fintamath/exceptions/InvalidInputException.hpp"
 
 namespace fintamath::detail {
 
@@ -50,6 +51,9 @@ private:
   template <typename... Args>
   static CallbackId getFunctionId(const Args &...args) {
     if constexpr (requires { CallbackId(args->getClass()...); }) {
+      if ((!args || ...)) {
+        throw InvalidInputException("One of the arguments is null");
+      }
       return CallbackId(args->getClass()...);
     }
     else {
