@@ -29,7 +29,7 @@ public:
 
   std::string toString() const noexcept override;
 
-  std::shared_ptr<const IMathObject> unwrapp() const noexcept override;
+  Shared<IMathObject> unwrapp() const noexcept override;
 
   int sign() const;
 

@@ -1,8 +1,9 @@
 #pragma once
 
+#include <memory>
 #include <utility>
 
-namespace fintamath::detail {
+namespace fintamath {
 
 template <typename Number, typename Function>
 void repeat(const Number &num, Function &&func) {

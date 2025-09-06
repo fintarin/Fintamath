@@ -1,11 +1,10 @@
 #include "fintamath/functions/arithmetic/Add.hpp"
 
-#include "fintamath/core/MathObjectUtils.hpp"
 #include "fintamath/numbers/INumber.hpp"
 
 namespace fintamath {
 
-FINTAMATH_FUNCTION_CLASS_IMPLEMENTATION(
+FINTAMATH_FUNCTION_CLASS_IMPLEMENTATION_WITH_MAKE(
   Add,
   {
     .name = "add",
@@ -26,13 +25,7 @@ FINTAMATH_FUNCTION_CLASS_IMPLEMENTATION(
   }
 )
 
-std::unique_ptr<Add> Add::make(Arguments inArgs) {
-  Add self;
-  self.initSelf(std::move(inArgs));
-  return makeObject<Add>(self);
-}
-
-std::unique_ptr<Add> AddOper::make(Arguments inArgs) {
+Shared<Add> AddOper::make(Arguments inArgs) {
   return Add::make(std::move(inArgs));
 }
 

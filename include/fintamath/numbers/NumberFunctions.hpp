@@ -4,6 +4,6 @@
 
 namespace fintamath {
 
-std::unique_ptr<INumber> operator+(const INumber &lhs, const INumber &rhs);
+Shared<INumber> operator+(const Shared<INumber> &lhs, const Shared<INumber> &rhs);
 
 }

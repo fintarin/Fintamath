@@ -113,7 +113,7 @@ std::string Rational::toString() const noexcept {
   return res;
 }
 
-std::shared_ptr<const IMathObject> Rational::unwrapp() const noexcept {
+Shared<IMathObject> Rational::unwrapp() const noexcept {
   if (denom == 1) {
     return numer.clone();
   }
@@ -136,9 +136,7 @@ const Integer &Rational::denominator() const noexcept {
 void Rational::registerDefaultObject() const noexcept {
   using detail::Converter;
 
-  Converter::add<Rational, Integer>([](const Integer &from) {
-    return makeObject<Rational>(from);
-  });
+  Converter::add<Rational, Integer>();
 }
 
 bool Rational::equals(const Rational &rhs) const {

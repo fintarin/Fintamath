@@ -181,12 +181,8 @@ void Real::setPrecisionStatic(unsigned precision) {
 void Real::registerDefaultObject() const {
   using detail::Converter;
 
-  Converter::add<Real, Integer>([](const Integer &from) {
-    return makeObject<Real>(from);
-  });
-  Converter::add<Real, Rational>([](const Rational &from) {
-    return makeObject<Real>(from);
-  });
+  Converter::add<Real, Integer>();
+  Converter::add<Real, Rational>();
 
   [[maybe_unused]] static const unsigned defaultPrecision = [] {
     constexpr unsigned precision = 20;

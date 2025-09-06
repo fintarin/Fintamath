@@ -19,7 +19,7 @@ namespace fintamath {
 FINTAMATH_CLASS_IMPLEMENTATION(Expression)
 
 Expression::Expression() {
-  static const Argument zero = makeObject<Integer>(0);
+  static const Argument zero = makeShared<Integer>(0);
   *this = Expression(zero);
 }
 
@@ -171,13 +171,13 @@ Expression::Argument Expression::parseExpression(TermStack &termsRPN) {
 std::optional<Expression::Term> Expression::parseTerm(const detail::Token &token) {
   switch (token.type) {
     case detail::TokenType::Variable: {
-      return makeObject<Variable>(token.name);
+      return makeShared<Variable>(token.name);
     }
     case detail::TokenType::Integer: {
-      return makeObject<Integer>(token.name);
+      return makeShared<Integer>(token.name);
     }
     case detail::TokenType::Decimal: {
-      return makeObject<Rational>(token.name);
+      return makeShared<Rational>(token.name);
     }
     case detail::TokenType::Registered: {
       if (const IFunction::FunctionMakers *functionMakers = IFunction::parseFunctionMakers(token.name)) {
@@ -186,7 +186,7 @@ std::optional<Expression::Term> Expression::parseTerm(const detail::Token &token
           .operatorPriority = getOperatorPriority(*functionMakers),
         };
       }
-      if (std::shared_ptr<const IConstant> constant = IConstant::parseConstant(token.name)) {
+      if (Shared<IConstant> constant = IConstant::parseConstant(token.name)) {
         return constant;
       }
       throw InvalidInputException(fmt::format(R"(invalid term {})", token.name));
@@ -226,7 +226,7 @@ void Expression::moveFunctionTerms(TermStack &outTermStack, FunctionTermStack &f
   }
 }
 
-// std::unique_ptr<IFunction> Expression::findFunction(const std::string &str, const size_t argNum) {
+// Unique<IFunction> Expression::findFunction(const std::string &str, const size_t argNum) {
 //   for (auto &func : IFunction::parse(str)) {
 //     if (func->getArgumentClasses().size() == argNum) {
 //       return std::move(func);
@@ -236,7 +236,7 @@ void Expression::moveFunctionTerms(TermStack &outTermStack, FunctionTermStack &f
 //   return {};
 // }
 
-// auto Expression::findOperator(const std::string &str, const IOperator::Priority priority) -> std::unique_ptr<IOperator> {
+// auto Expression::findOperator(const std::string &str, const IOperator::Priority priority) -> Unique<IOperator> {
 //   for (auto &oper : IOperator::parse(str)) {
 //     if (oper->getPriority() == priority) {
 //       return std::move(oper);
@@ -411,7 +411,7 @@ Expression::Argument Expression::parseOperator(TermStack &argTermsRPN, const Fun
   }
   std::ranges::reverse(args);
 
-  std::shared_ptr<const IFunction> outOper;
+  Shared<IFunction> outOper;
   for (const auto &maker : funcTerm.functionMakers.get()) {
     if (!maker.doArgumentsMatch(args)) {
       continue;
@@ -434,7 +434,7 @@ Expression::Argument Expression::parseOperator(TermStack &argTermsRPN, const Fun
 Expression::Argument Expression::parseFunction(TermStack &argTermsRPN, const FunctionTerm &funcTerm) {
   Arguments args = unwrappComma(parseExpression(argTermsRPN));
 
-  std::shared_ptr<const IFunction> outFunc;
+  Shared<IFunction> outFunc;
   for (const auto &maker : funcTerm.functionMakers.get()) {
     if (!maker.doArgumentsMatch(args)) {
       continue;
@@ -551,7 +551,7 @@ Expression::Arguments Expression::unwrappComma(Argument inArg) {
 
 // namespace detail {
 
-// std::unique_ptr<IMathObject> makeExpr(const IFunction &func, ArgumentPtrVector args) {
+// Unique<IMathObject> makeExpr(const IFunction &func, ArgumentPtrVector args) {
 //   if (func.isVariadic() && args.size() == 1) {
 //     return std::move(args.front())->clone();
 //   }

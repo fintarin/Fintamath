@@ -6,13 +6,10 @@
 namespace fintamath {
 
 class Add : public IFunction {
-  FINTAMATH_FUNCTION_CLASS_BODY(Add, IFunction)
+  FINTAMATH_FUNCTION_CLASS_BODY_WITH_MAKE(Add, IFunction)
 
 protected:
   Add() = default;
-
-public:
-  static std::unique_ptr<Add> make(Arguments inArgs);
 };
 
 class AddOper : public IFunction {
@@ -22,7 +19,7 @@ protected:
   AddOper() = default;
 
 public:
-  static std::unique_ptr<Add> make(Arguments inArgs);
+  static Shared<Add> make(Arguments inArgs);
 };
 
 }
