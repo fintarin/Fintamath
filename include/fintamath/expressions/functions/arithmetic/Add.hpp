@@ -17,7 +17,7 @@ public:
 public:
   const FunctionDeclaration &getFunctionDeclaration() const noexcept override;
 
-  std::unique_ptr<IFunction> makeFunction(Children children) const override;
+  std::unique_ptr<IFunction> makeFunctionSelf(Children children) const override;
 
 private:
   static const FunctionDeclaration addDeclaration;

@@ -1,5 +1,9 @@
 #pragma once
 
+#include <functional>
+#include <unordered_map>
+
+#include "fintamath/core/CoreUtils.hpp"
 #include "fintamath/expressions/IExpression.hpp"
 
 namespace fintamath {
@@ -10,8 +14,16 @@ class IFunction : public IExpression {
 public:
   struct FunctionDeclaration {
     ExpressionDeclaration expressionDeclarion;
-    std::string_view functionName;
+    std::string functionName;
   };
+
+  struct FunctionMaker {
+    std::function<std::shared_ptr<const IFunction>(Children children)> maker;
+    std::reference_wrapper<const IFunction> defaultObject;
+  };
+
+  using FunctionMakers = std::vector<FunctionMaker>;
+  using NameToFunctionMakersMap = std::unordered_map<std::string, FunctionMakers>;
 
 protected:
   IFunction() = default;
@@ -19,19 +31,27 @@ protected:
   explicit IFunction(Children inChildren);
 
 public:
-  const ExpressionDeclaration &getExpressionDeclaration() const noexcept final ;
+  const ExpressionDeclaration &getExpressionDeclaration() const noexcept final;
 
   virtual const FunctionDeclaration &getFunctionDeclaration() const noexcept = 0;
 
   std::string toString() const noexcept override;
 
   template <typename T>
-  friend std::unique_ptr<IFunction> makeFunction(IFunction::Children children) {
-    return T::getDefaultObject().makeFunction(std::move(children));
-  }
+  friend std::unique_ptr<IFunction> makeFunction(IFunction::Children children);
 
 protected:
-  virtual std::unique_ptr<IFunction> makeFunction(Children children) const = 0;
+  virtual std::unique_ptr<IFunction> makeFunctionSelf(Children children) const = 0;
+
+  void registerDefaultObject() const override;
+
+private:
+  static NameToFunctionMakersMap &getNameToFunctionMakersMap();
 };
+
+template <typename T>
+std::unique_ptr<IFunction> makeFunction(IFunction::Children children) {
+  return T::getDefaultObjectStatic().makeFunctionSelf(std::move(children));
+}
 
 }

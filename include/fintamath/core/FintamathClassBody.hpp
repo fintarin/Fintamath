@@ -18,6 +18,7 @@ public:                                                          \
     return getDefaultObjectStatic();                             \
   }                                                              \
                                                                  \
+protected:                                                       \
   std::unique_ptr<IMathObject> clone() const noexcept override { \
     return std::make_unique<Class>(*this);                       \
   }                                                              \
