@@ -12,6 +12,11 @@ namespace fintamath {
 
 class MathObject;
 
+template <typename T, typename... Args>
+std::unique_ptr<T> makeObject(Args &&...args) {
+  return std::make_unique<T>(std::forward<Args>(args)...);
+}
+
 constexpr bool is(const MathObjectClass to, const MathObjectClass from) noexcept {
   for (MathObjectClass parent = from; parent; parent = parent->getParent()) {
     if (parent == to) {
