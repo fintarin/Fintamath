@@ -3,13 +3,13 @@
 #include <memory>
 #include <vector>
 
-#include "fintamath/core/MathObject.hpp"
+#include "fintamath/core/IMathObject.hpp"
 #include "fintamath/core/MathObjectClass.hpp"
 
 namespace fintamath {
 
-class ExpressionBase : public MathObject {
-  FINTAMATH_INTERFACE_BODY(ExpressionBase, MathObject)
+class IExpression : public IMathObject {
+  FINTAMATH_INTERFACE_BODY(ExpressionBase, IMathObject)
 
 public:
   struct ExpressionDeclaration {
@@ -22,13 +22,13 @@ public:
     bool isVariadic = false;
   };
 
-  using Child = std::shared_ptr<MathObject>;
+  using Child = std::shared_ptr<IMathObject>;
   using Children = std::vector<Child>;
 
 protected:
-  ExpressionBase() = default;
+  IExpression() = default;
 
-  explicit ExpressionBase(Children inChildren);
+  explicit IExpression(Children inChildren);
 
 public:
   virtual constexpr ExpressionDeclaration getExpressionDeclaration() const noexcept = 0;

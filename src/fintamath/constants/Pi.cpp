@@ -2,14 +2,14 @@
 
 #include <memory>
 
-#include "fintamath/core/MathObject.hpp"
+#include "fintamath/core/IMathObject.hpp"
 #include "fintamath/numbers/RealFunctions.hpp"
 
 namespace fintamath {
 
 FINTAMATH_CLASS_IMPLEMENTATION(Pi)
 
-std::unique_ptr<MathObject> Pi::getValue(bool shouldApproximate) const noexcept {
+std::unique_ptr<IMathObject> Pi::getValue(bool shouldApproximate) const noexcept {
   if (!shouldApproximate) {
     return nullptr;
   }

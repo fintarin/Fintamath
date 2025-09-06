@@ -554,7 +554,7 @@ TEST(RationalTests, isComplexTest) {
 
 TEST(RationalTests, getClassTest) {
   EXPECT_EQ(Rational().getClass()->getName(), "Rational");
-  EXPECT_EQ(Rational().getClass()->getParent(), Number::getClassStatic());
+  EXPECT_EQ(Rational().getClass()->getParent(), INumber::getClassStatic());
 }
 
 TEST(RationalTests, hashTest) {

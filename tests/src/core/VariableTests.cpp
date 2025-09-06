@@ -105,5 +105,5 @@ TEST(VariableTest, stringIntegerConstructorTest) {
 
 TEST(VariableTest, getClassTest) {
   EXPECT_EQ(Variable("a").getClass()->getName(), "Variable");
-  EXPECT_EQ(Variable("a").getClass()->getParent(), MathObject::getClassStatic());
+  EXPECT_EQ(Variable("a").getClass()->getParent(), IMathObject::getClassStatic());
 }
