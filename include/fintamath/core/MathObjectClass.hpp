@@ -9,7 +9,7 @@ namespace fintamath {
 namespace detail {
 
 class MathObjectClassData final {
-  static constexpr size_t parentsMaxSize = 5;
+  static constexpr size_t parentsMaxSize = 10;
 
 public:
   using Name = std::string_view;
