@@ -8,7 +8,7 @@ namespace fintamath {
 
 namespace detail {
 
-class FINTAMATH_EXPORT MathObjectClassData final {
+class MathObjectClassData final {
 public:
   using Name = std::string_view;
 

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "fintamath/core/FintamathExport.hpp"
 #include "fintamath/core/MathObjectClass.hpp"
 
 #define FINTAMATH_INTERFACE_BODY(Class, SuperClass)            \
@@ -13,7 +14,7 @@ public:                                                        \
   }                                                            \
                                                                \
 private:                                                       \
-  static const detail::MathObjectClassData classData##Class;
+  FINTAMATH_EXPORT static const detail::MathObjectClassData classData##Class;
 
 #define FINTAMATH_INTERFACE_IMPLEMENTATION(Class)            \
   static_assert(std::is_same_v<Class, Class>);               \
