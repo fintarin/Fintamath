@@ -197,8 +197,8 @@ std::optional<Expression::Term> Expression::parseTerm(const detail::Token &token
   }
 }
 
-std::optional<IFunction::OperatorPriority> Expression::getOperatorPriority(const IFunction::FunctionMakers &functionMakers) {
-  std::optional<IFunction::OperatorPriority> outPriority;
+std::optional<OperatorPriority> Expression::getOperatorPriority(const IFunction::FunctionMakers &functionMakers) {
+  std::optional<OperatorPriority> outPriority;
 
   for (const auto &maker : functionMakers) {
     const IFunction::Declaration &decl = maker.getDeclaration();
@@ -211,7 +211,7 @@ std::optional<IFunction::OperatorPriority> Expression::getOperatorPriority(const
 }
 
 void Expression::moveFunctionTerms(TermStack &outTermStack, FunctionTermStack &functionTermStack, const FunctionTerm *nextFunctionTerm) {
-  if (nextFunctionTerm && nextFunctionTerm->operatorPriority == IFunction::OperatorPriority::PrefixUnary) {
+  if (nextFunctionTerm && nextFunctionTerm->operatorPriority == OperatorPriority::PrefixUnary) {
     return;
   }
 
@@ -460,6 +460,10 @@ Expression::Arguments Expression::unwrappComma(Argument inArg) {
   }
 
   return {std::move(inArg)};
+}
+
+Shared<IMathObject> Expression::unwrapp() const noexcept {
+  return arg;
 }
 
 // ArgumentPtr Expression::compress(const ArgumentPtr &child) {

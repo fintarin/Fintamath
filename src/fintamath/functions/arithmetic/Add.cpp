@@ -21,7 +21,7 @@ FINTAMATH_FUNCTION_CLASS_IMPLEMENTATION(
     .name = "+",
     .argumentClasses = {INumber::getClassStatic(), INumber::getClassStatic()},
     .returnClass = INumber::getClassStatic(),
-    .operatorPriority = IFunction::OperatorPriority::Addition,
+    .operatorPriority = OperatorPriority::Addition,
   }
 )
 
