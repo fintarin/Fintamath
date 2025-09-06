@@ -433,7 +433,7 @@ SharedRef<IMathObject> Expression::parseFunction(TermStack &argTermsRPN, const F
 Expression::Arguments Expression::unwrappComma(SharedRef<IMathObject> inArg) {
   if (const auto argFunc = cast<IFunction>(inArg); is<Comma>(argFunc)) {
     Comma::compress(inArg);
-    return cast<IFunction>(inArg)->getArguments();
+    return castChecked<IFunction>(*inArg).getArguments();
   }
 
   return {std::move(inArg)};
