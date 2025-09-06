@@ -1,6 +1,6 @@
 #pragma once
 
-#include "fintamath/expressions/functions/IFunction.hpp"
+#include "fintamath/functions/IFunction.hpp"
 
 namespace fintamath {
 
@@ -25,13 +25,13 @@ public:
 
   struct OperatorDeclaration {
     FunctionDeclaration functionDeclarion;
-    Priority operatorPriority = Priority::Addition;
+    Priority priority = Priority::Addition;
   };
 
 protected:
   IOperator() = default;
 
-  explicit IOperator(Children inChildren);
+  explicit IOperator(Arguments inArgs);
 
 public:
   const FunctionDeclaration &getFunctionDeclaration() const noexcept final;
