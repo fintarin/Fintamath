@@ -11,7 +11,8 @@ using namespace fintamath;
 
 namespace {
 
-unsigned precision = 500;
+// TODO: set precision to 100
+constexpr unsigned precision = 500;
 
 const Real &getBottom() {
   static const Real res = pow(Rational("9.99"), precision);
