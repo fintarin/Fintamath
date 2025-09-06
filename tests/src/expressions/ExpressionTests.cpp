@@ -3,16 +3,17 @@
 
 #include "fintamath/exceptions/InvalidInputException.hpp"
 #include "fintamath/expressions/Expression.hpp"
+#include "fintamath/expressions/ExpressionFunctions.hpp"
 
 using namespace fintamath;
 
 TEST(ExpressionTests, stringConstructorTest) {
-  EXPECT_EQ(Expression("2 + 2").toString(), "(add 2 2)");
-  EXPECT_EQ(Expression("2 + 3 + 4 + 5").toString(), "(add 2 3 4 5)");
-  EXPECT_EQ(Expression("2 + 3 * 4 + 2").toString(), "(add 2 (mul 3 4) 2)");
-  EXPECT_EQ(Expression("add(2, 3, 4, 5)").toString(), "(add 2 3 4 5)");
-  EXPECT_EQ(Expression("mul(2, 3, 4, 5)").toString(), "(mul 2 3 4 5)");
-  EXPECT_EQ(Expression("sin(sin(x + x))").toString(), "(sin (sin (add x x)))");
+  EXPECT_EQ(simplify(Expression("2 + 2")).toString(), "(add 2 2)");
+  EXPECT_EQ(simplify(Expression("2 + 3 + 4 + 5")).toString(), "(add 2 3 4 5)");
+  EXPECT_EQ(simplify(Expression("2 + 3 * 4 + 2")).toString(), "(add 2 (mul 3 4) 2)");
+  EXPECT_EQ(simplify(Expression("add(2, 3, 4, 5)")).toString(), "(add 2 3 4 5)");
+  EXPECT_EQ(simplify(Expression("mul(2, 3, 4, 5)")).toString(), "(mul 2 3 4 5)");
+  EXPECT_EQ(simplify(Expression("sin(sin(x + x))")).toString(), "(sin (sin (add x x)))");
 
   EXPECT_THAT(
     [] { Expression("True + False"); },

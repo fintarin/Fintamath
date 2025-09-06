@@ -13,6 +13,8 @@
 
 namespace fintamath {
 
+std::mutex IFunction::modifyStateMutex;
+
 FINTAMATH_INTERFACE_IMPLEMENTATION(IFunction)
 
 IFunction::FunctionMaker::FunctionMaker(const IFunction &inDefaultFunc)
@@ -68,12 +70,20 @@ const IFunction::FunctionMakers *IFunction::parseFunctionMakers(const std::strin
   return iter != nameToMakersMap.end() ? &iter->second : nullptr;
 }
 
+void IFunction::compress(Argument &arg) {
+  if (const auto func = cast<IFunction>(arg)) {
+    if (auto res = func->compressSelf()) {
+      arg = res;
+    }
+  }
+}
+
 void IFunction::preSimplify(Argument &arg) {
   modify(
     arg,
     [](const IFunction &func) { return func.preSimplifySelf(); },
     &preSimplify,
-    [](Argument &) {},
+    &compress,
     FunctionState::PreSimplify
   );
 }
@@ -120,6 +130,43 @@ void IFunction::approximate(Argument &arg) {
   );
 }
 
+Shared<IMathObject> IFunction::compressSelf() const {
+  if (!getDeclaration().isVariadic) {
+    return nullptr;
+  }
+
+  const MathObjectClass selfClass = getClass();
+  size_t selfArgIndex = 0;
+  std::optional<Arguments> outArgs;
+
+  for (; selfArgIndex < args.size(); selfArgIndex++) {
+    const Argument &arg = args[selfArgIndex];
+
+    if (is(selfClass, arg->getClass())) {
+      outArgs = Arguments(
+        args.begin(),
+        args.begin() + static_cast<ptrdiff_t>(selfArgIndex)
+      );
+
+      appendVariadicFunctionArguments(cast<IFunction>(*arg), selfClass, *outArgs);
+
+      break;
+    }
+  }
+
+  if (!outArgs) {
+    return nullptr;
+  }
+
+  selfArgIndex++;
+
+  for (; selfArgIndex < args.size(); selfArgIndex++) {
+    appendVariadicFunctionArgument(args[selfArgIndex], selfClass, *outArgs);
+  }
+
+  return makeSelf(std::move(*outArgs));
+}
+
 Shared<IMathObject> IFunction::preSimplifySelf() const {
   return nullptr;
 }
@@ -152,11 +199,9 @@ void IFunction::registerDefaultObject() const {
 }
 
 void IFunction::initSelf(Arguments inArgs) {
-  const Declaration &decl = getDeclaration();
   assert(areArgumentsNonNull(inArgs));
   args = unwrappArguments(std::move(inArgs));
-  assert(doArgumentsMatch(decl, args));
-  args = compressArguments(decl, getClass(), std::move(args));
+  assert(doArgumentsMatch(getDeclaration(), args));
 }
 
 bool IFunction::areArgumentsNonNull(const Arguments &args) {
@@ -221,110 +266,23 @@ IFunction::Arguments IFunction::unwrappArguments(Arguments args) noexcept {
   return args;
 }
 
-IFunction::Arguments IFunction::compressArguments(const Declaration &decl, const MathObjectClass funcClass, Arguments args) noexcept {
-  if (!decl.isVariadic) {
-    return args;
-  }
-
-  std::optional<Arguments> outArgs;
-  size_t argIndex = 0;
-
-  for (; argIndex < args.size(); argIndex++) {
-    const auto &arg = args[argIndex];
-
-    if (is(funcClass, arg->getClass())) {
-      outArgs = Arguments(
-        std::make_move_iterator(args.begin()),
-        std::make_move_iterator(args.begin() + static_cast<ptrdiff_t>(argIndex))
-      );
-      appendFunctionArguments(cast<IFunction>(*arg), *outArgs);
-      break;
-    }
-  }
-
-  if (!outArgs) {
-    return args;
-  }
-
-  argIndex++;
-
-  for (; argIndex < args.size(); argIndex++) {
-    auto &arg = args[argIndex];
-
-    if (is(funcClass, arg->getClass())) {
-      appendFunctionArguments(cast<IFunction>(*arg), *outArgs);
-    }
-    else {
-      outArgs->emplace_back(std::move(arg));
-    }
-  }
-
-  return std::move(*outArgs);
-}
-
-void IFunction::appendFunctionArguments(const IFunction &func, Arguments &args) noexcept {
-  const Arguments &funcArgs = func.getArguments();
-  args.insert(args.end(), funcArgs.begin(), funcArgs.end());
-}
-
-void IFunction::modify(Argument &arg, const ModifySelfCallback &modifySelf, const ModifyCallback &modify, const ModifyCallback &prevModify, FunctionState stateAfterModify) {
-  auto func = cast<IFunction>(arg);
-  if (!func || func->state >= stateAfterModify) {
-    return;
-  }
-
-  prevModify(arg);
-
-  if (arg != func) {
-    func = cast<IFunction>(arg);
-  }
-
-  if (!func) {
-    return;
-  }
-
-  modifyFunctionArguments(func, modify);
-  arg = func;
-
-  if (auto res = modifySelf(*func)) {
-    modify(res);
-    arg = res;
+void IFunction::appendVariadicFunctionArgument(const Argument &arg, const MathObjectClass &selfClass, Arguments &outArgs) {
+  if (is(selfClass, arg->getClass())) {
+    appendVariadicFunctionArguments(cast<IFunction>(*arg), selfClass, outArgs);
   }
   else {
-    func->state = stateAfterModify;
+    outArgs.emplace_back(arg);
   }
 }
 
-void IFunction::modifyFunctionArguments(Shared<IFunction> &func, const ModifyCallback &modify) {
-  const Arguments &oldArgs = func->getArguments();
-  std::optional<Arguments> newArgsFound;
-  size_t argIndex = 0;
+void IFunction::appendVariadicFunctionArguments(const IFunction &func, const MathObjectClass &selfClass, Arguments &outArgs) noexcept {
+  const Arguments &args = func.getArguments();
 
-  for (; argIndex < oldArgs.size(); argIndex++) {
-    const Argument &oldArg = oldArgs[argIndex];
-    Argument newArg = oldArg;
-    modify(newArg);
+  outArgs.reserve(outArgs.size() + args.size());
 
-    if (newArg != oldArg) {
-      newArgsFound = oldArgs;
-      (*newArgsFound)[argIndex] = newArg;
-      break;
-    }
+  for (const auto &arg : args) {
+    appendVariadicFunctionArgument(arg, selfClass, outArgs);
   }
-
-  if (!newArgsFound) {
-    return;
-  }
-
-  Arguments &newArgs = *newArgsFound;
-
-  argIndex++;
-
-  for (; argIndex < newArgs.size(); argIndex++) {
-    modify(newArgs[argIndex]);
-  }
-
-  func = func->makeSelf(std::move(newArgs));
 }
 
 IFunction::NameToFunctionMakersMap &IFunction::getNameToFunctionMakersMap() {

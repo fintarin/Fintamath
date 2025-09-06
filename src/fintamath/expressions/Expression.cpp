@@ -454,7 +454,8 @@ Expression::Argument Expression::parseFunction(TermStack &argTermsRPN, const Fun
 
 Expression::Arguments Expression::unwrappComma(Argument inArg) {
   if (const auto argFunc = cast<IFunction>(inArg); is<Comma>(argFunc)) {
-    return argFunc->getArguments();
+    Comma::compress(inArg);
+    return cast<IFunction>(inArg)->getArguments();
   }
 
   return {std::move(inArg)};
