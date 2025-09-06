@@ -4,13 +4,24 @@
 
 namespace fintamath::detail {
 
-Shared<IMathObject> Converter::convert(const IMathObject &to, const IMathObject &from) {
-  return getConverter()(to, from);
+Shared<IMathObject> Converter::convert(MathObjectClass toClass, const Shared<IMathObject> &from) {
+  if (!from) {
+    throw InvalidInputException("Argument 'from' is null");
+  }
+
+  const MathObjectClass fromClass = from->getClass();
+  if (toClass == from->getClass()) {
+    return from;
+  }
+
+  const auto& map = getClassPairToCallbackMap();
+  auto iter = map.find(ClassPair{toClass, fromClass});
+  return iter != map.end() ? iter->second(from) : nullptr;
 }
 
-Converter::ConverterMultiMethod &Converter::getConverter() {
-  static ConverterMultiMethod converter;
-  return converter;
+Converter::ClassPairToCallbackMap &Converter::getClassPairToCallbackMap() {
+  static ClassPairToCallbackMap classPairToCallbackMap;
+  return classPairToCallbackMap;
 }
 
 }

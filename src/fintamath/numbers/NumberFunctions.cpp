@@ -1,6 +1,7 @@
 #include "fintamath/numbers/NumberFunctions.hpp"
 
 #include "fintamath/core/Converter.hpp"
+#include "fintamath/core/MultiMethod.hpp"
 #include "fintamath/exceptions/InvalidInputException.hpp"
 #include "fintamath/numbers/Integer.hpp"
 #include "fintamath/numbers/Rational.hpp"
@@ -38,10 +39,10 @@ Shared<INumber> callBinaryMultimethod(const auto &multi, const Shared<INumber> &
   if (lhs->getClass() == rhs->getClass()) {
     return multi(lhs, rhs);
   }
-  if (auto convRhs = convert(*lhs, *rhs)) {
+  if (auto convRhs = convert(lhs, rhs)) {
     return multi(lhs, convRhs);
   }
-  if (auto convLhs = convert(*rhs, *lhs)) {
+  if (auto convLhs = convert(rhs, lhs)) {
     return multi(convLhs, rhs);
   }
   return nullptr;
