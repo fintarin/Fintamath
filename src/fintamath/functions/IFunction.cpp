@@ -251,9 +251,8 @@ bool IFunction::doesArgumentMatch(MathObjectClass expectedClass, const SharedRef
     return true;
   }
 
-  if (is<IFunction>(argClass)) {
-    const auto &func = castChecked<IFunction>(*arg);
-    return is(expectedClass, func.getDeclaration().returnClass);
+  if (auto func = cast<IFunction>(arg)) {
+    return is(expectedClass, func->getDeclaration().returnClass);
   }
 
   return false;
