@@ -171,7 +171,17 @@ Integer &Integer::decrease() {
 
 void Integer::registerDefaultObject() const {
   registerEqualsFunction<Integer>();
+  registerLessFunction<Integer>();
+  registerGreaterFunction<Integer>();
+  registerLessEqualsFunction<Integer>();
+  registerGreaterEqualsFunction<Integer>();
+  registerLessFunction<Integer>();
   registerAddFunction<Integer>();
+  registerSubFunction<Integer>();
+  registerMulFunction<Integer>();
+  registerNegFunction<Integer>();
+
+  // registerDivFunction is called in Rational 
 }
 
 Integer &Integer::operator%=(const Integer &rhs) {

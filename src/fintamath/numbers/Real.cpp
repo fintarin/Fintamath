@@ -274,7 +274,16 @@ void Real::registerDefaultObject() const {
   detail::Converter::add<Real, Rational>();
 
   registerEqualsFunction<Real>();
+  registerLessFunction<Real>();
+  registerGreaterFunction<Real>();
+  registerLessEqualsFunction<Real>();
+  registerGreaterEqualsFunction<Real>();
+  registerLessFunction<Real>();
   registerAddFunction<Real>();
+  registerSubFunction<Real>();
+  registerMulFunction<Real>();
+  registerDivFunction<Real>();
+  registerNegFunction<Real>();
 
   [[maybe_unused]] static const unsigned defaultPrecision = [] {
     constexpr unsigned precision = 20;

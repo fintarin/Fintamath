@@ -11,7 +11,7 @@ FINTAMATH_INTERFACE_IMPLEMENTATION(INumber)
 
 namespace {
 
-auto callBinaryMultimethod(const auto &multimethod, const SharedRef<INumber> &lhs, const SharedRef<INumber> &rhs) {
+auto callMultimethod(const auto &multimethod, const SharedRef<INumber> &lhs, const SharedRef<INumber> &rhs) {
   auto res = multimethod(lhs, rhs);
 
   if (!res) {
@@ -26,10 +26,31 @@ auto callBinaryMultimethod(const auto &multimethod, const SharedRef<INumber> &lh
   return res;
 }
 
+auto callMultimethod(const auto &multimethod, const SharedRef<INumber> &rhs) {
+  return multimethod(rhs);
+}
+
+void throwInvalidInputException(const std::string_view funcName, const MathObjectClass lhsClass, const MathObjectClass rhsClass) {
+  throw InvalidInputException(fmt::format(
+    R"(Unable to call {} with arguments {} and {})",
+    funcName,
+    lhsClass->getName(),
+    rhsClass->getName()
+  ));
+}
+
+void throwInvalidInputException(const std::string_view funcName, const MathObjectClass rhsClass) {
+  throw InvalidInputException(fmt::format(
+    R"(Unable to call {} with argument)",
+    funcName,
+    rhsClass->getName()
+  ));
+}
+
 }
 
 std::optional<unsigned> INumber::getPrecision() const noexcept {
-  return {};
+  return std::nullopt;
 }
 
 bool INumber::isComplex() const noexcept {
@@ -44,19 +65,99 @@ bool INumber::equals(const SharedRef<IMathObject> &lhs, const SharedRef<IMathObj
 
   const auto lhsNum = cast<INumber>(lhs);
 
-  auto res = callBinaryMultimethod(INumber::getEqualsMultimethod(), lhsNum.toRef(), rhsNum.toRef());
+  if (static_cast<bool>(lhsNum->getPrecision()) != static_cast<bool>(rhsNum->getPrecision())) {
+    return false;
+  }
+
+  std::optional<bool> res = callMultimethod(INumber::getEqualsMultimethod(), lhsNum.toRef(), rhsNum.toRef());
   return res.value_or(false);
 }
 
-SharedRef<INumber> add(const SharedRef<INumber> &lhs, const SharedRef<INumber> &rhs) {
-  auto res = callBinaryMultimethod(INumber::getAddMultimethod(), lhs, rhs);
+bool less(const SharedRef<INumber> &lhs, const SharedRef<INumber> &rhs) {
+  std::optional<bool> res = callMultimethod(INumber::getLessMultimethod(), lhs, rhs);
 
   if (!res) {
-    throw InvalidInputException(fmt::format(
-      R"(Unable to call add with arguments {} and {})",
-      lhs->getClass()->getName(),
-      rhs->getClass()->getName()
-    ));
+    throwInvalidInputException("less", lhs->getClass(), rhs->getClass());
+  }
+
+  return *res;
+}
+
+bool greater(const SharedRef<INumber> &lhs, const SharedRef<INumber> &rhs) {
+  std::optional<bool> res = callMultimethod(INumber::getGreaterMultimethod(), lhs, rhs);
+
+  if (!res) {
+    throwInvalidInputException("greater", lhs->getClass(), rhs->getClass());
+  }
+
+  return *res;
+}
+
+bool lessEquals(const SharedRef<INumber> &lhs, const SharedRef<INumber> &rhs) {
+  std::optional<bool> res = callMultimethod(INumber::getLessEqualsMultimethod(), lhs, rhs);
+
+  if (!res) {
+    throwInvalidInputException("lessEquals", lhs->getClass(), rhs->getClass());
+  }
+
+  return *res;
+}
+
+bool greaterEquals(const SharedRef<INumber> &lhs, const SharedRef<INumber> &rhs) {
+  std::optional<bool> res = callMultimethod(INumber::getGreaterEqualsMultimethod(), lhs, rhs);
+
+  if (!res) {
+    throwInvalidInputException("greaterEquals", lhs->getClass(), rhs->getClass());
+  }
+
+  return *res;
+}
+
+SharedRef<INumber> add(const SharedRef<INumber> &lhs, const SharedRef<INumber> &rhs) {
+  std::optional<SharedRef<INumber>> res = callMultimethod(INumber::getAddMultimethod(), lhs, rhs);
+
+  if (!res) {
+    throwInvalidInputException("add", lhs->getClass(), rhs->getClass());
+  }
+
+  return *res;
+}
+
+SharedRef<INumber> sub(const SharedRef<INumber> &lhs, const SharedRef<INumber> &rhs) {
+  std::optional<SharedRef<INumber>> res = callMultimethod(INumber::getSubMultimethod(), lhs, rhs);
+
+  if (!res) {
+    throwInvalidInputException("sub", lhs->getClass(), rhs->getClass());
+  }
+
+  return *res;
+}
+
+SharedRef<INumber> mul(const SharedRef<INumber> &lhs, const SharedRef<INumber> &rhs) {
+  std::optional<SharedRef<INumber>> res = callMultimethod(INumber::getMulMultimethod(), lhs, rhs);
+
+  if (!res) {
+    throwInvalidInputException("mul", lhs->getClass(), rhs->getClass());
+  }
+
+  return *res;
+}
+
+SharedRef<INumber> div(const SharedRef<INumber> &lhs, const SharedRef<INumber> &rhs) {
+  std::optional<SharedRef<INumber>> res = callMultimethod(INumber::getDivMultimethod(), lhs, rhs);
+
+  if (!res) {
+    throwInvalidInputException("div", lhs->getClass(), rhs->getClass());
+  }
+
+  return *res;
+}
+
+SharedRef<INumber> neg(const SharedRef<INumber> &rhs) {
+  std::optional<SharedRef<INumber>> res = callMultimethod(INumber::getNegMultimethod(), rhs);
+
+  if (!res) {
+    throwInvalidInputException("neg", rhs->getClass());
   }
 
   return *res;
@@ -67,8 +168,48 @@ INumber::BoolBinaryMultiMethod &INumber::getEqualsMultimethod() {
   return multimethod;
 }
 
+INumber::BoolBinaryMultiMethod &INumber::getLessMultimethod() {
+  static BoolBinaryMultiMethod multimethod;
+  return multimethod;
+}
+
+INumber::BoolBinaryMultiMethod &INumber::getGreaterMultimethod() {
+  static BoolBinaryMultiMethod multimethod;
+  return multimethod;
+}
+
+INumber::BoolBinaryMultiMethod &INumber::getLessEqualsMultimethod() {
+  static BoolBinaryMultiMethod multimethod;
+  return multimethod;
+}
+
+INumber::BoolBinaryMultiMethod &INumber::getGreaterEqualsMultimethod() {
+  static BoolBinaryMultiMethod multimethod;
+  return multimethod;
+}
+
 INumber::NumberBinaryMultiMethod &INumber::getAddMultimethod() {
   static NumberBinaryMultiMethod multimethod;
+  return multimethod;
+}
+
+INumber::NumberBinaryMultiMethod &INumber::getSubMultimethod() {
+  static NumberBinaryMultiMethod multimethod;
+  return multimethod;
+}
+
+INumber::NumberBinaryMultiMethod &INumber::getMulMultimethod() {
+  static NumberBinaryMultiMethod multimethod;
+  return multimethod;
+}
+
+INumber::NumberBinaryMultiMethod &INumber::getDivMultimethod() {
+  static NumberBinaryMultiMethod multimethod;
+  return multimethod;
+}
+
+INumber::NumberUnaryMultiMethod &INumber::getNegMultimethod() {
+  static NumberUnaryMultiMethod multimethod;
   return multimethod;
 }
 

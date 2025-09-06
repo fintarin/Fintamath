@@ -26,11 +26,28 @@ concept IsSmartPointer = requires(T v) {
 };
 
 template <typename T>
-using EqualTo = std::equal_to<T>;
+struct AddCallable {
+  constexpr T operator()(const T &lhs, const T &rhs) const { return lhs + rhs; }
+};
 
-template <typename Res, typename T>
-struct AddTo {
-  constexpr Res operator()(const T &lhs, const T &rhs) const { return lhs + rhs; }
+template <typename T>
+struct SubCallable {
+  constexpr T operator()(const T &lhs, const T &rhs) const { return lhs - rhs; }
+};
+
+template <typename T>
+struct MulCallable {
+  constexpr T operator()(const T &lhs, const T &rhs) const { return lhs * rhs; }
+};
+
+template <typename T>
+struct DivCallable {
+  constexpr T operator()(const T &lhs, const T &rhs) const { return lhs / rhs; }
+};
+
+template <typename T>
+struct NegCallable {
+  constexpr T operator()(const T &rhs) const { return -rhs; }
 };
 
 template <typename Number, typename Callback>

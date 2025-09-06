@@ -195,7 +195,20 @@ void Rational::registerDefaultObject() const noexcept {
   detail::Converter::add<Rational, Integer>();
 
   registerEqualsFunction<Rational>();
+  registerLessFunction<Rational>();
+  registerGreaterFunction<Rational>();
+  registerLessEqualsFunction<Rational>();
+  registerGreaterEqualsFunction<Rational>();
+  registerLessFunction<Rational>();
   registerAddFunction<Rational>();
+  registerSubFunction<Rational>();
+  registerMulFunction<Rational>();
+  registerDivFunction<Rational>();
+  registerNegFunction<Rational>();
+
+  registerDivFunction<Integer>([](const Integer &lhs, const Integer &rhs) {
+    return Rational(lhs, rhs);
+  });
 }
 
 void Rational::toIrreducibleRational() {
