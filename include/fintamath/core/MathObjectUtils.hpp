@@ -13,26 +13,12 @@ namespace fintamath {
 class IMathObject;
 
 constexpr bool is(const MathObjectClass to, const MathObjectClass from) noexcept {
-  assert(to);
-
-  for (MathObjectClass parent = from; parent; parent = parent->getParent()) {
-    if (parent == to) {
-      return true;
-    }
-  }
-
-  return false;
+  return from && from->is(to);
 }
 
 template <std::derived_from<IMathObject> To>
 constexpr bool is(const MathObjectClass from) noexcept {
-  for (MathObjectClass parent = from; parent; parent = parent->getParent()) {
-    if (parent == To::getClassStatic()) {
-      return true;
-    }
-  }
-
-  return false;
+  return is(To::getClassStatic(), from);
 }
 
 template <std::derived_from<IMathObject> To, std::derived_from<IMathObject> From>
