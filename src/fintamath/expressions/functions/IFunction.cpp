@@ -21,6 +21,12 @@ std::string IFunction::toString() const noexcept {
   return outStr;
 }
 
+const IFunction::FunctionMakers *IFunction::parseFunctionMakers(const std::string &str) {
+  const NameToFunctionMakersMap &nameToFunctionMakersMap = getNameToFunctionMakersMap();
+  const auto parsedConstantIter = nameToFunctionMakersMap.find(str);
+  return parsedConstantIter != nameToFunctionMakersMap.end() ? &parsedConstantIter->second : nullptr;
+}
+
 void IFunction::registerDefaultObject() const {
   const FunctionDeclaration &declaration = getFunctionDeclaration();
   detail::Tokenizer::registerToken(declaration.functionName);

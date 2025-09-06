@@ -3,7 +3,6 @@
 #include <functional>
 #include <unordered_map>
 
-#include "fintamath/core/CoreUtils.hpp"
 #include "fintamath/expressions/IExpression.hpp"
 
 namespace fintamath {
@@ -36,6 +35,8 @@ public:
   virtual const FunctionDeclaration &getFunctionDeclaration() const noexcept = 0;
 
   std::string toString() const noexcept override;
+
+  static const FunctionMakers* parseFunctionMakers(const std::string& str);
 
   template <typename T>
   friend std::unique_ptr<IFunction> makeFunction(IFunction::Children children);
