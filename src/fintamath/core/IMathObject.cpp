@@ -8,6 +8,10 @@ std::string IMathObject::toString() const noexcept {
   return std::string(getClass()->getName());
 }
 
+std::unique_ptr<IMathObject> IMathObject::toMinimalObject() const noexcept {
+  return nullptr;
+}
+
 void IMathObject::registerDefaultObject() const {
 }
 

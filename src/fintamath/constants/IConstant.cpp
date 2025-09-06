@@ -7,6 +7,10 @@ namespace fintamath {
 
 FINTAMATH_INTERFACE_IMPLEMENTATION(IConstant)
 
+std::unique_ptr<IMathObject> IConstant::approximate() const noexcept {
+  return nullptr;
+}
+
 std::shared_ptr<const IConstant> IConstant::parseConstant(const std::string &str) {
   const NameToConstantMap &nameToConstantMap = getNameToConstantMap();
   const auto parsedConstantIter = nameToConstantMap.find(str);

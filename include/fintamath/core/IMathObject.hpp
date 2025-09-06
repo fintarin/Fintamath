@@ -25,6 +25,8 @@ public:
 
   virtual std::unique_ptr<IMathObject> clone() && noexcept = 0;
 
+  virtual std::unique_ptr<IMathObject> toMinimalObject() const noexcept;
+
 protected:
   virtual void registerDefaultObject() const;
 };
