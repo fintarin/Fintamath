@@ -4,7 +4,7 @@
 #include <cstddef>
 #include <string>
 
-#include "fintamath/core/FintamathClassBody.hpp"
+#include "fintamath/core/ClassBody.hpp"
 #include "fintamath/core/Hash.hpp"
 #include "fintamath/core/IWithArithmeticOperators.hpp"
 #include "fintamath/core/IWithCompareOperators.hpp"

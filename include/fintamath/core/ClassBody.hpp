@@ -2,7 +2,7 @@
 
 #include <fmt/format.h>
 
-#include "fintamath/core/FintamathInterfaceBody.hpp"
+#include "fintamath/core/InterfaceBody.hpp"
 
 #define FINTAMATH_CLASS_BODY(Class, SuperClass)                   \
   FINTAMATH_INTERFACE_BODY(Class, SuperClass)                     \
