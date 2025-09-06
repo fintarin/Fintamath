@@ -15,25 +15,35 @@ TEST(BooleanTests, stringConstructorTest) {
   EXPECT_EQ(Boolean("False"), false);
 
   EXPECT_THAT(
-      [] { Boolean(std::string("")); },
-      testing::ThrowsMessage<InvalidInputException>(
-          testing::StrEq(R"(Unable to parse Boolean from "" (expected "True" or "False"))")));
+    [] { Boolean(std::string("")); },
+    testing::ThrowsMessage<InvalidInputException>(
+      testing::StrEq(R"(Unable to parse Boolean from "" (expected "True" or "False"))")
+    )
+  );
   EXPECT_THAT(
-      [] { Boolean(std::string("true")); },
-      testing::ThrowsMessage<InvalidInputException>(
-          testing::StrEq(R"(Unable to parse Boolean from "true" (expected "True" or "False"))")));
+    [] { Boolean(std::string("true")); },
+    testing::ThrowsMessage<InvalidInputException>(
+      testing::StrEq(R"(Unable to parse Boolean from "true" (expected "True" or "False"))")
+    )
+  );
   EXPECT_THAT(
-      [] { Boolean(std::string("false")); },
-      testing::ThrowsMessage<InvalidInputException>(
-          testing::StrEq(R"(Unable to parse Boolean from "false" (expected "True" or "False"))")));
+    [] { Boolean(std::string("false")); },
+    testing::ThrowsMessage<InvalidInputException>(
+      testing::StrEq(R"(Unable to parse Boolean from "false" (expected "True" or "False"))")
+    )
+  );
   EXPECT_THAT(
-      [] { Boolean(std::string("10")); },
-      testing::ThrowsMessage<InvalidInputException>(
-          testing::StrEq(R"(Unable to parse Boolean from "10" (expected "True" or "False"))")));
+    [] { Boolean(std::string("10")); },
+    testing::ThrowsMessage<InvalidInputException>(
+      testing::StrEq(R"(Unable to parse Boolean from "10" (expected "True" or "False"))")
+    )
+  );
   EXPECT_THAT(
-      [] { Boolean(std::string("i")); },
-      testing::ThrowsMessage<InvalidInputException>(
-          testing::StrEq(R"(Unable to parse Boolean from "i" (expected "True" or "False"))")));
+    [] { Boolean(std::string("i")); },
+    testing::ThrowsMessage<InvalidInputException>(
+      testing::StrEq(R"(Unable to parse Boolean from "i" (expected "True" or "False"))")
+    )
+  );
 }
 
 TEST(BooleanTests, boolConstructorTest) {

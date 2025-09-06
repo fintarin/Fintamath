@@ -22,77 +22,113 @@ TEST(RationalTests, stringConstructorTest) {
   EXPECT_EQ(Rational("1.").toString(), "1");
 
   EXPECT_THAT(
-      [] { Rational(""); },
-      testing::ThrowsMessage<InvalidInputException>(
-          testing::StrEq(R"(Unable to parse Rational from "")")));
+    [] { Rational(""); },
+    testing::ThrowsMessage<InvalidInputException>(
+      testing::StrEq(R"(Unable to parse Rational from "")")
+    )
+  );
   EXPECT_THAT(
-      [] { Rational("--10"); },
-      testing::ThrowsMessage<InvalidInputException>(
-          testing::StrEq(R"(Unable to parse Rational from "--10")")));
+    [] { Rational("--10"); },
+    testing::ThrowsMessage<InvalidInputException>(
+      testing::StrEq(R"(Unable to parse Rational from "--10")")
+    )
+  );
   EXPECT_THAT(
-      [] { Rational("test"); },
-      testing::ThrowsMessage<InvalidInputException>(
-          testing::StrEq(R"(Unable to parse Rational from "test")")));
+    [] { Rational("test"); },
+    testing::ThrowsMessage<InvalidInputException>(
+      testing::StrEq(R"(Unable to parse Rational from "test")")
+    )
+  );
   EXPECT_THAT(
-      [] { Rational("+"); },
-      testing::ThrowsMessage<InvalidInputException>(
-          testing::StrEq(R"(Unable to parse Rational from "+")")));
+    [] { Rational("+"); },
+    testing::ThrowsMessage<InvalidInputException>(
+      testing::StrEq(R"(Unable to parse Rational from "+")")
+    )
+  );
   EXPECT_THAT(
-      [] { Rational("939849.0-0023"); },
-      testing::ThrowsMessage<InvalidInputException>(
-          testing::StrEq(R"(Unable to parse Rational from "939849.0-0023")")));
+    [] { Rational("939849.0-0023"); },
+    testing::ThrowsMessage<InvalidInputException>(
+      testing::StrEq(R"(Unable to parse Rational from "939849.0-0023")")
+    )
+  );
   EXPECT_THAT(
-      [] { Rational("a"); },
-      testing::ThrowsMessage<InvalidInputException>(
-          testing::StrEq(R"(Unable to parse Rational from "a")")));
+    [] { Rational("a"); },
+    testing::ThrowsMessage<InvalidInputException>(
+      testing::StrEq(R"(Unable to parse Rational from "a")")
+    )
+  );
   EXPECT_THAT(
-      [] { Rational("."); },
-      testing::ThrowsMessage<InvalidInputException>(
-          testing::StrEq(R"(Unable to parse Rational from ".")")));
+    [] { Rational("."); },
+    testing::ThrowsMessage<InvalidInputException>(
+      testing::StrEq(R"(Unable to parse Rational from ".")")
+    )
+  );
   EXPECT_THAT(
-      [] { Rational("a.1"); },
-      testing::ThrowsMessage<InvalidInputException>(
-          testing::StrEq(R"(Unable to parse Rational from "a.1")")));
+    [] { Rational("a.1"); },
+    testing::ThrowsMessage<InvalidInputException>(
+      testing::StrEq(R"(Unable to parse Rational from "a.1")")
+    )
+  );
   EXPECT_THAT(
-      [] { Rational("1.a"); },
-      testing::ThrowsMessage<InvalidInputException>(
-          testing::StrEq(R"(Unable to parse Rational from "1.a")")));
+    [] { Rational("1.a"); },
+    testing::ThrowsMessage<InvalidInputException>(
+      testing::StrEq(R"(Unable to parse Rational from "1.a")")
+    )
+  );
   EXPECT_THAT(
-      [] { Rational("1a.1"); },
-      testing::ThrowsMessage<InvalidInputException>(
-          testing::StrEq(R"(Unable to parse Rational from "1a.1")")));
+    [] { Rational("1a.1"); },
+    testing::ThrowsMessage<InvalidInputException>(
+      testing::StrEq(R"(Unable to parse Rational from "1a.1")")
+    )
+  );
   EXPECT_THAT(
-      [] { Rational("1.1a"); },
-      testing::ThrowsMessage<InvalidInputException>(
-          testing::StrEq(R"(Unable to parse Rational from "1.1a")")));
+    [] { Rational("1.1a"); },
+    testing::ThrowsMessage<InvalidInputException>(
+      testing::StrEq(R"(Unable to parse Rational from "1.1a")")
+    )
+  );
   EXPECT_THAT(
-      [] { Rational(".1."); },
-      testing::ThrowsMessage<InvalidInputException>(
-          testing::StrEq(R"(Unable to parse Rational from ".1.")")));
+    [] { Rational(".1."); },
+    testing::ThrowsMessage<InvalidInputException>(
+      testing::StrEq(R"(Unable to parse Rational from ".1.")")
+    )
+  );
   EXPECT_THAT(
-      [] { Rational("--10.-1"); },
-      testing::ThrowsMessage<InvalidInputException>(
-          testing::StrEq(R"(Unable to parse Rational from "--10.-1")")));
+    [] { Rational("--10.-1"); },
+    testing::ThrowsMessage<InvalidInputException>(
+      testing::StrEq(R"(Unable to parse Rational from "--10.-1")")
+    )
+  );
   EXPECT_THAT(
-      [] { Rational("10.-1"); },
-      testing::ThrowsMessage<InvalidInputException>(
-          testing::StrEq(R"(Unable to parse Rational from "10.-1")")));
+    [] { Rational("10.-1"); },
+    testing::ThrowsMessage<InvalidInputException>(
+      testing::StrEq(R"(Unable to parse Rational from "10.-1")")
+    )
+  );
   EXPECT_THAT(
-      [] { Rational("1-0.1"); },
-      testing::ThrowsMessage<InvalidInputException>(
-          testing::StrEq(R"(Unable to parse Rational from "1-0.1")")));
+    [] { Rational("1-0.1"); },
+    testing::ThrowsMessage<InvalidInputException>(
+      testing::StrEq(R"(Unable to parse Rational from "1-0.1")")
+    )
+  );
   EXPECT_THAT(
-      [] { Rational("10-.1"); },
-      testing::ThrowsMessage<InvalidInputException>(
-          testing::StrEq(R"(Unable to parse Rational from "10-.1")")));
+    [] { Rational("10-.1"); },
+    testing::ThrowsMessage<InvalidInputException>(
+      testing::StrEq(R"(Unable to parse Rational from "10-.1")")
+    )
+  );
   EXPECT_THAT(
-      [] { Rational("10.--1"); },
-      testing::ThrowsMessage<InvalidInputException>(
-          testing::StrEq(R"(Unable to parse Rational from "10.--1")")));
+    [] { Rational("10.--1"); },
+    testing::ThrowsMessage<InvalidInputException>(
+      testing::StrEq(R"(Unable to parse Rational from "10.--1")")
+    )
+  );
   EXPECT_THAT(
-      [] { Rational("1.10.1"); },
-      testing::ThrowsMessage<InvalidInputException>(
-          testing::StrEq(R"(Unable to parse Rational from "1.10.1")")));
+    [] { Rational("1.10.1"); },
+    testing::ThrowsMessage<InvalidInputException>(
+      testing::StrEq(R"(Unable to parse Rational from "1.10.1")")
+    )
+  );
 }
 
 TEST(RationalTests, integerIntegerConstructorTest) {
@@ -101,9 +137,11 @@ TEST(RationalTests, integerIntegerConstructorTest) {
   EXPECT_EQ(Rational(2849300, -1893).toString(), "-2849300/1893");
 
   EXPECT_THAT(
-      [] { Rational(23070, 0); },
-      testing::ThrowsMessage<UndefinedException>(
-          testing::StrEq(R"(div(23070, 0) is undefined (division by zero))")));
+    [] { Rational(23070, 0); },
+    testing::ThrowsMessage<UndefinedException>(
+      testing::StrEq(R"(div(23070, 0) is undefined (division by zero))")
+    )
+  );
 }
 
 TEST(RationalTests, integerConstructorTest) {
@@ -270,9 +308,11 @@ TEST(RationalTests, divideAssignmentOperatorTest) {
   EXPECT_EQ(Rational(-738, 10) /= Rational(-5, 2), Rational(738, 25));
 
   EXPECT_THAT(
-      [] { Rational(-738, -10) /= Rational("0"); },
-      testing::ThrowsMessage<UndefinedException>(
-          testing::StrEq(R"(div(369/5, 0) is undefined (division by zero))")));
+    [] { Rational(-738, -10) /= Rational("0"); },
+    testing::ThrowsMessage<UndefinedException>(
+      testing::StrEq(R"(div(369/5, 0) is undefined (division by zero))")
+    )
+  );
 }
 
 TEST(RationalTests, integerDivideAssignmentOperatorTest) {
