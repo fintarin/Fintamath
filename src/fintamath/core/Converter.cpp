@@ -5,9 +5,7 @@
 namespace fintamath::detail {
 
 Shared<IMathObject> Converter::convert(MathObjectClass toClass, const Shared<IMathObject> &from) {
-  if (!from) {
-    throw InvalidInputException("Argument 'from' is null");
-  }
+  assert(from);
 
   const MathObjectClass fromClass = from->getClass();
   if (toClass == from->getClass()) {

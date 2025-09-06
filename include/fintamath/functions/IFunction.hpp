@@ -105,9 +105,7 @@ protected:
   void initSelf(Arguments inArgs);
 
 private:
-  static void validateArgumentsNonNull(const Arguments &args);
-
-  static void validateArgumentsMatch(const Declaration &decl, const Arguments &args);
+  static bool areArgumentsNonNull(const Arguments &args);
 
   static bool doArgumentsMatch(const Declaration &decl, const Arguments &args) noexcept;
 

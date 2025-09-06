@@ -51,9 +51,7 @@ private:
   template <typename... Args>
   static CallbackId getFunctionId(const Args &...args) {
     if constexpr (requires { CallbackId(args->getClass()...); }) {
-      if ((!args || ...)) {
-        throw InvalidInputException("One of the arguments is null");
-      }
+      assert((args && ...));
       return CallbackId(args->getClass()...);
     }
     else {

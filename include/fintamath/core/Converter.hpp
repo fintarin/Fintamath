@@ -7,7 +7,6 @@
 #include "fintamath/core/Hash.hpp"
 #include "fintamath/core/IMathObject.hpp"
 #include "fintamath/core/MathObjectUtils.hpp"
-#include "fintamath/exceptions/InvalidInputException.hpp"
 
 namespace fintamath {
 
@@ -51,9 +50,7 @@ Shared<IMathObject> convert(MathObjectClass toClass, const Shared<From> &from) {
 
 template <std::derived_from<IMathObject> To, std::derived_from<IMathObject> From>
 Shared<To> convert(const Shared<To> &to, const Shared<From> &from) {
-  if (!to) {
-    throw InvalidInputException("Argument 'to' is null");
-  }
+  assert(from);
   return cast<To>(detail::Converter::convert(to->getClass(), from));
 }
 
