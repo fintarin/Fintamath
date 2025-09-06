@@ -15,10 +15,10 @@ public:
   using Ptr = const MathObjectClassData *;
 
 public:
-  constexpr MathObjectClassData(Name inName, Ptr inParent = nullptr) noexcept
+  consteval MathObjectClassData(Name inName, Ptr inParent = nullptr) noexcept
       : name(inName),
         parent(inParent) {
-  }
+}
 
   constexpr MathObjectClassData(const MathObjectClassData &) noexcept = delete;
 
