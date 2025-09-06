@@ -37,7 +37,7 @@ void IConstant::registerDefaultObject() const {
   assert(empaceResult.second);
 }
 
-IConstant::NameToConstantMap &fintamath::IConstant::getNameToConstantMap() {
+IConstant::NameToConstantMap &IConstant::getNameToConstantMap() {
   static NameToConstantMap nameToConstantMap;
   return nameToConstantMap;
 }
