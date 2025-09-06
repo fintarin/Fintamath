@@ -21,8 +21,12 @@ const Add::FunctionDeclaration &Add::getFunctionDeclaration() const noexcept {
   return addDeclaration;
 }
 
-std::unique_ptr<IFunction> Add::makeFunctionSelf(Arguments inArg) const {
-  return makeObject<Add>(Add(std::move(inArg)));
+std::unique_ptr<IFunction> Add::makeSelf(Arguments inArg) const {
+  return make(std::move(inArg));
+}
+
+std::unique_ptr<Add> Add::make(Arguments inArgs) {
+  return makeObject<Add>(Add(std::move(inArgs)));
 }
 
 }

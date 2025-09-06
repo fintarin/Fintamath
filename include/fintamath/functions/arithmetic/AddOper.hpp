@@ -1,17 +1,19 @@
 #pragma once
 
-#include "fintamath/core/FintamathClassBody.hpp"
+#include "fintamath/functions/FintamathFunctionClassBody.hpp"
 #include "fintamath/functions/IOperator.hpp"
 
 namespace fintamath {
 
+class Add;
+
 class AddOper : public IOperator {
-  FINTAMATH_CLASS_BODY(AddOper, IOperator)
+  FINTAMATH_FUNCTION_CLASS_BODY(AddOper, IOperator)
 
 public:
   const OperatorDeclaration &getOperatorDeclaration() const noexcept override;
 
-  std::unique_ptr<IFunction> makeFunctionSelf(Arguments inArgs) const override;
+  static std::unique_ptr<Add> make(Arguments inArgs);
 
 private:
   static const OperatorDeclaration addOperDeclaration;

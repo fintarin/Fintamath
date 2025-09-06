@@ -1,10 +1,22 @@
 #include "fintamath/functions/IFunction.hpp"
 
+#include "fintamath/core/MathObjectUtils.hpp"
 #include "fintamath/core/Tokenizer.hpp"
 
 namespace fintamath {
 
 FINTAMATH_INTERFACE_IMPLEMENTATION(IFunction)
+
+IFunction::FunctionMaker::FunctionMaker(const IFunction &inDefaultFunc) : defaultFunc(inDefaultFunc) {
+}
+
+std::unique_ptr<IFunction> IFunction::FunctionMaker::makeFunction(Arguments inArgs) {
+  return defaultFunc.get().makeSelf(std::move(inArgs));
+}
+
+std::unique_ptr<IFunction> IFunction::FunctionMaker::doArgumentsMatch(Arguments inArgs) {
+  return defaultFunc.get().makeSelf(std::move(inArgs));
+}
 
 IFunction::IFunction(Arguments inArgs) : args(std::move(inArgs)) {
 }
@@ -31,19 +43,17 @@ void IFunction::registerDefaultObject() const {
   const FunctionDeclaration &declaration = getFunctionDeclaration();
   detail::Tokenizer::registerToken(declaration.name);
 
-  const auto selfMaker = [this](Arguments inArgs) {
-    return makeFunctionSelf(std::move(inArgs));
-  };
   FunctionMakers &functionMakers = getNameToFunctionMakersMap()[declaration.name];
-  functionMakers.emplace_back(FunctionMaker{
-    .maker = std::move(selfMaker),
-    .defaultObject = *this,
-  });
+  functionMakers.emplace_back(cast<IFunction>(getDefaultObject()));
+}
+
+bool IFunction::doArgumentsMatch(Arguments inArgs) const {
+  return true;
 }
 
 IFunction::NameToFunctionMakersMap &IFunction::getNameToFunctionMakersMap() {
-  static NameToFunctionMakersMap parseInputToFunctionMakerMap;
-  return parseInputToFunctionMakerMap;
+  static NameToFunctionMakersMap nameToFunctionMakerMap;
+  return nameToFunctionMakerMap;
 }
 
 }
