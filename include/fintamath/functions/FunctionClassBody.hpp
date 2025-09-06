@@ -1,7 +1,5 @@
 #pragma once
 
-#include <fmt/format.h>
-
 #include "fintamath/core/ClassBody.hpp"
 
 #define FINTAMATH_FUNCTION_CLASS_BODY(Class, SuperClass)                \
