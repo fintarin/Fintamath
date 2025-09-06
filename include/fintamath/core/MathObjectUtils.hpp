@@ -7,6 +7,7 @@
 #include "fintamath/core/MathObjectClass.hpp"
 #include "fintamath/core/Pointers.hpp"
 #include "fintamath/core/Qualifiers.hpp"
+#include "fintamath/exceptions/BadCastException.hpp"
 
 namespace fintamath {
 
@@ -71,20 +72,24 @@ inline auto cast(From &&from) noexcept {
 
 template <std::derived_from<IMathObject> To, typename From>
   requires(std::is_base_of_v<IMathObject, typename detail::RemoveQualifiers<From>>)
-inline decltype(auto) castRef(From &&from) noexcept {
+inline decltype(auto) castChecked(From &&from) {
   using ResultType = detail::CopyQualifiersFromToType<From, To>;
 
-  assert(is<To>(from));
+  if (!is<To>(from)) {
+    throw BadCastException(from.getClass()->getName(), To::getClassStatic()->getName());
+  }
 
   return static_cast<ResultType>(std::forward<From>(from));
 }
 
 template <std::derived_from<IMathObject> To, typename From>
   requires(std::is_base_of_v<IMathObject, typename detail::RemoveQualifiers<From>::ElementType>)
-inline auto castRef(From &&from) noexcept {
+inline auto castChecked(From &&from) {
   using ResultType = detail::CopyQualifiersFromToType<typename detail::RemoveQualifiers<From>::ElementType, To>;
 
-  assert(is<To>(from));
+  if (!is<To>(from)) {
+    throw BadCastException(from->getClass()->getName(), To::getClassStatic()->getName());
+  }
 
   return SharedRef<ResultType>(staticPointerCast<ResultType>(std::forward<From>(from)));
 }

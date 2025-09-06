@@ -149,7 +149,7 @@ SharedPtr<IMathObject> IFunction::compressSelf() const {
         args.begin() + static_cast<ptrdiff_t>(selfArgIndex)
       );
 
-      appendVariadicFunctionArguments(castRef<IFunction>(*arg), selfClass, *outArgs);
+      appendVariadicFunctionArguments(castChecked<IFunction>(*arg), selfClass, *outArgs);
 
       break;
     }
@@ -205,7 +205,7 @@ void IFunction::registerDefaultObject() const {
   detail::Tokenizer::registerToken(decl.name);
 
   FunctionMakers &makers = getNameToFunctionMakersMap()[decl.name];
-  makers.emplace_back(castRef<IFunction>(getDefaultObject()));
+  makers.emplace_back(castChecked<IFunction>(getDefaultObject()));
 }
 
 void IFunction::initSelf(Arguments inArgs) {
@@ -252,7 +252,7 @@ bool IFunction::doesArgumentMatch(MathObjectClass expectedClass, const SharedRef
   }
 
   if (is<IFunction>(argClass)) {
-    const auto &func = castRef<IFunction>(*arg);
+    const auto &func = castChecked<IFunction>(*arg);
     return is(expectedClass, func.getDeclaration().returnClass);
   }
 
@@ -271,7 +271,7 @@ IFunction::Arguments IFunction::unwrappArguments(Arguments args) noexcept {
 
 void IFunction::appendVariadicFunctionArgument(const SharedRef<IMathObject> &arg, const MathObjectClass &selfClass, Arguments &outArgs) {
   if (is(selfClass, arg->getClass())) {
-    appendVariadicFunctionArguments(castRef<IFunction>(*arg), selfClass, outArgs);
+    appendVariadicFunctionArguments(castChecked<IFunction>(*arg), selfClass, outArgs);
   }
   else {
     outArgs.emplace_back(arg);

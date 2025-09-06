@@ -31,7 +31,7 @@ public:
     constexpr auto funcId = CallbackId(Args::getClassStatic()...);
 
     idToFunctionMap[funcId] = [func = std::move(func)](ArgsBase... args) -> ResBase {
-      return func(castRef<Args>(args)...);
+      return func(castChecked<Args>(args)...);
     };
   }
 

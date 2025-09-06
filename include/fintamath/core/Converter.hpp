@@ -36,7 +36,7 @@ inline void Converter::add() {
   getClassPairToCallbackMap().emplace(
     ClassPair{To::getClassStatic(), From::getClassStatic()},
     [](const SharedRef<IMathObject> &from) {
-      return makeShared<To>(castRef<From>(*from));
+      return makeShared<To>(castChecked<From>(*from));
     }
   );
 }
