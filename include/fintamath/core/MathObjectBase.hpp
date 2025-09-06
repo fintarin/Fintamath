@@ -5,6 +5,9 @@
 namespace fintamath {
 
 class MathObjectBase {
+protected:
+  MathObjectBase() = default;
+
 public:
   virtual ~MathObjectBase() noexcept = default;
 
@@ -13,6 +16,8 @@ public:
   }
 
   virtual MathObjectClass getClass() const noexcept;
+
+  virtual const MathObjectBase &getDefaultObject() const;
 };
 
 }
