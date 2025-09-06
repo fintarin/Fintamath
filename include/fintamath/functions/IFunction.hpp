@@ -67,6 +67,11 @@ public:
 private:
   using NameToFunctionMakersMap = std::unordered_map<std::string, FunctionMakers>;
 
+protected:
+  IFunction() = default;
+
+  explicit IFunction(const Declaration &inDeclaration, Arguments inArgs);
+
 public:
   virtual const Declaration &getDeclaration() const noexcept = 0;
 
@@ -104,8 +109,6 @@ protected:
   bool equals(const SharedRef<IMathObject> &lhs, const SharedRef<IMathObject> &rhs) const noexcept override;
 
   void registerDefaultObject() const override;
-
-  void initSelf(Arguments inArgs);
 
 private:
   static bool doArgumentsMatch(const Declaration &decl, const Arguments &args) noexcept;

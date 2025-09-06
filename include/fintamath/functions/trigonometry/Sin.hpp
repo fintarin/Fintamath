@@ -9,8 +9,6 @@ class Sin : public IFunction {
   FINTAMATH_FUNCTION_CLASS_BODY_WITH_MAKE(Sin, IFunction)
 
 protected:
-  Sin() = default;
-
   SharedPtr<IMathObject> approximateSelf() const override;
 };
 

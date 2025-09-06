@@ -375,7 +375,7 @@ SharedRef<IMathObject> Expression::parseOperator(TermStack &argTermsRPN, const F
     }
 
     if (expectedArgsSize > 0) {
-      throw InvalidInputException("Ambiguous operator"); // TODO
+      throw InvalidInputException("Ambiguous operator"); // TODO!!!
     }
 
     expectedArgsSize = makerDecl.argumentClasses.size();
@@ -394,14 +394,14 @@ SharedRef<IMathObject> Expression::parseOperator(TermStack &argTermsRPN, const F
     }
 
     if (outOper) {
-      throw InvalidInputException("Ambiguous operator"); // TODO
+      throw InvalidInputException("Ambiguous operator"); // TODO!!!
     }
 
     outOper = maker.make(std::move(args));
   }
 
   if (!outOper) {
-    throw InvalidInputException("Operator args are invalid"); // TODO
+    throw InvalidInputException("Operator args are invalid"); // TODO!!!
   }
 
   return outOper.toRef();
@@ -417,14 +417,14 @@ SharedRef<IMathObject> Expression::parseFunction(TermStack &argTermsRPN, const F
     }
 
     if (outFunc) {
-      throw InvalidInputException("Ambiguous function"); // TODO
+      throw InvalidInputException("Ambiguous function"); // TODO!!!
     }
 
     outFunc = maker.make(std::move(args));
   }
 
   if (!outFunc) {
-    throw InvalidInputException("Function args are invalid"); // TODO
+    throw InvalidInputException("Function args are invalid"); // TODO!!!
   }
 
   return outFunc.toRef();

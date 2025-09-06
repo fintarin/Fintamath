@@ -7,16 +7,10 @@ namespace fintamath {
 
 class Mul : public IFunction {
   FINTAMATH_FUNCTION_CLASS_BODY_WITH_MAKE(Mul, IFunction)
-
-protected:
-  Mul() = default;
 };
 
 class MulOper : public IFunction {
   FINTAMATH_FUNCTION_CLASS_BODY(MulOper, IFunction)
-
-protected:
-  MulOper() = default;
 
 public:
   static SharedRef<Mul> make(Arguments inArgs);

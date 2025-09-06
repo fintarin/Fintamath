@@ -9,6 +9,7 @@
 #include "fintamath/core/CoreUtils.hpp"
 #include "fintamath/core/MathObjectUtils.hpp"
 #include "fintamath/core/Tokenizer.hpp"
+#include "fintamath/exceptions/InvalidInputException.hpp"
 #include "fintamath/numbers/Real.hpp"
 #include "fintamath/variables/Variable.hpp"
 
@@ -36,6 +37,14 @@ const IFunction::Declaration &IFunction::FunctionMaker::getDeclaration() const n
 
 MathObjectClass IFunction::FunctionMaker::getClass() const noexcept {
   return defaultFunc.get().getClass();
+}
+
+IFunction::IFunction(const Declaration &inDeclaration, Arguments inArgs)
+    : args(unwrappArguments(std::move(inArgs))) {
+
+  if (!doArgumentsMatch(inDeclaration, args)) {
+    throw InvalidInputException("Invalid args"); // TODO!!!
+  }
 }
 
 std::string IFunction::toString() const noexcept {
@@ -206,11 +215,6 @@ void IFunction::registerDefaultObject() const {
 
   FunctionMakers &makers = getNameToFunctionMakersMap()[decl.name];
   makers.emplace_back(castChecked<IFunction>(getDefaultObject()));
-}
-
-void IFunction::initSelf(Arguments inArgs) {
-  args = unwrappArguments(std::move(inArgs));
-  assert(doArgumentsMatch(getDeclaration(), args));
 }
 
 bool IFunction::doArgumentsMatch(const Declaration &decl, const Arguments &args) noexcept {
