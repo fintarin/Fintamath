@@ -9,8 +9,6 @@
 namespace fintamath {
 
 FINTAMATH_CLASS_IMPLEMENTATION(Boolean)
-FINTAMATH_CLASS_IMPLEMENTATION(True)
-FINTAMATH_CLASS_IMPLEMENTATION(False)
 
 Boolean::Boolean() : val(false) {
 }
@@ -33,14 +31,6 @@ std::string Boolean::toString() const noexcept {
 
 Boolean::operator bool() const noexcept {
   return val;
-}
-
-std::unique_ptr<IMathObject> True::getValue(const bool /*shouldApproximate*/) const noexcept {
-  return std::make_unique<Boolean>(true);
-}
-
-std::unique_ptr<IMathObject> False::getValue(const bool /*shouldApproximate*/) const noexcept {
-  return std::make_unique<Boolean>(false);
 }
 
 }
