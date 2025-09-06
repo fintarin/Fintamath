@@ -3,12 +3,11 @@
 
 #include "fintamath/exceptions/InvalidInputException.hpp"
 #include "fintamath/literals/Boolean.hpp"
-#include "fintamath/literals/constants/E.hpp"
 
 using namespace fintamath;
 
 TEST(BooleanTests, constructorTest) {
-  EXPECT_EQ(Boolean(std::string("False")), false);
+  EXPECT_EQ(Boolean("False"), false);
 }
 
 TEST(BooleanTests, stringConstructorTest) {

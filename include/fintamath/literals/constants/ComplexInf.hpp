@@ -1,25 +1,19 @@
 #pragma once
 
 #include <memory>
-#include <string>
 
 #include "fintamath/core/IMathObject.hpp"
-#include "fintamath/core/MathObjectClass.hpp"
 #include "fintamath/literals/constants/IConstant.hpp"
-#include "fintamath/numbers/INumber.hpp"
 
 namespace fintamath {
 
-class ComplexInf : public IConstantCRTP<INumber, ComplexInf> {
-  FINTAMATH_CLASS_BODY(ComplexInf, IConstant)
+class ComplexInf : public IConstant {
+  FINTAMATH_CHILD_CLASS_BODY(ComplexInf, IConstant)
 
 public:
-  std::string toString() const override {
-    return "ComplexInf";
-  }
+  MathObjectClass getValueClass() const noexcept override;
 
-protected:
-  std::unique_ptr<IMathObject> call() const override;
+  std::unique_ptr<IMathObject> getValue(bool shouldApproximate) const noexcept override;
 };
 
 }

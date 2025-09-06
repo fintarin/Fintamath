@@ -4,7 +4,6 @@
 #include <cassert>
 #include <compare>
 #include <cstddef>
-#include <cstdint>
 #include <ios>
 #include <stdexcept>
 #include <string>
@@ -23,7 +22,7 @@
 
 namespace fintamath {
 
-FINTAMATH_CLASS_IMPLEMENTATION(Real)
+FINTAMATH_CHILD_CLASS_IMPLEMENTATION(Real)
 
 using namespace detail;
 
@@ -79,7 +78,7 @@ catch (const InvalidInputException &) {
       str));
 }
 
-std::string Real::toString() const {
+std::string Real::toString() const noexcept {
   return toString(outputPrecision);
 }
 

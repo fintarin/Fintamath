@@ -129,12 +129,4 @@ inline std::shared_ptr<To> cast(const std::shared_ptr<From> &from) noexcept {
   return std::static_pointer_cast<To>(from);
 }
 
-template <typename Comparator>
-struct ToStringComparator {
-  template <typename T>
-  bool operator()(const T &lhs, const T &rhs) const noexcept {
-    return Comparator{}(lhs.toString(), rhs.toString());
-  }
-};
-
 }

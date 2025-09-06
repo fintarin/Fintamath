@@ -1,9 +1,8 @@
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
+#include "fintamath/numbers/Rational.hpp"
 #include "fintamath/numbers/Real.hpp"
-
-#include <unordered_set>
 
 #include "fintamath/exceptions/InvalidInputException.hpp"
 #include "fintamath/exceptions/UndefinedException.hpp"

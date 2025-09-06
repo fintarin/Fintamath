@@ -1,84 +1,72 @@
-#pragma once
+// #pragma once
 
-#include <compare>
-#include <cstdint>
-#include <memory>
-#include <optional>
-#include <string>
+// #include <optional>
+// #include <string>
 
-#include "fintamath/core/IMathObject.hpp"
-#include "fintamath/core/MathObjectClass.hpp"
-#include "fintamath/numbers/INumber.hpp"
-#include "fintamath/numbers/Integer.hpp"
-#include "fintamath/numbers/Rational.hpp"
-#include "fintamath/numbers/Real.hpp"
+// #include "fintamath/core/IWithArithmeticOperators.hpp"
+// #include "fintamath/numbers/INumber.hpp"
+// #include "fintamath/numbers/Integer.hpp"
+// #include "fintamath/numbers/Rational.hpp"
+// #include "fintamath/numbers/Real.hpp"
+// #include "fintamath/numbers/RealNumberVariant.hpp"
 
-namespace fintamath {
+// namespace fintamath {
 
-class Complex : public INumberCRTP<Complex> {
-  FINTAMATH_CLASS_BODY(Complex, INumber)
+// class Rational;
+// class Real;
 
-public:
-  Complex() = default;
+// class Complex : public INumber, public IWithArithmeticOperators<Complex> {
+//   FINTAMATH_CHILD_CLASS_BODY(Complex, INumber)
 
-  Complex(const Complex &rhs);
+// public:
+//   using InnerNumber = RealNumberVariant<Integer, Rational, Real>;
 
-  Complex(Complex &&rhs) noexcept = default;
+// public:
+//   Complex() = default;
 
-  Complex &operator=(const Complex &rhs);
+//   Complex(const Integer &rhs);
 
-  Complex &operator=(Complex &&rhs) noexcept = default;
+//   Complex(const Rational &rhs);
 
-  Complex(const Integer &rhs);
+//   Complex(const Real &rhs);
 
-  Complex(const Rational &rhs);
+//   Complex(std::integral auto rhs) : re(Integer(rhs)) {}
 
-  Complex(const Real &rhs);
+//   explicit Complex(std::integral auto inReal, std::integral auto inImag)
+//       : re(Integer(inReal)),
+//         im(Integer(inImag)) {}
 
-  Complex(std::integral auto rhs) : re(std::make_unique<Integer>(rhs)) {}
+//   explicit Complex(InnerNumber inReal, InnerNumber inImag);
 
-  explicit Complex(std::integral auto inReal, std::integral auto inImag)
-      : re(std::make_unique<Integer>(inReal)),
-        im(std::make_unique<Integer>(inImag)) {}
+//   explicit Complex(const std::string &str);
 
-  explicit Complex(const INumber &inReal, const INumber &inImag);
+//   std::string toString() const noexcept override;
 
-  explicit Complex(const std::string &str);
+//   std::optional<unsigned> getPrecision() const noexcept override;
 
-  std::string toString() const override;
+//   bool isComplex() const noexcept override;
 
-  std::unique_ptr<IMathObject> toMinimalObject() const override;
+//   const InnerNumber &real() const noexcept;
 
-  std::optional<unsigned> getPrecision() const noexcept override;
+//   const InnerNumber &imag() const noexcept;
 
-  bool isComplex() const noexcept override;
+// protected:
+//   bool equals(const Complex &rhs) const override;
 
-  const INumber &real() const noexcept;
+//   Complex &add(const Complex &rhs) override;
 
-  const INumber &imag() const noexcept;
+//   Complex &substract(const Complex &rhs) override;
 
-protected:
-  bool equals(const Complex &rhs) const override;
+//   Complex &multiply(const Complex &rhs) override;
 
-  std::strong_ordering compare(const Complex &rhs) const override;
+//   Complex &divide(const Complex &rhs) override;
 
-  Complex &add(const Complex &rhs) override;
+//   Complex &negate() override;
 
-  Complex &substract(const Complex &rhs) override;
+// private:
+//   InnerNumber re = Integer(0);
 
-  Complex &multiply(const Complex &rhs) override;
+//   InnerNumber im = Integer(0);
+// };
 
-  Complex &divide(const Complex &rhs) override;
-
-  Complex &negate() override;
-
-private:
-  static std::unique_ptr<INumber> parseNonComplexNumber(const std::string &str);
-
-private:
-  std::unique_ptr<INumber> re = std::make_unique<Integer>(0);
-
-  std::unique_ptr<INumber> im = std::make_unique<Integer>(0);
-};
-
-}
+// }

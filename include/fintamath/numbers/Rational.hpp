@@ -2,20 +2,18 @@
 
 #include <compare>
 #include <cstddef>
-#include <cstdint>
-#include <memory>
 #include <string>
 
-#include "fintamath/core/IArithmetic.hpp"
-#include "fintamath/core/IMathObject.hpp"
-#include "fintamath/core/MathObjectClass.hpp"
+#include "fintamath/core/Hash.hpp"
+#include "fintamath/core/IWithArithmeticOperators.hpp"
+#include "fintamath/core/IWithCompareOperators.hpp"
 #include "fintamath/numbers/INumber.hpp"
 #include "fintamath/numbers/Integer.hpp"
 
 namespace fintamath {
 
-class Rational : public INumberCRTP<Rational> {
-  FINTAMATH_CLASS_BODY(Rational, INumber)
+class Rational : public INumber, public IWithArithmeticOperators<Rational>, public IWithCompareOperators<Rational> {
+  FINTAMATH_CHILD_CLASS_BODY(Rational, INumber)
 
 public:
   Rational() = default;
@@ -28,9 +26,7 @@ public:
 
   explicit Rational(std::string_view str);
 
-  std::string toString() const override;
-
-  std::unique_ptr<IMathObject> toMinimalObject() const override;
+  std::string toString() const noexcept override;
 
   int sign() const;
 
@@ -49,11 +45,7 @@ protected:
 
   Rational &multiply(const Rational &rhs) override;
 
-  std::unique_ptr<IArithmetic> multiplyAbstract(const IArithmetic &rhs) const override;
-
   Rational &divide(const Rational &rhs) override;
-
-  std::unique_ptr<IArithmetic> divideAbstract(const IArithmetic &rhs) const override;
 
   Rational &negate() override;
 

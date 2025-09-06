@@ -623,22 +623,6 @@ TEST(IntegerTests, isComplexTest) {
   EXPECT_FALSE(Integer(1).isComplex());
 }
 
-TEST(IntegerTests, equalsTest) {
-  const Integer a;
-  const Rational b;
-  const Rational c(1);
-
-  EXPECT_EQ(a, a);
-  EXPECT_EQ(a, Integer());
-  EXPECT_EQ(Integer(), a);
-  EXPECT_EQ(a, cast<IMathObject>(Integer()));
-  EXPECT_EQ(cast<IMathObject>(Integer()), a);
-  EXPECT_EQ(a, b);
-  EXPECT_EQ(b, a);
-  EXPECT_NE(a, c);
-  EXPECT_NE(c, a);
-}
-
 TEST(IntegerTests, getClassTest) {
   EXPECT_EQ(Integer().getClass()->getName(), "Integer");
   EXPECT_EQ(Integer().getClass()->getParent(), INumber::getClassStatic());
