@@ -2,7 +2,7 @@
 #include <gtest/gtest.h>
 
 #include "fintamath/exceptions/InvalidInputException.hpp"
-#include "fintamath/core/Boolean.hpp"
+#include "fintamath/variables/Boolean.hpp"
 
 using namespace fintamath;
 
