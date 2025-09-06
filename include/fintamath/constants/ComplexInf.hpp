@@ -10,13 +10,11 @@ class ComplexInf : public IConstant {
   FINTAMATH_CLASS_BODY(ComplexInf, IConstant)
 
 public:
-  constexpr MathObjectClass getValueClass() const noexcept override;
+  constexpr MathObjectClass getValueClass() const noexcept override {
+    return INumber::getClassStatic();
+  }
 
   std::unique_ptr<IMathObject> getValue(bool shouldApproximate) const noexcept override;
 };
-
-constexpr MathObjectClass ComplexInf::getValueClass() const noexcept {
-  return INumber::getClassStatic();
-}
 
 }
