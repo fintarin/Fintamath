@@ -10,8 +10,16 @@ public:                                                          \
     return getClassStatic();                                     \
   }                                                              \
                                                                  \
-  static const Class &getDefaultObject() noexcept {              \
+  static const Class &getDefaultObjectStatic() noexcept {        \
     return defaultObject##Class;                                 \
+  }                                                              \
+                                                                 \
+  const Class &getDefaultObject() const noexcept override {      \
+    return getDefaultObjectStatic();                             \
+  }                                                              \
+                                                                 \
+  std::unique_ptr<IMathObject> clone() const noexcept override { \
+    return std::make_unique<Class>(*this);                       \
   }                                                              \
                                                                  \
 private:                                                         \
