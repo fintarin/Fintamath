@@ -50,16 +50,21 @@ template <std::derived_from<IMathObject> To, typename From>
 inline decltype(auto) cast(From &&from) noexcept {
   using ResultType = detail::CopyQualifiersFromToType<From, To>;
 
-  if constexpr (std::is_pointer<From>()) {
-    if (!is<To>(from)) {
-      return ResultType{};
-    }
-  }
-  else {
-    assert(is<To>(from));
-  }
+  assert(is<To>(from));
 
   return static_cast<ResultType>(std::forward<From>(from));
+}
+
+template <std::derived_from<IMathObject> To, typename From>
+  requires(std::is_base_of_v<IMathObject, typename detail::RemoveQualifiers<From>>)
+inline decltype(auto) cast(From *from) noexcept {
+  using ResultType = detail::CopyQualifiersFromToType<From, To>;
+
+  if (!is<To>(from)) {
+    return static_cast<ResultType *>(nullptr);
+  }
+
+  return static_cast<ResultType *>(from);
 }
 
 template <std::derived_from<IMathObject> To, typename From>
