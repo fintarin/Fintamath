@@ -5,6 +5,7 @@
 #include "fintamath/expressions/ExpressionFunctions.hpp"
 
 using namespace fintamath;
+using namespace fintamath::detail;
 
 namespace {
 

@@ -49,7 +49,7 @@ public:
 private:
   template <typename... Args>
   static CallbackId getFunctionId(const Args &...args) {
-    if constexpr (requires { CallbackId(args->getClass()...); }) {
+    if constexpr (requires { (args->getClass(), ...); }) {
       assert((args && ...));
       return CallbackId(args->getClass()...);
     }
