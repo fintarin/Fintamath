@@ -36,7 +36,7 @@ file(
 if(${PROJECT_NAME}_build_shared)
   add_library(${PROJECT_NAME} SHARED ${SOURCES})
 else()
-  add_library(${PROJECT_NAME} ${SOURCES})
+  add_library(${PROJECT_NAME} OBJECT ${SOURCES})
 endif()
 
 add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
