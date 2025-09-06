@@ -19,9 +19,7 @@ protected:
   explicit IFunction(Children inChildren);
 
 public:
-  constexpr ExpressionDeclaration getExpressionDeclaration() const noexcept final {
-    return getFunctionDeclaration().expressionDeclarion;
-  }
+  constexpr ExpressionDeclaration getExpressionDeclaration() const noexcept final;
 
   virtual constexpr FunctionDeclaration getFunctionDeclaration() const noexcept = 0;
 
@@ -33,6 +31,10 @@ public:
 protected:
   virtual std::unique_ptr<IFunction> makeFunction(Children children) const = 0;
 };
+
+constexpr IExpression::ExpressionDeclaration IFunction::getExpressionDeclaration() const noexcept {
+  return getFunctionDeclaration().expressionDeclarion;
+}
 
 template <typename T>
 std::unique_ptr<IFunction> makeFunction(IFunction::Children children) {

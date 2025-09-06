@@ -16,20 +16,22 @@ public:
   explicit Add(Children inChildren);
 
 public:
-  constexpr FunctionDeclaration getFunctionDeclaration() const noexcept override {
-    constexpr MathObjectClass numberClass = INumber::getClassStatic();
-    return {
-      .expressionDeclarion = {
-        .domainAndRangeVariants = {{
-          .returnClass = numberClass,
-          .childClasses = {numberClass, numberClass},
-        }}
-      },
-      .functionName = "add",
-    };
-  }
+  constexpr FunctionDeclaration getFunctionDeclaration() const noexcept override;
 
   std::unique_ptr<IFunction> makeFunction(Children children) const override;
 };
+
+constexpr Add::FunctionDeclaration Add::getFunctionDeclaration() const noexcept {
+  constexpr MathObjectClass numberClass = INumber::getClassStatic();
+  return {
+    .expressionDeclarion = {
+      .domainAndRangeVariants = {{
+        .returnClass = numberClass,
+        .childClasses = {numberClass, numberClass},
+      }}
+    },
+    .functionName = "add",
+  };
+}
 
 }
