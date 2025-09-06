@@ -4,11 +4,15 @@
 
 namespace fintamath {
 
-// TODO: remove None
-struct None {
+class MathObjectBase {
+public:
+  virtual ~MathObjectBase() noexcept = default;
+
   static constexpr MathObjectClass getClassStatic() noexcept {
     return nullptr;
   }
+
+  virtual MathObjectClass getClass() const noexcept;
 };
 
 }

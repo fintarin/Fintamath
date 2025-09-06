@@ -2,15 +2,15 @@
 
 #include "fintamath/core/MathObjectIdStorage.hpp"
 
-#define FINTAMATH_CLASS_BODY(Class, SuperClass)      \
-public:                                              \
-  using Super = SuperClass;                          \
-                                                     \
-  static MathObjectClass getClassStatic() noexcept;  \
-                                                     \
-  virtual MathObjectClass getClass() const noexcept; \
-                                                     \
-private:                                             \
+#define FINTAMATH_CLASS_BODY(Class, SuperClass)               \
+public:                                                       \
+  using Super = SuperClass;                                   \
+                                                              \
+  static MathObjectClass getClassStatic() noexcept;           \
+                                                              \
+  virtual MathObjectClass getClass() const noexcept override; \
+                                                              \
+private:                                                      \
   static const Class defaultObject##Class;
 
 #define FINTAMATH_CLASS_IMPLEMENTATION(Class)                                       \

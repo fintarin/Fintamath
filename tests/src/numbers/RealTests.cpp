@@ -1131,7 +1131,7 @@ TEST(RealTests, isComplexTest) {
 
 TEST(RealTests, getClassTest) {
   EXPECT_EQ(Real().getClass()->getName(), "Real");
-  EXPECT_EQ(Real().getClass()->getParent(), INumber::getClassStatic());
+  EXPECT_EQ(Real().getClass()->getParent(), Number::getClassStatic());
 }
 
 TEST(RealTests, hashTest) {

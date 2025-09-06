@@ -2,12 +2,12 @@
 
 #include <string>
 
-#include "fintamath/literals/ILiteral.hpp"
+#include "fintamath/literals/Literal.hpp"
 
 namespace fintamath {
 
-class Boolean : public ILiteral {
-  FINTAMATH_CLASS_BODY(Boolean, ILiteral)
+class Boolean : public Literal {
+  FINTAMATH_CLASS_BODY(Boolean, Literal)
 
 public:
   Boolean();

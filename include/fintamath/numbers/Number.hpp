@@ -2,12 +2,12 @@
 
 #include <optional>
 
-#include "fintamath/core/IComparable.hpp"
+#include "fintamath/core/Comparable.hpp"
 
 namespace fintamath {
 
-class INumber : public IComparable {
-  FINTAMATH_CLASS_BODY(INumber, IComparable)
+class Number : public Comparable {
+  FINTAMATH_CLASS_BODY(Number, Comparable)
 
 public:
   virtual std::optional<unsigned> getPrecision() const noexcept {

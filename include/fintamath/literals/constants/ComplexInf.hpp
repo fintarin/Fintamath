@@ -2,18 +2,18 @@
 
 #include <memory>
 
-#include "fintamath/core/IMathObject.hpp"
-#include "fintamath/literals/constants/IConstant.hpp"
+#include "fintamath/core/MathObject.hpp"
+#include "fintamath/literals/constants/Constant.hpp"
 
 namespace fintamath {
 
-class ComplexInf : public IConstant {
-  FINTAMATH_CLASS_BODY(ComplexInf, IConstant)
+class ComplexInf : public Constant {
+  FINTAMATH_CLASS_BODY(ComplexInf, Constant)
 
 public:
   MathObjectClass getValueClass() const noexcept override;
 
-  std::unique_ptr<IMathObject> getValue(bool shouldApproximate) const noexcept override;
+  std::unique_ptr<MathObject> getValue(bool shouldApproximate) const noexcept override;
 };
 
 }

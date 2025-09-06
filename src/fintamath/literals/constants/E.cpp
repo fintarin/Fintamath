@@ -2,7 +2,7 @@
 
 #include <memory>
 
-#include "fintamath/core/IMathObject.hpp"
+#include "fintamath/core/MathObject.hpp"
 #include "fintamath/numbers/RealFunctions.hpp"
 
 namespace fintamath {
@@ -13,7 +13,7 @@ MathObjectClass E::getValueClass() const noexcept {
   return Real::getClassStatic();
 }
 
-std::unique_ptr<IMathObject> E::getValue(bool shouldApproximate) const noexcept {
+std::unique_ptr<MathObject> E::getValue(bool shouldApproximate) const noexcept {
   if (!shouldApproximate) {
     return nullptr;
   }
