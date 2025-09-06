@@ -5,7 +5,7 @@
 namespace fintamath {
 
 class IArithmetic : public IMathObject {
-  FINTAMATH_PARENT_CLASS_BODY(IArithmetic, IMathObject)
+  FINTAMATH_CLASS_BODY(IArithmetic, IMathObject)
 };
 
 }

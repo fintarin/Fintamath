@@ -7,7 +7,7 @@
 
 namespace fintamath {
 
-FINTAMATH_CHILD_CLASS_IMPLEMENTATION(E)
+FINTAMATH_CLASS_IMPLEMENTATION(E)
 
 MathObjectClass E::getValueClass() const noexcept {
   return Real::getClassStatic();

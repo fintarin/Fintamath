@@ -8,7 +8,7 @@
 namespace fintamath {
 
 class Pi : public IConstant {
-  FINTAMATH_CHILD_CLASS_BODY(Pi, IConstant)
+  FINTAMATH_CLASS_BODY(Pi, IConstant)
 
 public:
   MathObjectClass getValueClass() const noexcept override;
