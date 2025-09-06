@@ -3,15 +3,19 @@
 #include <ostream>
 #include <string>
 
-#include "fintamath/core/MathObjectBase.hpp"
-#include "fintamath/core/MathObjectMacro.hpp"
+#include "fintamath/core/MathObjectInterfaceBody.hpp"
+#include "fintamath/core/None.hpp"
 
 namespace fintamath {
 
-class MathObject : public MathObjectBase {
-  FINTAMATH_CLASS_BODY(MathObject, MathObjectBase)
+class MathObject {
+  FINTAMATH_INTERFACE_BODY(MathObject, None)
 
 public:
+  virtual ~MathObject() = default;
+
+  virtual constexpr MathObjectClass getClass() const noexcept = 0;
+
   virtual std::string toString() const noexcept;
 
 protected:

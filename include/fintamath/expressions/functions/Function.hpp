@@ -5,7 +5,7 @@
 namespace fintamath {
 
 class Function : public ExpressionBase {
-  FINTAMATH_CLASS_BODY(Function, ExpressionBase)
+  FINTAMATH_INTERFACE_BODY(Function, ExpressionBase)
 
 public:
   struct FunctionDeclaration : ExpressionBaseDeclaration {
@@ -18,7 +18,7 @@ protected:
   explicit Function(Children inChildren);
 
 public:
-  const FunctionDeclaration &getDeclaration() const noexcept override;
+  const FunctionDeclaration &getDeclaration() const noexcept override = 0;
 
   std::string toString() const noexcept override;
 
@@ -26,12 +26,12 @@ public:
   friend std::unique_ptr<Function> makeFunction(Function::Children children);
 
 protected:
-  virtual std::unique_ptr<Function> makeFunction(Children children) const;
+  virtual std::unique_ptr<Function> makeFunction(Children children) const = 0;
 };
 
 template <typename T>
 std::unique_ptr<Function> makeFunction(Function::Children children) {
-  return T::getDefaultObjectStatic().makeFunction(std::move(children));
+  return T::getDefaultObject().makeFunction(std::move(children));
 }
 
 }

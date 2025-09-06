@@ -7,7 +7,7 @@
 namespace fintamath {
 
 class Number : public Comparable {
-  FINTAMATH_CLASS_BODY(Number, Comparable)
+  FINTAMATH_INTERFACE_BODY(Number, Comparable)
 
 public:
   virtual std::optional<unsigned> getPrecision() const noexcept {

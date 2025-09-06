@@ -12,6 +12,7 @@
 #include "fintamath/core/Hash.hpp"
 #include "fintamath/core/IWithArithmeticOperators.hpp"
 #include "fintamath/core/IWithCompareOperators.hpp"
+#include "fintamath/core/MathObjectClassBody.hpp"
 #include "fintamath/numbers/Number.hpp"
 
 namespace fintamath {

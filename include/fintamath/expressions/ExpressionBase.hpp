@@ -9,7 +9,7 @@
 namespace fintamath {
 
 class ExpressionBase : public MathObject {
-  FINTAMATH_CLASS_BODY(ExpressionBase, MathObject)
+  FINTAMATH_INTERFACE_BODY(ExpressionBase, MathObject)
 
 public:
   struct ExpressionBaseDeclaration {
@@ -27,7 +27,7 @@ protected:
   explicit ExpressionBase(Children inChildren);
 
 public:
-  virtual const ExpressionBaseDeclaration &getDeclaration() const noexcept;
+  virtual const ExpressionBaseDeclaration &getDeclaration() const noexcept = 0;
 
   const Children &getChildren() const noexcept;
 
