@@ -3,6 +3,7 @@
 
 #include <unordered_set>
 
+#include "fintamath/core/MathObjectUtils.hpp"
 #include "fintamath/exceptions/InvalidInputException.hpp"
 #include "fintamath/exceptions/UndefinedException.hpp"
 #include "fintamath/numbers/Rational.hpp"
@@ -534,6 +535,17 @@ TEST(RationalTests, denominatorTest) {
 TEST(RationalTests, toStringTest) {
   EXPECT_EQ(Rational(5, 2).toString(), "5/2");
   EXPECT_EQ(Rational(55, -10).toString(), "-11/2");
+}
+
+TEST(RationalTests, toMinimalObjectTest) {
+  EXPECT_TRUE(is<Integer>(Rational(55, 5).toMinimalObject()));
+  EXPECT_TRUE(is<Integer>(Rational(-55, 5).toMinimalObject()));
+
+  EXPECT_EQ(Rational(55, 5).toMinimalObject()->toString(), "11");
+  EXPECT_EQ(Rational(-55, 5).toMinimalObject()->toString(), "-11");
+
+  EXPECT_FALSE(Rational(5, 2).toMinimalObject());
+  EXPECT_FALSE(Rational(-5, 2).toMinimalObject());
 }
 
 TEST(RationalTests, signTest) {

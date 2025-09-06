@@ -46,30 +46,30 @@ inline bool is(const From *from) noexcept {
 }
 
 template <std::derived_from<IMathObject> To, typename From>
-  requires std::derived_from<IMathObject, typename detail::RemoveQualifiers<From>::element_type>
+  requires(std::is_base_of_v<IMathObject, typename detail::RemoveQualifiers<From>::element_type>)
 inline bool is(const From &from) noexcept {
   return is<To>(from.get());
 }
 
 template <std::derived_from<IMathObject> To, typename From>
-  requires std::derived_from<IMathObject, typename detail::RemoveQualifiers<From>>
+  requires(std::is_base_of_v<IMathObject, typename detail::RemoveQualifiers<From>>)
 inline decltype(auto) cast(From &&from) noexcept {
   using ResultType = detail::CopyQualifiersFromToType<From, To>;
 
-  if (!is<To>(from)) {
-    if constexpr (std::is_pointer<From>()) {
+  if constexpr (std::is_pointer<From>()) {
+    if (!is<To>(from)) {
       return ResultType{};
     }
-    else {
-      assert(false);
-    }
+  }
+  else {
+    assert(is<To>(from));
   }
 
   return static_cast<ResultType>(std::forward<From>(from));
 }
 
 template <std::derived_from<IMathObject> To, typename From>
-  requires std::derived_from<IMathObject, typename detail::RemoveQualifiers<From>::element_type>
+  requires(std::is_base_of_v<IMathObject, typename detail::RemoveQualifiers<From>::element_type> && std::is_copy_constructible_v<From>)
 inline decltype(auto) cast(From &&from) noexcept {
   using ResultType = detail::CopyQualifiersFromToType<typename detail::RemoveQualifiers<From>::element_type, To>;
 
@@ -78,6 +78,20 @@ inline decltype(auto) cast(From &&from) noexcept {
   }
 
   return std::static_pointer_cast<ResultType>(std::forward<From>(from));
+}
+
+template <std::derived_from<IMathObject> To, typename From>
+  requires(std::is_base_of_v<IMathObject, typename detail::RemoveQualifiers<From>::element_type> && !std::is_copy_constructible_v<From>)
+inline decltype(auto) cast(From from) noexcept {
+  using ResultType = detail::CopyQualifiersFromToType<typename detail::RemoveQualifiers<From>::element_type, To>;
+
+  if (!is<To>(from)) {
+    return std::unique_ptr<ResultType>();
+  }
+
+  auto *fromRawPtr = from.release();
+  auto *toRawPtr = static_cast<ResultType *>(fromRawPtr);
+  return std::unique_ptr<ResultType>(toRawPtr);
 }
 
 }
