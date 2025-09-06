@@ -28,7 +28,7 @@ public:
   template <typename... Args>
     requires(sizeof...(Args) == sizeof...(ArgsBase))
   void add(auto func) {
-    constexpr auto funcId = FunctionId(RemoveQualifiers<Args>::getClassStatic()...);
+    constexpr auto funcId = FunctionId(Args::getClassStatic()...);
 
     idToFunctionMap[funcId] = [func = std::move(func)](ArgsBase... args) -> ResBase {
       return func(cast<Args>(args)...);
