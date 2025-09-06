@@ -21,6 +21,10 @@ const Add::FunctionDeclaration Add::addDeclaration = {
 Add::Add(Children inChildren) : Super(std::move(inChildren)) {
 }
 
+const Add::FunctionDeclaration &Add::getFunctionDeclaration() const noexcept {
+  return addDeclaration;
+}
+
 std::unique_ptr<IFunction> Add::makeFunction(Children inChildren) const {
   return makeObject<Add>(std::move(inChildren));
 }

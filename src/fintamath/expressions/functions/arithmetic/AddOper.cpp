@@ -21,6 +21,10 @@ const AddOper::OperatorDeclaration AddOper::addOperDeclaration = {
   .operatorPriority = AddOper::Priority::Addition,
 };
 
+const AddOper::OperatorDeclaration &AddOper::getOperatorDeclaration() const noexcept {
+  return addOperDeclaration;
+}
+
 std::unique_ptr<IFunction> AddOper::makeFunction(Children inChildren) const {
   return makeObject<Add>(std::move(inChildren));
 }
