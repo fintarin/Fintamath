@@ -2,8 +2,8 @@
 
 #include <string>
 
-#include "fintamath/core/IMathObject.hpp"
 #include "fintamath/core/FintamathClassBody.hpp"
+#include "fintamath/core/IMathObject.hpp"
 
 namespace fintamath {
 

@@ -6,8 +6,8 @@
 #include <vector>
 
 #include "fintamath/exceptions/UndefinedException.hpp"
-#include "fintamath/numbers/Integer.hpp"
 #include "fintamath/numbers/INumber.hpp"
+#include "fintamath/numbers/Integer.hpp"
 
 namespace fintamath {
 
