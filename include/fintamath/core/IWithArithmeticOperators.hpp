@@ -1,6 +1,6 @@
 #pragma once
 
-#include "fintamath/core/CoreUtils.hpp"
+#include "fintamath/core/CoreConcepts.hpp"
 
 namespace fintamath {
 

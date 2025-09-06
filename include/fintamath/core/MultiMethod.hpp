@@ -1,7 +1,6 @@
 #pragma once
 
 #include <functional>
-#include <optional>
 #include <tuple>
 #include <unordered_map>
 
@@ -45,7 +44,7 @@ public:
       return iter->second(std::forward<Args>(args)...);
     }
 
-    return {};
+    return nullptr;
   }
 
 private:

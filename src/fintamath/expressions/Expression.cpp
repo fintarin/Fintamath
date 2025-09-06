@@ -6,6 +6,7 @@
 
 #include "fintamath/constants/IConstant.hpp"
 #include "fintamath/core/MathObjectUtils.hpp"
+#include "fintamath/core/Overload.hpp"
 #include "fintamath/core/Tokenizer.hpp"
 #include "fintamath/exceptions/InvalidInputException.hpp"
 #include "fintamath/functions/other/Comma.hpp"
@@ -120,8 +121,8 @@ Expression::TermStack Expression::parseTermsRPN(TokenToTermVector &tokensToTerms
 
     std::visit(
       detail::Overload{
-        [&](Argument &arg) {
-          outTermStack.emplace(std::move(arg));
+        [&](Argument &argTerm) {
+          outTermStack.emplace(std::move(argTerm));
         },
         [&](FunctionTerm &funcTerm) {
           if (funcTerm.operatorPriority) {
@@ -154,8 +155,8 @@ Expression::Argument Expression::parseExpression(TermStack &termsRPN) {
 
   Argument outArg = std::visit(
     detail::Overload{
-      [&](Argument &arg) {
-        return std::move(arg);
+      [&](Argument &argTerm) {
+        return std::move(argTerm);
       },
       [&](FunctionTerm &funcTerm) {
         if (funcTerm.operatorPriority) {
@@ -456,12 +457,12 @@ Expression::Argument Expression::parseFunction(TermStack &argTermsRPN, const Fun
   return outFunc;
 }
 
-Expression::Arguments Expression::unwrappComma(Argument arg) {
-  if (const auto argFunc = cast<IFunction>(arg); is<Comma>(argFunc)) {
+Expression::Arguments Expression::unwrappComma(Argument inArg) {
+  if (const auto argFunc = cast<IFunction>(inArg); is<Comma>(argFunc)) {
     return argFunc->getArguments();
   }
 
-  return {std::move(arg)};
+  return {std::move(inArg)};
 }
 
 // ArgumentPtr Expression::compress(const ArgumentPtr &child) {
