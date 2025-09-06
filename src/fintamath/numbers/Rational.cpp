@@ -56,31 +56,31 @@ Rational::Rational(const std::string_view str) {
     throwInvalidInputException(str);
   }
 
-  int64_t firstDigitNum = 0;
-  const int64_t firstDotNum = std::ranges::distance(str.begin(), std::ranges::find(str, '.'));
+  int64_t firstDigitIndex = 0;
+  const int64_t firstDotIndex = std::ranges::distance(str.begin(), std::ranges::find(str, '.'));
 
   bool isNegative = false;
   if (str.front() == '-') {
     isNegative = true;
-    firstDigitNum++;
+    firstDigitIndex++;
   }
 
   const std::string intPartStr(str.substr(
-    static_cast<size_t>(firstDigitNum),
-    static_cast<size_t>(firstDotNum - firstDigitNum)
+    static_cast<size_t>(firstDigitIndex),
+    static_cast<size_t>(firstDotIndex - firstDigitIndex)
   ));
   Integer intPart;
 
   try {
     if (!intPartStr.empty()) {
       intPart = Integer(str.substr(
-        static_cast<size_t>(firstDigitNum),
-        static_cast<size_t>(firstDotNum - firstDigitNum)
+        static_cast<size_t>(firstDigitIndex),
+        static_cast<size_t>(firstDotIndex - firstDigitIndex)
       ));
     }
 
-    if (firstDotNum + 1 < std::ssize(str)) {
-      const std::string numeratorStr(str.substr(static_cast<size_t>(firstDotNum) + 1));
+    if (firstDotIndex + 1 < std::ssize(str)) {
+      const std::string numeratorStr(str.substr(static_cast<size_t>(firstDotIndex) + 1));
       std::string denominatorStr(numeratorStr.size() + 1, '0');
       denominatorStr.front() = '1';
       numer = Integer(numeratorStr);
