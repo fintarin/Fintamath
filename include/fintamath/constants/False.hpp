@@ -4,7 +4,7 @@
 
 #include "fintamath/constants/IConstant.hpp"
 #include "fintamath/core/Boolean.hpp"
-#include "fintamath/core/MathObjectClassBody.hpp"
+#include "fintamath/core/FintamathClassBody.hpp"
 
 namespace fintamath {
 
