@@ -5,7 +5,7 @@
 // #include "fintamath/Expression.hpp"
 // #include "fintamath/functions/IFunction.hpp"
 // #include "fintamath/functions/arithmetic/AddOper.hpp"
-// #include "fintamath/literals/constants/E.hpp"
+// #include "fintamath/constants/E.hpp"
 // #include "fintamath/numbers/INumber.hpp"
 // #include "fintamath/numbers/Integer.hpp"
 

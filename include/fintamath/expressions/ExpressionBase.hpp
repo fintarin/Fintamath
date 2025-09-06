@@ -12,9 +12,13 @@ class ExpressionBase : public MathObject {
   FINTAMATH_INTERFACE_BODY(ExpressionBase, MathObject)
 
 public:
-  struct ExpressionBaseDeclaration {
-    MathObjectClass returnClass;
-    std::vector<MathObjectClass> childClasses;
+  struct ExpressionDeclaration {
+    struct DomainAndRange {
+      MathObjectClass returnClass;
+      std::vector<MathObjectClass> childClasses;
+    };
+
+    std::vector<DomainAndRange> domainAndRangeVariants;
     bool isVariadic = false;
   };
 
@@ -27,7 +31,7 @@ protected:
   explicit ExpressionBase(Children inChildren);
 
 public:
-  virtual const ExpressionBaseDeclaration &getDeclaration() const noexcept = 0;
+  virtual constexpr ExpressionDeclaration getExpressionDeclaration() const noexcept = 0;
 
   const Children &getChildren() const noexcept;
 
