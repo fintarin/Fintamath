@@ -9,16 +9,12 @@ class Expression : public IExpression {
   FINTAMATH_CLASS_BODY(Expression, IExpression)
 
 public:
-  constexpr ExpressionDeclaration getExpressionDeclaration() const noexcept override;
-};
+  constexpr const ExpressionDeclaration &getExpressionDeclaration() const noexcept override {
+    return expressionDeclaration;
+  }
 
-constexpr Expression::ExpressionDeclaration Expression::getExpressionDeclaration() const noexcept {
-  return {
-    .domainAndRangeVariants = {{
-      .returnClass = nullptr,
-      .childClasses = {IMathObject::getClassStatic()},
-    }}
-  };
-}
+private:
+  FINTAMATH_EXPORT static const ExpressionDeclaration expressionDeclaration;
+};
 
 }
