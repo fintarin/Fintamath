@@ -106,9 +106,10 @@ Integer floor(const Real &rhs) {
   }
   catch (const UndefinedException &exc) {
     throw UndefinedException(fmt::format(
-        "floor({}) is undefined ({})",
-        rhs.toString(),
-        getExceptionMessage(exc.what())));
+      "floor({}) is undefined ({})",
+      rhs.toString(),
+      getExceptionMessage(exc.what())
+    ));
   }
 }
 
@@ -123,9 +124,10 @@ Integer ceil(const Real &rhs) {
   }
   catch (const UndefinedException &exc) {
     throw UndefinedException(fmt::format(
-        "ceil({}) is undefined ({})",
-        rhs.toString(),
-        getExceptionMessage(exc.what())));
+      "ceil({}) is undefined ({})",
+      rhs.toString(),
+      getExceptionMessage(exc.what())
+    ));
   }
 }
 
@@ -143,9 +145,10 @@ Real sqrt(const Real &rhs) {
   }
   catch (const UndefinedException &exc) {
     throw UndefinedException(fmt::format(
-        "sqrt({}) is undefined ({})",
-        rhs.toString(),
-        getExceptionMessage(exc.what())));
+      "sqrt({}) is undefined ({})",
+      rhs.toString(),
+      getExceptionMessage(exc.what())
+    ));
   }
 }
 
@@ -163,10 +166,11 @@ Real pow(const Real &lhs, const Real &rhs) {
   }
   catch (const UndefinedException &exc) {
     throw UndefinedException(fmt::format(
-        "pow({}, {}) is undefined ({})",
-        lhs.toString(),
-        rhs.toString(),
-        getExceptionMessage(exc.what())));
+      "pow({}, {}) is undefined ({})",
+      lhs.toString(),
+      rhs.toString(),
+      getExceptionMessage(exc.what())
+    ));
   }
 }
 
@@ -176,9 +180,10 @@ Real exp(const Real &rhs) {
   }
   catch (const UndefinedException &exc) {
     throw UndefinedException(fmt::format(
-        "exp({}) is undefined ({})",
-        rhs.toString(),
-        getExceptionMessage(exc.what())));
+      "exp({}) is undefined ({})",
+      rhs.toString(),
+      getExceptionMessage(exc.what())
+    ));
   }
 }
 
@@ -190,10 +195,11 @@ Real log(const Real &lhs, const Real &rhs) {
   }
   catch (const UndefinedException &exc) {
     throw UndefinedException(fmt::format(
-        "log({}, {}) is undefined ({})",
-        lhs.toString(),
-        rhs.toString(),
-        getExceptionMessage(exc.what())));
+      "log({}, {}) is undefined ({})",
+      lhs.toString(),
+      rhs.toString(),
+      getExceptionMessage(exc.what())
+    ));
   }
 }
 
@@ -213,9 +219,10 @@ Real ln(const Real &rhs) {
   }
   catch (const UndefinedException &exc) {
     throw UndefinedException(fmt::format(
-        "ln({}) is undefined ({})",
-        rhs.toString(),
-        getExceptionMessage(exc.what())));
+      "ln({}) is undefined ({})",
+      rhs.toString(),
+      getExceptionMessage(exc.what())
+    ));
   }
 }
 
@@ -226,9 +233,10 @@ Real lb(const Real &rhs) {
   }
   catch (const UndefinedException &exc) {
     throw UndefinedException(fmt::format(
-        "lb({}) is undefined ({})",
-        rhs.toString(),
-        getExceptionMessage(exc.what())));
+      "lb({}) is undefined ({})",
+      rhs.toString(),
+      getExceptionMessage(exc.what())
+    ));
   }
 }
 
@@ -239,9 +247,10 @@ Real lg(const Real &rhs) {
   }
   catch (const UndefinedException &exc) {
     throw UndefinedException(fmt::format(
-        "lg({}) is undefined ({})",
-        rhs.toString(),
-        getExceptionMessage(exc.what())));
+      "lg({}) is undefined ({})",
+      rhs.toString(),
+      getExceptionMessage(exc.what())
+    ));
   }
 }
 
@@ -255,9 +264,10 @@ Real sin(const Real &rhs) {
   }
   catch (const UndefinedException &exc) {
     throw UndefinedException(fmt::format(
-        "sin({}) is undefined ({})",
-        rhs.toString(),
-        getExceptionMessage(exc.what())));
+      "sin({}) is undefined ({})",
+      rhs.toString(),
+      getExceptionMessage(exc.what())
+    ));
   }
 }
 
@@ -271,9 +281,10 @@ Real cos(const Real &rhs) {
   }
   catch (const UndefinedException &exc) {
     throw UndefinedException(fmt::format(
-        "cos({}) is undefined ({})",
-        rhs.toString(),
-        getExceptionMessage(exc.what())));
+      "cos({}) is undefined ({})",
+      rhs.toString(),
+      getExceptionMessage(exc.what())
+    ));
   }
 }
 
@@ -287,9 +298,10 @@ Real tan(const Real &rhs) {
   }
   catch (const UndefinedException &exc) {
     throw UndefinedException(fmt::format(
-        "tan({}) is undefined ({})",
-        rhs.toString(),
-        getExceptionMessage(exc.what())));
+      "tan({}) is undefined ({})",
+      rhs.toString(),
+      getExceptionMessage(exc.what())
+    ));
   }
 }
 
@@ -299,9 +311,10 @@ Real cot(const Real &rhs) {
   }
   catch (const UndefinedException &exc) {
     throw UndefinedException(fmt::format(
-        "cot({}) is undefined ({})",
-        rhs.toString(),
-        getExceptionMessage(exc.what())));
+      "cot({}) is undefined ({})",
+      rhs.toString(),
+      getExceptionMessage(exc.what())
+    ));
   }
 }
 
@@ -311,9 +324,10 @@ Real sec(const Real &rhs) {
   }
   catch (const UndefinedException &exc) {
     throw UndefinedException(fmt::format(
-        "sec({}) is undefined ({})",
-        rhs.toString(),
-        getExceptionMessage(exc.what())));
+      "sec({}) is undefined ({})",
+      rhs.toString(),
+      getExceptionMessage(exc.what())
+    ));
   }
 }
 
@@ -323,9 +337,10 @@ Real csc(const Real &rhs) {
   }
   catch (const UndefinedException &exc) {
     throw UndefinedException(fmt::format(
-        "csc({}) is undefined ({})",
-        rhs.toString(),
-        getExceptionMessage(exc.what())));
+      "csc({}) is undefined ({})",
+      rhs.toString(),
+      getExceptionMessage(exc.what())
+    ));
   }
 }
 
@@ -335,9 +350,10 @@ Real asin(const Real &rhs) {
   }
   catch (const UndefinedException &exc) {
     throw UndefinedException(fmt::format(
-        "asin({}) is undefined ({})",
-        rhs.toString(),
-        getExceptionMessage(exc.what())));
+      "asin({}) is undefined ({})",
+      rhs.toString(),
+      getExceptionMessage(exc.what())
+    ));
   }
 }
 
@@ -347,9 +363,10 @@ Real acos(const Real &rhs) {
   }
   catch (const UndefinedException &exc) {
     throw UndefinedException(fmt::format(
-        "acos({}) is undefined ({})",
-        rhs.toString(),
-        getExceptionMessage(exc.what())));
+      "acos({}) is undefined ({})",
+      rhs.toString(),
+      getExceptionMessage(exc.what())
+    ));
   }
 }
 
@@ -359,9 +376,10 @@ Real atan(const Real &rhs) {
   }
   catch (const UndefinedException &exc) {
     throw UndefinedException(fmt::format(
-        "atan({}) is undefined ({})",
-        rhs.toString(),
-        getExceptionMessage(exc.what())));
+      "atan({}) is undefined ({})",
+      rhs.toString(),
+      getExceptionMessage(exc.what())
+    ));
   }
 }
 
@@ -371,9 +389,10 @@ Real acot(const Real &rhs) {
   }
   catch (const UndefinedException &exc) {
     throw UndefinedException(fmt::format(
-        "acot({}) is undefined ({})",
-        rhs.toString(),
-        getExceptionMessage(exc.what())));
+      "acot({}) is undefined ({})",
+      rhs.toString(),
+      getExceptionMessage(exc.what())
+    ));
   }
 }
 
@@ -383,9 +402,10 @@ Real asec(const Real &rhs) {
   }
   catch (const UndefinedException &exc) {
     throw UndefinedException(fmt::format(
-        "asec({}) is undefined ({})",
-        rhs.toString(),
-        getExceptionMessage(exc.what())));
+      "asec({}) is undefined ({})",
+      rhs.toString(),
+      getExceptionMessage(exc.what())
+    ));
   }
 }
 
@@ -395,9 +415,10 @@ Real acsc(const Real &rhs) {
   }
   catch (const UndefinedException &exc) {
     throw UndefinedException(fmt::format(
-        "acsc({}) is undefined ({})",
-        rhs.toString(),
-        getExceptionMessage(exc.what())));
+      "acsc({}) is undefined ({})",
+      rhs.toString(),
+      getExceptionMessage(exc.what())
+    ));
   }
 }
 
@@ -407,9 +428,10 @@ Real sinh(const Real &rhs) {
   }
   catch (const UndefinedException &exc) {
     throw UndefinedException(fmt::format(
-        "sinh({}) is undefined ({})",
-        rhs.toString(),
-        getExceptionMessage(exc.what())));
+      "sinh({}) is undefined ({})",
+      rhs.toString(),
+      getExceptionMessage(exc.what())
+    ));
   }
 }
 
@@ -419,9 +441,10 @@ Real cosh(const Real &rhs) {
   }
   catch (const UndefinedException &exc) {
     throw UndefinedException(fmt::format(
-        "cosh({}) is undefined ({})",
-        rhs.toString(),
-        getExceptionMessage(exc.what())));
+      "cosh({}) is undefined ({})",
+      rhs.toString(),
+      getExceptionMessage(exc.what())
+    ));
   }
 }
 
@@ -431,9 +454,10 @@ Real tanh(const Real &rhs) {
   }
   catch (const UndefinedException &exc) {
     throw UndefinedException(fmt::format(
-        "tanh({}) is undefined ({})",
-        rhs.toString(),
-        getExceptionMessage(exc.what())));
+      "tanh({}) is undefined ({})",
+      rhs.toString(),
+      getExceptionMessage(exc.what())
+    ));
   }
 }
 
@@ -443,9 +467,10 @@ Real coth(const Real &rhs) {
   }
   catch (const UndefinedException &exc) {
     throw UndefinedException(fmt::format(
-        "coth({}) is undefined ({})",
-        rhs.toString(),
-        getExceptionMessage(exc.what())));
+      "coth({}) is undefined ({})",
+      rhs.toString(),
+      getExceptionMessage(exc.what())
+    ));
   }
 }
 
@@ -455,9 +480,10 @@ Real sech(const Real &rhs) {
   }
   catch (const UndefinedException &exc) {
     throw UndefinedException(fmt::format(
-        "sech({}) is undefined ({})",
-        rhs.toString(),
-        getExceptionMessage(exc.what())));
+      "sech({}) is undefined ({})",
+      rhs.toString(),
+      getExceptionMessage(exc.what())
+    ));
   }
 }
 
@@ -467,9 +493,10 @@ Real csch(const Real &rhs) {
   }
   catch (const UndefinedException &exc) {
     throw UndefinedException(fmt::format(
-        "csch({}) is undefined ({})",
-        rhs.toString(),
-        getExceptionMessage(exc.what())));
+      "csch({}) is undefined ({})",
+      rhs.toString(),
+      getExceptionMessage(exc.what())
+    ));
   }
 }
 
@@ -479,9 +506,10 @@ Real asinh(const Real &rhs) {
   }
   catch (const UndefinedException &exc) {
     throw UndefinedException(fmt::format(
-        "asinh({}) is undefined ({})",
-        rhs.toString(),
-        getExceptionMessage(exc.what())));
+      "asinh({}) is undefined ({})",
+      rhs.toString(),
+      getExceptionMessage(exc.what())
+    ));
   }
 }
 
@@ -496,9 +524,10 @@ Real acosh(const Real &rhs) {
   }
   catch (const UndefinedException &exc) {
     throw UndefinedException(fmt::format(
-        "acosh({}) is undefined ({})",
-        rhs.toString(),
-        getExceptionMessage(exc.what())));
+      "acosh({}) is undefined ({})",
+      rhs.toString(),
+      getExceptionMessage(exc.what())
+    ));
   }
 }
 
@@ -516,9 +545,10 @@ Real atanh(const Real &rhs) {
   }
   catch (const UndefinedException &exc) {
     throw UndefinedException(fmt::format(
-        "atanh({}) is undefined ({})",
-        rhs.toString(),
-        getExceptionMessage(exc.what())));
+      "atanh({}) is undefined ({})",
+      rhs.toString(),
+      getExceptionMessage(exc.what())
+    ));
   }
 }
 
@@ -528,9 +558,10 @@ Real acoth(const Real &rhs) {
   }
   catch (const UndefinedException &exc) {
     throw UndefinedException(fmt::format(
-        "acoth({}) is undefined ({})",
-        rhs.toString(),
-        getExceptionMessage(exc.what())));
+      "acoth({}) is undefined ({})",
+      rhs.toString(),
+      getExceptionMessage(exc.what())
+    ));
   }
 }
 
@@ -540,9 +571,10 @@ Real asech(const Real &rhs) {
   }
   catch (const UndefinedException &exc) {
     throw UndefinedException(fmt::format(
-        "asech({}) is undefined ({})",
-        rhs.toString(),
-        getExceptionMessage(exc.what())));
+      "asech({}) is undefined ({})",
+      rhs.toString(),
+      getExceptionMessage(exc.what())
+    ));
   }
 }
 
@@ -552,9 +584,10 @@ Real acsch(const Real &rhs) {
   }
   catch (const UndefinedException &exc) {
     throw UndefinedException(fmt::format(
-        "acsch({}) is undefined ({})",
-        rhs.toString(),
-        getExceptionMessage(exc.what())));
+      "acsch({}) is undefined ({})",
+      rhs.toString(),
+      getExceptionMessage(exc.what())
+    ));
   }
 }
 
@@ -572,9 +605,10 @@ Real tgamma(const Real &rhs) {
   }
   catch (const UndefinedException &exc) {
     throw UndefinedException(fmt::format(
-        "tgamma({}) is undefined ({})",
-        rhs.toString(),
-        getExceptionMessage(exc.what())));
+      "tgamma({}) is undefined ({})",
+      rhs.toString(),
+      getExceptionMessage(exc.what())
+    ));
   }
 }
 
