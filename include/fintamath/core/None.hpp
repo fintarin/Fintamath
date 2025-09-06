@@ -4,7 +4,7 @@
 
 namespace fintamath {
 
-class None {
+class FINTAMATH_EXPORT None {
 public:
   static constexpr MathObjectClass getClassStatic() noexcept {
     return nullptr;

@@ -63,6 +63,9 @@ include(cmake/Coverage.cmake)
 include(cmake/Sanitizers.cmake)
 include(cmake/ClangFormat.cmake)
 
+include(GenerateExportHeader)
+generate_export_header(${PROJECT_NAME} EXPORT_FILE_NAME "${CMAKE_CURRENT_SOURCE_DIR}/include/fintamath/core/FintamathExport.hpp")
+
 if(${PROJECT_NAME}_build_tests)
   enable_testing()
   add_subdirectory(tests)
