@@ -133,17 +133,15 @@ const Integer &Rational::denominator() const noexcept {
   return denom;
 }
 
-void Rational::registerDefaultObject() const noexcept {
-  using detail::Converter;
-
-  Converter::add<Rational, Integer>();
+bool Rational::equals(const Shared<IMathObject> &lhs, const Shared<IMathObject> &rhs) const noexcept {
+  return Super::equals(lhs, rhs);
 }
 
-bool Rational::equals(const Rational &rhs) const {
+bool Rational::equals(const Rational &rhs) const noexcept {
   return numer == rhs.numer && denom == rhs.denom;
 }
 
-std::strong_ordering Rational::compare(const Rational &rhs) const {
+std::strong_ordering Rational::compare(const Rational &rhs) const noexcept {
   Rational lhs = *this;
   Rational tmpRhs = rhs;
   toCommonDenominators(lhs, tmpRhs);
@@ -191,6 +189,13 @@ Rational &Rational::divide(const Rational &rhs) {
 Rational &Rational::negate() {
   numer = -numer;
   return *this;
+}
+
+void Rational::registerDefaultObject() const noexcept {
+  detail::Converter::add<Rational, Integer>();
+
+  registerEqualsFunction<Rational>();
+  registerAddFunction<Rational>();
 }
 
 void Rational::toIrreducibleRational() {

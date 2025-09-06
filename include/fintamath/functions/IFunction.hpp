@@ -102,6 +102,8 @@ protected:
 
   virtual Shared<IMathObject> approximateSelf() const;
 
+  bool equals(const Shared<IMathObject> &lhs, const Shared<IMathObject> &rhs) const noexcept override;
+
   void registerDefaultObject() const override;
 
   void initSelf(Arguments inArgs);

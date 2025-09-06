@@ -45,7 +45,6 @@ constexpr unsigned toCalculationPrecision(const unsigned resPrecision) {
 }
 
 Real::Real(Backend inBackend) : backend(std::move(inBackend)) {
-
   if (!isFinite()) {
     throw UndefinedException(fmt::format(
       R"(Undefined backend {})",
@@ -193,24 +192,15 @@ void Real::setPrecisionStaticForAllThreads(const unsigned precision) {
   Backend::default_precision(toCalculationPrecision(precision));
 }
 
-void Real::registerDefaultObject() const {
-  using detail::Converter;
-
-  Converter::add<Real, Integer>();
-  Converter::add<Real, Rational>();
-
-  [[maybe_unused]] static const unsigned defaultPrecision = [] {
-    constexpr unsigned precision = 20;
-    Real::setPrecisionStaticForAllThreads(precision);
-    return precision;
-  }();
+bool Real::equals(const Shared<IMathObject> &lhs, const Shared<IMathObject> &rhs) const noexcept {
+  return Super::equals(lhs, rhs);
 }
 
-bool Real::equals(const Real &rhs) const {
+bool Real::equals(const Real &rhs) const noexcept {
   return backend == rhs.backend && sign() == rhs.sign();
 }
 
-std::strong_ordering Real::compare(const Real &rhs) const {
+std::strong_ordering Real::compare(const Real &rhs) const noexcept {
   if (sign() != rhs.sign()) {
     return sign() <=> rhs.sign();
   }
@@ -277,6 +267,20 @@ Real &Real::divide(const Real &rhs) {
 Real &Real::negate() {
   backend = -backend;
   return *this;
+}
+
+void Real::registerDefaultObject() const {
+  detail::Converter::add<Real, Integer>();
+  detail::Converter::add<Real, Rational>();
+
+  registerEqualsFunction<Real>();
+  registerAddFunction<Real>();
+
+  [[maybe_unused]] static const unsigned defaultPrecision = [] {
+    constexpr unsigned precision = 20;
+    Real::setPrecisionStaticForAllThreads(precision);
+    return precision;
+  }();
 }
 
 bool Real::isFinite() const {

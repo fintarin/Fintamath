@@ -7,7 +7,7 @@
 
 namespace fintamath {
 
-class Variable : public IMathObject {
+class Variable : public IMathObject, IWithEqualsOperators<Variable> {
   FINTAMATH_CLASS_BODY(Variable, IMathObject)
 
 protected:
@@ -20,10 +20,15 @@ public:
 
   std::string toString() const noexcept override;
 
+protected:
+  bool equals(const Shared<IMathObject> &lhs, const Shared<IMathObject> &rhs) const noexcept override;
+
+  bool equals(const Variable &rhs) const noexcept override;
+
 private:
   std::string name;
 
-  Integer index = -1;
+  std::optional<Integer> index;
 };
 
 }

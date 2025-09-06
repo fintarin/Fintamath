@@ -25,11 +25,17 @@ public:
 
   virtual Shared<IMathObject> unwrapp() const noexcept;
 
+  friend bool equals(const Shared<IMathObject> &lhs, const Shared<IMathObject> &rhs) noexcept;
+
 protected:
+  virtual bool equals(const Shared<IMathObject> &lhs, const Shared<IMathObject> &rhs) const noexcept = 0;
+
   virtual const IMathObject &getDefaultObject() const noexcept = 0;
 
   virtual void registerDefaultObject() const;
 };
+
+bool equals(const Shared<IMathObject> &lhs, const Shared<IMathObject> &rhs) noexcept;
 
 std::ostream &operator<<(std::ostream &out, const IMathObject &rhs);
 

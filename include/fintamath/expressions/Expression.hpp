@@ -34,6 +34,9 @@ public:
 
   Shared<IMathObject> unwrapp() const noexcept override;
 
+protected:
+  bool equals(const Shared<IMathObject> &lhs, const Shared<IMathObject> &rhs) const noexcept override;
+
 private:
   using Arguments = IFunction::Arguments;
 

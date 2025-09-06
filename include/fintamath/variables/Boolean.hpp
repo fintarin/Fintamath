@@ -4,10 +4,11 @@
 
 #include "fintamath/core/ClassBody.hpp"
 #include "fintamath/core/IMathObject.hpp"
+#include "fintamath/core/IWithEqualsOperators.hpp"
 
 namespace fintamath {
 
-class Boolean : public IMathObject {
+class Boolean : public IMathObject, public IWithEqualsOperators<Boolean> {
   FINTAMATH_CLASS_BODY(Boolean, IMathObject)
 
 public:
@@ -21,6 +22,11 @@ public:
   std::string toString() const noexcept override;
 
   operator bool() const noexcept;
+
+protected:
+  bool equals(const Shared<IMathObject> &lhs, const Shared<IMathObject> &rhs) const noexcept override;
+
+  bool equals(const Boolean &rhs) const noexcept override;
 
 private:
   bool val;

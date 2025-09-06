@@ -2,7 +2,7 @@
 
 #include <compare>
 
-#include "fintamath/core/CoreConcepts.hpp"
+#include "fintamath/core/CoreUtils.hpp"
 #include "fintamath/core/IWithEqualsOperators.hpp"
 
 namespace fintamath {
@@ -11,7 +11,7 @@ template <typename Derived>
 class IWithCompareOperators : public IWithEqualsOperators<Derived> {
 
 public:
-  virtual ~IWithCompareOperators() = default;
+  ~IWithCompareOperators() override = default;
 
   friend std::strong_ordering operator<=>(const Derived &lhs, const Derived &rhs) {
     const auto &lhsParent = static_cast<const IWithCompareOperators<Derived> &>(lhs);
@@ -19,7 +19,7 @@ public:
   }
 
 protected:
-  virtual std::strong_ordering compare(const Derived &rhs) const = 0;
+  virtual std::strong_ordering compare(const Derived &rhs) const noexcept = 0;
 };
 
 template <typename Lhs, detail::ConvertibleToAndNotSameAs<Lhs> Rhs>

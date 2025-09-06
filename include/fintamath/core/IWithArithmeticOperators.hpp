@@ -1,6 +1,6 @@
 #pragma once
 
-#include "fintamath/core/CoreConcepts.hpp"
+#include "fintamath/core/CoreUtils.hpp"
 
 namespace fintamath {
 
@@ -56,8 +56,6 @@ public:
   }
 
 protected:
-  virtual bool equals(const Derived &rhs) const = 0;
-
   virtual Derived &add(const Derived &rhs) = 0;
 
   virtual Derived &substract(const Derived &rhs) = 0;

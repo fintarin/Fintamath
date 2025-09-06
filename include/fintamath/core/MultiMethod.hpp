@@ -1,6 +1,7 @@
 #pragma once
 
 #include <functional>
+#include <optional>
 #include <tuple>
 #include <unordered_map>
 
@@ -36,14 +37,14 @@ public:
 
   template <typename... Args>
     requires(sizeof...(Args) == sizeof...(ArgsBase))
-  ResBase operator()(Args &&...args) const {
+  std::optional<ResBase> operator()(Args &&...args) const {
     const CallbackId funcId = getFunctionId(args...);
 
     if (auto iter = idToFunctionMap.find(funcId); iter != idToFunctionMap.end()) {
       return iter->second(std::forward<Args>(args)...);
     }
 
-    return nullptr;
+    return {};
   }
 
 private:

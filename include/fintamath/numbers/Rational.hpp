@@ -38,11 +38,11 @@ public:
   const Integer &denominator() const noexcept;
 
 protected:
-  void registerDefaultObject() const noexcept override;
+  bool equals(const Shared<IMathObject> &lhs, const Shared<IMathObject> &rhs) const noexcept override;
 
-  bool equals(const Rational &rhs) const override;
+  bool equals(const Rational &rhs) const noexcept override;
 
-  std::strong_ordering compare(const Rational &rhs) const override;
+  std::strong_ordering compare(const Rational &rhs) const noexcept override;
 
   Rational &add(const Rational &rhs) override;
 
@@ -53,6 +53,8 @@ protected:
   Rational &divide(const Rational &rhs) override;
 
   Rational &negate() override;
+
+  void registerDefaultObject() const noexcept override;
 
 private:
   void toIrreducibleRational();

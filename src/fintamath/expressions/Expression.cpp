@@ -63,6 +63,18 @@ std::string Expression::toString() const noexcept {
   return arg->toString();
 }
 
+Shared<IMathObject> Expression::unwrapp() const noexcept {
+  return arg;
+}
+
+bool Expression::equals(const Shared<IMathObject> & /*lhs*/, const Shared<IMathObject> &rhs) const noexcept {
+  if (const auto rhsExpr = cast<Expression>(rhs)) {
+    return fintamath::equals(arg, rhsExpr->arg);
+  }
+
+  return fintamath::equals(arg, rhs);
+}
+
 Expression::TokenToTermVector Expression::parseTokensToTerms(detail::Tokens &tokens) {
   if (tokens.empty()) {
     throw InvalidInputException("empty input");
@@ -223,42 +235,6 @@ void Expression::moveFunctionTerms(TermStack &outTermStack, FunctionTermStack &f
     functionTermStack.pop();
   }
 }
-
-// Unique<IFunction> Expression::findFunction(const std::string &str, const size_t argNum) {
-//   for (auto &func : IFunction::parse(str)) {
-//     if (func->getArgumentClasses().size() == argNum) {
-//       return std::move(func);
-//     }
-//   }
-
-//   return {};
-// }
-
-// auto Expression::findOperator(const std::string &str, const IOperator::Priority priority) -> Unique<IOperator> {
-//   for (auto &oper : IOperator::parse(str)) {
-//     if (oper->getPriority() == priority) {
-//       return std::move(oper);
-//     }
-//   }
-
-//   return {};
-// }
-
-// void Expression::moveFunctionTerms(Term &objects, std::stack<FunctionTerm> &functions, const IOperator *nextOper) {
-//   if (isPrefixOperator(nextOper)) {
-//     return;
-//   }
-
-//   while (!functions.empty() &&
-//          functions.top().term.name != "(" &&
-//          (!nextOper ||
-//           !functions.top().priority ||
-//           *functions.top().priority <= nextOper->getPriority())) {
-
-//     objects.emplace(std::move(functions.top().term.value));
-//     functions.pop();
-//   }
-// }
 
 // void Expression::insertMultiplications(TermVector &terms) {
 //   static const ArgumentPtr mul = MulOper{}.clone();
@@ -461,112 +437,4 @@ Expression::Arguments Expression::unwrappComma(Argument inArg) {
   return {std::move(inArg)};
 }
 
-Shared<IMathObject> Expression::unwrapp() const noexcept {
-  return arg;
-}
-
-// ArgumentPtr Expression::compress(const ArgumentPtr &child) {
-//   if (const auto expr = cast<Expression>(child)) {
-//     return expr->child;
-//   }
-
-//   return child;
-// }
-
-// void Expression::validateFunctionArgs(const IFunction &func, const ArgumentPtrVector &args) {
-//   const ArgumentTypeVector &expectedArgTypes = func.getArgumentClasses();
-
-//   if (args.size() != expectedArgTypes.size()) {
-//     if (!func.isVariadic()) {
-//       throw InvalidInputException(fmt::format(
-//         R"(Unable to call {} "{}" with {} argument{} (expected {}))",
-//         func.getClass()->getName(),
-//         func.toString(),
-//         args.size(),
-//         args.size() != 1 ? "s" : "",
-//         func.getArgumentClasses().size()
-//       ));
-//     }
-
-//     if (args.empty()) {
-//       throw InvalidInputException(fmt::format(
-//         R"(Unable to call {} "{}" with 0 arguments (expected > 0))",
-//         func.getClass()->getName(),
-//         func.toString()
-//       ));
-//     }
-//   }
-
-//   const bool doesArgSizeMatch = !func.isVariadic() && args.size() == expectedArgTypes.size();
-//   MathObjectClass expectedClass = expectedArgTypes.front();
-
-//   for (size_t i = 0; i < args.size(); i++) {
-//     const ArgumentPtr &arg = args[i];
-
-//     if (doesArgSizeMatch) {
-//       expectedClass = expectedArgTypes[i];
-//     }
-
-//     if (auto [argClass, doesMatch] = doesArgMatch(expectedClass, arg); !doesMatch) {
-//       throw InvalidInputException(fmt::format(
-//         R"(Unable to call {} "{}" with argument #{} {} "{}" (expected {}))",
-//         func.getClass()->getName(),
-//         func.toString(),
-//         i,
-//         argClass->getName(),
-//         arg->toString(),
-//         expectedClass->getName()
-//       ));
-//     }
-//   }
-// }
-
-// std::pair<MathObjectClass, bool> Expression::doesArgMatch(const MathObjectClass &expectedClass, const ArgumentPtr &arg) {
-//   if (const auto childExpr = cast<IExpression>(arg)) {
-//     const MathObjectClass argReturnClass = childExpr->getFunction()->getReturnClass();
-
-//     if (argReturnClass != Variable::getClassStatic() &&
-//         !is(expectedClass, argReturnClass) &&
-//         !is(argReturnClass, expectedClass)) {
-
-//       return {argReturnClass, false};
-//     }
-//   }
-//   else if (const auto argConst = cast<IConstant>(arg)) {
-//     if (const MathObjectClass argReturnClass = argConst->getReturnClass();
-//         !is(expectedClass, argReturnClass) &&
-//         !is(argReturnClass, expectedClass)) {
-
-//       return {argReturnClass, false};
-//     }
-//   }
-//   else {
-//     if (const MathObjectClass argClass = arg->getClass();
-//         argClass != Variable::getClassStatic() &&
-//         !is(expectedClass, argClass)) {
-
-//       return {argClass, false};
-//     }
-//   }
-
-//   return {arg->getClass(), true};
-// }
-
-// namespace detail {
-
-// Unique<IMathObject> makeExpr(const IFunction &func, ArgumentPtrVector args) {
-//   if (func.isVariadic() && args.size() == 1) {
-//     return std::move(args.front())->clone();
-//   }
-
-//   if (const auto strToConstr = Expression::getExpressionMaker().find(func.getClass());
-//       strToConstr != Expression::getExpressionMaker().end()) {
-
-//     if (auto expr = strToConstr->second(std::move(args))) {
-//       return expr;
-//     }
-//   }
-
-//   return FunctionExpression(func, std::move(args)).clone();
-// }
 }

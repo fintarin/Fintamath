@@ -55,11 +55,15 @@ const Integer::Backend &Integer::getBackend() const noexcept {
   return backend;
 }
 
-bool Integer::equals(const Integer &rhs) const {
+bool Integer::equals(const Shared<IMathObject> &lhs, const Shared<IMathObject> &rhs) const noexcept {
+  return Super::equals(lhs, rhs);
+}
+
+bool Integer::equals(const Integer &rhs) const noexcept {
   return backend == rhs.backend;
 }
 
-std::strong_ordering Integer::compare(const Integer &rhs) const {
+std::strong_ordering Integer::compare(const Integer &rhs) const noexcept {
   return backend.compare(rhs.backend) <=> 0;
 }
 
@@ -163,6 +167,11 @@ Integer &Integer::increase() {
 Integer &Integer::decrease() {
   --backend;
   return *this;
+}
+
+void Integer::registerDefaultObject() const {
+  registerEqualsFunction<Integer>();
+  registerAddFunction<Integer>();
 }
 
 Integer &Integer::operator%=(const Integer &rhs) {

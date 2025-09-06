@@ -1,6 +1,5 @@
 #pragma once
 
-#include <memory>
 #include <unordered_map>
 
 #include "fintamath/core/IMathObject.hpp"
@@ -25,6 +24,8 @@ public:
   static Shared<IConstant> parseConstant(const std::string &str);
 
 protected:
+  bool equals(const Shared<IMathObject> &lhs, const Shared<IMathObject> &rhs) const noexcept override;
+
   void registerDefaultObject() const override;
 
 private:

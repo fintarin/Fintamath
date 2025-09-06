@@ -6,6 +6,7 @@
 
 #include "fintamath/constants/IConstant.hpp"
 #include "fintamath/core/Converter.hpp"
+#include "fintamath/core/CoreUtils.hpp"
 #include "fintamath/core/MathObjectUtils.hpp"
 #include "fintamath/core/Tokenizer.hpp"
 #include "fintamath/numbers/Real.hpp"
@@ -181,6 +182,14 @@ Shared<IMathObject> IFunction::solveSelf() const {
 
 Shared<IMathObject> IFunction::approximateSelf() const {
   return nullptr;
+}
+
+bool IFunction::equals(const Shared<IMathObject> & /*lhs*/, const Shared<IMathObject> &rhs) const noexcept {
+  if (const auto rhsFunc = cast<IFunction>(rhs)) {
+    return getClass() == rhsFunc->getClass() && detail::areContainersEqual(args, rhsFunc->args, &fintamath::equals);
+  }
+
+  return false;
 }
 
 void IFunction::registerDefaultObject() const {

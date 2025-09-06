@@ -3,7 +3,7 @@
 #include <functional>
 #include <tuple>
 
-#include "fintamath/core/CoreConcepts.hpp"
+#include "fintamath/core/CoreUtils.hpp"
 
 namespace fintamath::detail {
 

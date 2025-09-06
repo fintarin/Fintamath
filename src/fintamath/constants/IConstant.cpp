@@ -25,6 +25,10 @@ Shared<IConstant> IConstant::parseConstant(const std::string &str) {
   return iter != nameToConstMap.end() ? iter->second : nullptr;
 }
 
+bool IConstant::equals(const Shared<IMathObject> & /*lhs*/, const Shared<IMathObject> &rhs) const noexcept {
+  return rhs && getClass() == rhs->getClass();
+}
+
 void IConstant::registerDefaultObject() const {
   std::string name = toString();
   detail::Tokenizer::registerToken(name);

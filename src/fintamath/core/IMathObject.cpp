@@ -15,6 +15,11 @@ Shared<IMathObject> IMathObject::unwrapp() const noexcept {
 void IMathObject::registerDefaultObject() const {
 }
 
+bool equals(const Shared<IMathObject> &lhs, const Shared<IMathObject> &rhs) noexcept {
+  return lhs == rhs &&
+         (!lhs || lhs->equals(lhs, rhs));
+}
+
 std::ostream &operator<<(std::ostream &out, const IMathObject &rhs) {
   return out << rhs.toString();
 }

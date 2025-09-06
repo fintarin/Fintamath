@@ -4,6 +4,8 @@
 #include "fintamath/exceptions/InvalidInputException.hpp"
 #include "fintamath/expressions/Expression.hpp"
 #include "fintamath/expressions/ExpressionFunctions.hpp"
+#include "fintamath/functions/arithmetic/Add.hpp"
+#include "fintamath/numbers/Integer.hpp"
 
 using namespace fintamath;
 

@@ -6,6 +6,7 @@
 
 #include <fmt/core.h>
 
+#include "fintamath/core/MathObjectUtils.hpp"
 #include "fintamath/exceptions/InvalidInputException.hpp"
 #include "fintamath/numbers/Integer.hpp"
 
@@ -38,8 +39,22 @@ Variable::Variable(std::string_view inName, Integer inIndex) : Variable(inName) 
 }
 
 std::string Variable::toString() const noexcept {
-  std::string indexStr = index != -1 ? fmt::format("_{}", index.toString()) : "";
-  return fmt::format("{}{}", name, indexStr);
+  if (index) {
+    return fmt::format("{}_{}", name, index->toString());
+  }
+  return name;
+}
+
+bool Variable::equals(const Shared<IMathObject> & /*lhs*/, const Shared<IMathObject> &rhs) const noexcept {
+  if (const auto rhsVar = cast<Variable>(rhs)) {
+    return equals(*rhsVar);
+  }
+
+  return false;
+}
+
+bool Variable::equals(const Variable &rhs) const noexcept {
+  return name == rhs.name && index == rhs.index;
 }
 
 }

@@ -78,9 +78,11 @@ public:
   Integer operator--(int);
 
 protected:
-  bool equals(const Integer &rhs) const override;
+  bool equals(const Shared<IMathObject> &lhs, const Shared<IMathObject> &rhs) const noexcept override;
 
-  std::strong_ordering compare(const Integer &rhs) const override;
+  bool equals(const Integer &rhs) const noexcept override;
+
+  std::strong_ordering compare(const Integer &rhs) const noexcept override;
 
   Integer &add(const Integer &rhs) override;
 
@@ -109,6 +111,8 @@ protected:
   Integer &increase();
 
   Integer &decrease();
+
+  void registerDefaultObject() const override;
 
 private:
   Backend backend;

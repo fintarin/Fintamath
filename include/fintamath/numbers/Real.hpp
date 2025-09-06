@@ -78,11 +78,11 @@ public:
   static void setPrecisionStaticForAllThreads(unsigned precision);
 
 protected:
-  void registerDefaultObject() const override;
+  bool equals(const Shared<IMathObject> &lhs, const Shared<IMathObject> &rhs) const noexcept override;
 
-  bool equals(const Real &rhs) const override;
+  bool equals(const Real &rhs) const noexcept override;
 
-  std::strong_ordering compare(const Real &rhs) const override;
+  std::strong_ordering compare(const Real &rhs) const noexcept override;
 
   Real &add(const Real &rhs) override;
 
@@ -93,6 +93,8 @@ protected:
   Real &divide(const Real &rhs) override;
 
   Real &negate() override;
+
+  void registerDefaultObject() const override;
 
 private:
   bool isFinite() const;

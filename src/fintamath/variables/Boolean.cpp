@@ -4,6 +4,7 @@
 
 #include <fmt/core.h>
 
+#include "fintamath/core/MathObjectUtils.hpp"
 #include "fintamath/exceptions/InvalidInputException.hpp"
 
 namespace fintamath {
@@ -31,6 +32,18 @@ std::string Boolean::toString() const noexcept {
 
 Boolean::operator bool() const noexcept {
   return val;
+}
+
+bool Boolean::equals(const Shared<IMathObject> & /*lhs*/, const Shared<IMathObject> &rhs) const noexcept {
+  if (const auto rhsBool = cast<Boolean>(rhs)) {
+    return equals(*rhsBool);
+  }
+
+  return false;
+}
+
+bool Boolean::equals(const Boolean &rhs) const noexcept {
+  return val == rhs.val;
 }
 
 }
