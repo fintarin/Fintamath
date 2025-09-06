@@ -19,7 +19,7 @@ protected:
   MulOper() = default;
 
 public:
-  static Shared<Mul> make(Arguments inArgs);
+  static SharedRef<Mul> make(Arguments inArgs);
 };
 
 }

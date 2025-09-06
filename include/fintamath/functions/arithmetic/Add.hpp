@@ -19,7 +19,7 @@ protected:
   AddOper() = default;
 
 public:
-  static Shared<Add> make(Arguments inArgs);
+  static SharedRef<Add> make(Arguments inArgs);
 };
 
 }

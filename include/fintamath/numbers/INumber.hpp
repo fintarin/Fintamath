@@ -11,19 +11,19 @@ namespace fintamath {
 class INumber : public IMathObject {
   FINTAMATH_INTERFACE_BODY(INumber, IMathObject)
 
-  using BoolBinaryMultiMethod = detail::MultiMethod<bool(const Shared<INumber> &, const Shared<INumber> &)>;
+  using BoolBinaryMultiMethod = detail::MultiMethod<bool(const SharedRef<INumber> &, const SharedRef<INumber> &)>;
 
-  using NumberBinaryMultiMethod = detail::MultiMethod<Shared<INumber>(const Shared<INumber> &, const Shared<INumber> &)>;
+  using NumberBinaryMultiMethod = detail::MultiMethod<SharedRef<INumber>(const SharedRef<INumber> &, const SharedRef<INumber> &)>;
 
 public:
   virtual std::optional<unsigned> getPrecision() const noexcept;
 
   virtual bool isComplex() const noexcept;
 
-  friend Shared<INumber> add(const Shared<INumber> &lhs, const Shared<INumber> &rhs);
+  friend SharedRef<INumber> add(const SharedRef<INumber> &lhs, const SharedRef<INumber> &rhs);
 
 protected:
-  bool equals(const Shared<IMathObject> &lhs, const Shared<IMathObject> &rhs) const noexcept override;
+  bool equals(const SharedRef<IMathObject> &lhs, const SharedRef<IMathObject> &rhs) const noexcept override;
 
   template <typename Num, typename Func>
   static void registerEqualsFunction(Func func = {});
@@ -55,8 +55,7 @@ inline void INumber::registerAddFunction(Func func) {
 
 template <typename Num>
 inline void INumber::registerBoolBinaryFunction(auto &multimethod, auto func) {
-  multimethod.template add<Num, Num>([func = std::move(func)](const Shared<Num> &lhs, const Shared<Num> &rhs) {
-    assert(lhs && rhs);
+  multimethod.template add<Num, Num>([func = std::move(func)](const SharedRef<Num> &lhs, const SharedRef<Num> &rhs) {
     return func(*lhs, *rhs);
   });
 }
@@ -64,13 +63,11 @@ inline void INumber::registerBoolBinaryFunction(auto &multimethod, auto func) {
 template <typename Num>
 inline void INumber::registerNumberBinaryFunction(auto &multimethod, auto func) {
   multimethod.template add<Num, Num>(
-    [func = std::move(func)](const Shared<Num> &lhs, const Shared<Num> &rhs) -> Shared<INumber> {
-      assert(lhs && rhs);
-
+    [func = std::move(func)](const SharedRef<Num> &lhs, const SharedRef<Num> &rhs) -> SharedRef<INumber> {
       auto res = func(*lhs, *rhs);
 
       if (auto resUnwrapped = cast<INumber>(res.unwrapp())) {
-        return resUnwrapped;
+        return resUnwrapped.toRef();
       }
 
       return makeShared<decltype(res)>(std::move(res));

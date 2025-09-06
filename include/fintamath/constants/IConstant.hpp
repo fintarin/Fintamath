@@ -10,21 +10,21 @@ class IConstant : public IMathObject {
   FINTAMATH_INTERFACE_BODY(IConstant, IMathObject)
 
 private:
-  using NameToConstantMap = std::unordered_map<std::string, Shared<IConstant>>;
+  using NameToConstantMap = std::unordered_map<std::string, SharedRef<IConstant>>;
 
 public:
   virtual constexpr MathObjectClass getValueClass() const noexcept = 0;
 
-  virtual Shared<IMathObject> getValue() const noexcept;
+  virtual SharedPtr<IMathObject> getValue() const noexcept;
 
-  virtual Shared<IMathObject> approximateValue() const noexcept;
+  virtual SharedPtr<IMathObject> approximateValue() const noexcept;
 
-  Shared<IMathObject> unwrapp() const noexcept final;
+  SharedPtr<IMathObject> unwrapp() const noexcept final;
 
-  static Shared<IConstant> parseConstant(const std::string &str);
+  static SharedPtr<IConstant> parseConstant(const std::string &str);
 
 protected:
-  bool equals(const Shared<IMathObject> &lhs, const Shared<IMathObject> &rhs) const noexcept override;
+  bool equals(const SharedRef<IMathObject> &lhs, const SharedRef<IMathObject> &rhs) const noexcept override;
 
   void registerDefaultObject() const override;
 

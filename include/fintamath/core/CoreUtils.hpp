@@ -19,6 +19,13 @@ concept Hashable = requires(T v) {
 };
 
 template <typename T>
+concept IsSmartPointer = requires(T v) {
+  v.operator->();
+  *v;
+  v.get();
+};
+
+template <typename T>
 using EqualTo = std::equal_to<T>;
 
 template <typename Res, typename T>

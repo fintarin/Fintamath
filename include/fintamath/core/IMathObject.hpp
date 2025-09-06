@@ -5,7 +5,7 @@
 
 #include "fintamath/core/InterfaceBody.hpp"
 #include "fintamath/core/MathObjectClass.hpp"
-#include "fintamath/core/MathObjectPointers.hpp"
+#include "fintamath/core/Pointers.hpp"
 
 namespace fintamath {
 
@@ -19,23 +19,23 @@ public:
 
   virtual std::string toString() const noexcept;
 
-  virtual Unique<IMathObject> clone() const & noexcept = 0;
+  virtual UniqueRef<IMathObject> clone() const & noexcept = 0;
 
-  virtual Unique<IMathObject> clone() && noexcept = 0;
+  virtual UniqueRef<IMathObject> clone() && noexcept = 0;
 
-  virtual Shared<IMathObject> unwrapp() const noexcept;
+  virtual SharedPtr<IMathObject> unwrapp() const noexcept;
 
-  friend bool equals(const Shared<IMathObject> &lhs, const Shared<IMathObject> &rhs) noexcept;
+  friend bool equals(const SharedRef<IMathObject> &lhs, const SharedRef<IMathObject> &rhs) noexcept;
 
 protected:
-  virtual bool equals(const Shared<IMathObject> &lhs, const Shared<IMathObject> &rhs) const noexcept = 0;
+  virtual bool equals(const SharedRef<IMathObject> &lhs, const SharedRef<IMathObject> &rhs) const noexcept = 0;
 
   virtual const IMathObject &getDefaultObject() const noexcept = 0;
 
   virtual void registerDefaultObject() const;
 };
 
-bool equals(const Shared<IMathObject> &lhs, const Shared<IMathObject> &rhs) noexcept;
+bool equals(const SharedRef<IMathObject> &lhs, const SharedRef<IMathObject> &rhs) noexcept;
 
 std::ostream &operator<<(std::ostream &out, const IMathObject &rhs);
 

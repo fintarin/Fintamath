@@ -25,7 +25,7 @@ FINTAMATH_FUNCTION_CLASS_IMPLEMENTATION(
   }
 )
 
-Shared<Mul> MulOper::make(Arguments inArgs) {
+SharedRef<Mul> MulOper::make(Arguments inArgs) {
   return Mul::make(std::move(inArgs));
 }
 

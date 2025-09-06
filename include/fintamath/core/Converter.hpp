@@ -17,12 +17,12 @@ namespace detail {
 class Converter final {
   using ClassPair = std::pair<MathObjectClass, MathObjectClass>;
 
-  using ConvertCallback = std::function<Shared<IMathObject>(const Shared<IMathObject> &)>;
+  using ConvertCallback = std::function<SharedPtr<IMathObject>(const SharedRef<IMathObject> &)>;
 
   using ClassPairToCallbackMap = std::unordered_map<ClassPair, ConvertCallback, Hash<ClassPair>>;
 
 public:
-  static Shared<IMathObject> convert(MathObjectClass toClass, const Shared<IMathObject> &from);
+  static SharedPtr<IMathObject> convert(MathObjectClass toClass, const SharedRef<IMathObject> &from);
 
   template <typename To, typename From>
   static void add();
@@ -35,8 +35,8 @@ template <typename To, typename From>
 inline void Converter::add() {
   getClassPairToCallbackMap().emplace(
     ClassPair{To::getClassStatic(), From::getClassStatic()},
-    [](const Shared<IMathObject> &from) {
-      return makeShared<To>(cast<From>(*from));
+    [](const SharedRef<IMathObject> &from) {
+      return makeShared<To>(castRef<From>(*from));
     }
   );
 }
@@ -44,18 +44,17 @@ inline void Converter::add() {
 }
 
 template <std::derived_from<IMathObject> From>
-Shared<IMathObject> convert(MathObjectClass toClass, const Shared<From> &from) {
+SharedPtr<IMathObject> convert(MathObjectClass toClass, const SharedRef<From> &from) {
   return detail::Converter::convert(toClass, from);
 }
 
 template <std::derived_from<IMathObject> To, std::derived_from<IMathObject> From>
-Shared<To> convert(const Shared<To> &to, const Shared<From> &from) {
-  assert(from);
+SharedPtr<To> convert(const SharedRef<To> &to, const SharedRef<From> &from) {
   return cast<To>(detail::Converter::convert(to->getClass(), from));
 }
 
 template <std::derived_from<IMathObject> To, std::derived_from<IMathObject> From>
-Shared<To> convert(const Shared<From> &from) {
+SharedPtr<To> convert(const SharedRef<From> &from) {
   return cast<To>(convert(To::getClassStatic(), from));
 }
 

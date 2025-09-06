@@ -23,7 +23,7 @@ FINTAMATH_FUNCTION_CLASS_IMPLEMENTATION(
   }
 )
 
-Shared<Comma> CommaOper::make(Arguments inArgs) {
+SharedRef<Comma> CommaOper::make(Arguments inArgs) {
   return Comma::make(std::move(inArgs));
 }
 

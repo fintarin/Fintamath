@@ -7,7 +7,7 @@ namespace fintamath {
 
 FINTAMATH_CLASS_IMPLEMENTATION(E)
 
-Shared<IMathObject> E::approximateValue() const noexcept {
+SharedPtr<IMathObject> E::approximateValue() const noexcept {
   return getE().clone();
 }
 

@@ -11,7 +11,7 @@ class Sin : public IFunction {
 protected:
   Sin() = default;
 
-  Shared<IMathObject> approximateSelf() const override;
+  SharedPtr<IMathObject> approximateSelf() const override;
 };
 
 }

@@ -44,14 +44,13 @@ public:
     bool isVariadic = false;
   };
 
-  using Argument = Shared<IMathObject>;
-  using Arguments = std::vector<Argument>;
+  using Arguments = std::vector<SharedRef<IMathObject>>;
 
   class FunctionMaker {
   public:
     FunctionMaker(const IFunction &inDefaultFunc);
 
-    Shared<IFunction> make(Arguments inArgs) const;
+    SharedRef<IFunction> make(Arguments inArgs) const;
 
     bool doArgumentsMatch(const Arguments &inArgs) const noexcept;
 
@@ -73,63 +72,61 @@ public:
 
   std::string toString() const noexcept override;
 
-  Shared<IMathObject> unwrapp() const noexcept override;
+  SharedPtr<IMathObject> unwrapp() const noexcept override;
 
   const Arguments &getArguments() const noexcept;
 
   static const FunctionMakers *parseFunctionMakers(const std::string &str);
 
-  static void compress(Argument& arg);
+  static void compress(SharedRef<IMathObject> &arg);
 
-  static void preSimplify(Argument &arg);
+  static void preSimplify(SharedRef<IMathObject> &arg);
 
-  static void simplify(Argument &arg);
+  static void simplify(SharedRef<IMathObject> &arg);
 
-  static void solve(Argument &arg);
+  static void solve(SharedRef<IMathObject> &arg);
 
-  static void approximate(Argument &arg);
+  static void approximate(SharedRef<IMathObject> &arg);
 
 protected:
-  virtual Shared<IFunction> makeSelf(Arguments inArgs) const = 0;
+  virtual SharedRef<IFunction> makeSelf(Arguments inArgs) const = 0;
 
-  virtual Shared<IMathObject> compressSelf() const;
+  virtual SharedPtr<IMathObject> compressSelf() const;
 
-  virtual Shared<IMathObject> preSimplifySelf() const;
+  virtual SharedPtr<IMathObject> preSimplifySelf() const;
 
-  virtual Shared<IMathObject> simplifySelf() const;
+  virtual SharedPtr<IMathObject> simplifySelf() const;
 
-  virtual Shared<IMathObject> solveSelf() const;
+  virtual SharedPtr<IMathObject> solveSelf() const;
 
-  virtual Shared<IMathObject> approximateSelf() const;
+  virtual SharedPtr<IMathObject> approximateSelf() const;
 
-  bool equals(const Shared<IMathObject> &lhs, const Shared<IMathObject> &rhs) const noexcept override;
+  bool equals(const SharedRef<IMathObject> &lhs, const SharedRef<IMathObject> &rhs) const noexcept override;
 
   void registerDefaultObject() const override;
 
   void initSelf(Arguments inArgs);
 
 private:
-  static bool areArgumentsNonNull(const Arguments &args);
-
   static bool doArgumentsMatch(const Declaration &decl, const Arguments &args) noexcept;
 
   static bool doArgumentsMatchNonVariadic(const Declaration &decl, const Arguments &args) noexcept;
 
   static bool doArgumentsMatchVariadic(const Declaration &decl, const Arguments &args) noexcept;
 
-  static bool doesArgumentMatch(MathObjectClass expectedClass, const Argument &args) noexcept;
+  static bool doesArgumentMatch(MathObjectClass expectedClass, const SharedRef<IMathObject> &arg) noexcept;
 
   static Arguments unwrappArguments(Arguments args) noexcept;
 
-  static void appendVariadicFunctionArgument(const Argument &arg, const MathObjectClass &selfClass, Arguments &outArgs);
-  
+  static void appendVariadicFunctionArgument(const SharedRef<IMathObject> &arg, const MathObjectClass &selfClass, Arguments &outArgs);
+
   static void appendVariadicFunctionArguments(const IFunction &func, const MathObjectClass &selfClass, Arguments &outArgs) noexcept;
 
   template <typename ModifySelfCallback, typename ModifyCallback, typename PreviousModifyCallback>
-  static void modify(Argument &arg, const ModifySelfCallback &modifySelf, const ModifyCallback &modify, const PreviousModifyCallback &prevModify, FunctionState stateAfterModify);
+  static void modify(SharedRef<IMathObject> &arg, const ModifySelfCallback &modifySelf, const ModifyCallback &modify, const PreviousModifyCallback &prevModify, FunctionState stateAfterModify);
 
   template <typename ModifyCallback>
-  static void modifyFunctionArguments(Shared<IFunction> &func, const ModifyCallback &modify);
+  static void modifyFunctionArguments(SharedRef<IFunction> &func, const ModifyCallback &modify);
 
   static NameToFunctionMakersMap &getNameToFunctionMakersMap();
 
@@ -142,26 +139,28 @@ private:
 };
 
 template <typename ModifySelfCallback, typename ModifyCallback, typename PreviousModifyCallback>
-inline void IFunction::modify(Argument &arg, const ModifySelfCallback &modifySelf, const ModifyCallback &modify, const PreviousModifyCallback &prevModify, FunctionState stateAfterModify) {
-  auto func = cast<IFunction>(arg);
-  if (!func || func->state >= stateAfterModify) {
+inline void IFunction::modify(SharedRef<IMathObject> &arg, const ModifySelfCallback &modifySelf, const ModifyCallback &modify, const PreviousModifyCallback &prevModify, FunctionState stateAfterModify) {
+  auto funcPtr = cast<IFunction>(arg);
+  if (!funcPtr || funcPtr->state >= stateAfterModify) {
     return;
   }
 
   prevModify(arg);
 
-  if (arg != func) {
-    func = cast<IFunction>(arg);
+  if (arg != funcPtr) {
+    funcPtr = cast<IFunction>(arg);
+
+    if (!funcPtr) {
+      return;
+    }
   }
 
-  if (!func) {
-    return;
-  }
-
+  auto func = std::move(funcPtr).toRef();
   modifyFunctionArguments(func, modify);
   arg = func;
 
-  if (auto res = modifySelf(*func)) {
+  if (auto resPtr = modifySelf(*func)) {
+    auto res = std::move(resPtr).toRef();
     modify(res);
     arg = std::move(res);
   }
@@ -172,14 +171,14 @@ inline void IFunction::modify(Argument &arg, const ModifySelfCallback &modifySel
 }
 
 template <typename ModifyCallback>
-inline void IFunction::modifyFunctionArguments(Shared<IFunction> &func, const ModifyCallback &modify) {
+inline void IFunction::modifyFunctionArguments(SharedRef<IFunction> &func, const ModifyCallback &modify) {
   const Arguments &oldArgs = func->getArguments();
   std::optional<Arguments> newArgsFound;
   size_t argIndex = 0;
 
   for (; argIndex < oldArgs.size(); argIndex++) {
-    const Argument &oldArg = oldArgs[argIndex];
-    Argument newArg = oldArg;
+    const SharedRef<IMathObject> &oldArg = oldArgs[argIndex];
+    SharedRef<IMathObject> newArg = oldArg;
     modify(newArg);
 
     if (newArg != oldArg) {

@@ -16,7 +16,7 @@ public:
     return INumber::getClassStatic();
   }
 
-  Shared<IMathObject> approximateValue() const noexcept override;
+  SharedPtr<IMathObject> approximateValue() const noexcept override;
 };
 
 }

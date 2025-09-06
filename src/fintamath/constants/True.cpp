@@ -6,7 +6,7 @@ namespace fintamath {
 
 FINTAMATH_CLASS_IMPLEMENTATION(True)
 
-Shared<IMathObject> True::getValue() const noexcept {
+SharedPtr<IMathObject> True::getValue() const noexcept {
   static const auto obj = makeShared<Boolean>(true);
   return obj;
 }

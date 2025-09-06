@@ -7,38 +7,39 @@ namespace fintamath {
 
 FINTAMATH_INTERFACE_IMPLEMENTATION(IConstant)
 
-Shared<IMathObject> IConstant::getValue() const noexcept {
-  return nullptr;
+SharedPtr<IMathObject> IConstant::getValue() const noexcept {
+  return {};
 }
 
-Shared<IMathObject> IConstant::approximateValue() const noexcept {
-  return nullptr;
+SharedPtr<IMathObject> IConstant::approximateValue() const noexcept {
+  return {};
 }
 
-Shared<IMathObject> IConstant::unwrapp() const noexcept {
+SharedPtr<IMathObject> IConstant::unwrapp() const noexcept {
   return getValue();
 }
 
-Shared<IConstant> IConstant::parseConstant(const std::string &str) {
+SharedPtr<IConstant> IConstant::parseConstant(const std::string &str) {
   const NameToConstantMap &nameToConstMap = getNameToConstantMap();
   const auto iter = nameToConstMap.find(str);
-  return iter != nameToConstMap.end() ? iter->second : nullptr;
+  return iter != nameToConstMap.end() ? iter->second : SharedPtr<IConstant>{};
 }
 
-bool IConstant::equals(const Shared<IMathObject> & /*lhs*/, const Shared<IMathObject> &rhs) const noexcept {
-  return rhs && getClass() == rhs->getClass();
+bool IConstant::equals(const SharedRef<IMathObject> & /*lhs*/, const SharedRef<IMathObject> &rhs) const noexcept {
+  return getClass() == rhs->getClass();
 }
 
 void IConstant::registerDefaultObject() const {
   std::string name = toString();
   detail::Tokenizer::registerToken(name);
 
-  auto object = cast<IConstant>(std::shared_ptr(clone()));
-  [[maybe_unused]] const auto empaceResult = getNameToConstantMap().emplace(
+  auto self = cast<IConstant>(SharedPtr<IMathObject>(clone()));
+
+  [[maybe_unused]] const auto empaceRes = getNameToConstantMap().emplace(
     std::move(name),
-    std::move(object)
+    std::move(self).toRef()
   );
-  assert(empaceResult.second);
+  assert(empaceRes.second);
 }
 
 IConstant::NameToConstantMap &IConstant::getNameToConstantMap() {

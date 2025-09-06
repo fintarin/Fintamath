@@ -19,7 +19,7 @@ protected:
   CommaOper() = default;
 
 public:
-  static Shared<Comma> make(Arguments inArgs);
+  static SharedRef<Comma> make(Arguments inArgs);
 };
 
 }

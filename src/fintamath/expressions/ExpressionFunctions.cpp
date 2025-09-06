@@ -8,7 +8,7 @@ namespace {
 
 template <typename ModifyCallback>
 Expression modify(const Expression &rhs, const ModifyCallback &modifyCallback) {
-  Expression::Argument arg = rhs.unwrapp();
+  auto arg = rhs.unwrapp().toRef();
   modifyCallback(arg);
   return arg;
 }
@@ -28,7 +28,9 @@ Expression approximate(const Expression &rhs) {
 }
 
 Expression sin(const Expression &rhs) {
-  return {Sin::make({rhs.unwrapp()})};
+  return modify(rhs, [](SharedRef<IMathObject> &arg) {
+    arg = Sin::make({arg});
+  });
 }
 
 }

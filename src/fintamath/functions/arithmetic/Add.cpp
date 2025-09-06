@@ -25,7 +25,7 @@ FINTAMATH_FUNCTION_CLASS_IMPLEMENTATION(
   }
 )
 
-Shared<Add> AddOper::make(Arguments inArgs) {
+SharedRef<Add> AddOper::make(Arguments inArgs) {
   return Add::make(std::move(inArgs));
 }
 

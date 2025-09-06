@@ -14,7 +14,7 @@
 //   return Real::getClassStatic();
 // }
 
-// Unique<MathObject> I::getValue(bool /*shouldApproximate*/) const noexcept {
+// UniqueRef<MathObject> I::getValue(bool /*shouldApproximate*/) const noexcept {
 //   return std::make_unique<Complex>(Integer(0), Integer(1));
 // }
 

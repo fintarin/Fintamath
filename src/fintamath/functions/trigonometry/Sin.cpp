@@ -17,10 +17,10 @@ FINTAMATH_FUNCTION_CLASS_IMPLEMENTATION_WITH_MAKE(
   }
 )
 
-Shared<IMathObject> Sin::approximateSelf() const {
+SharedPtr<IMathObject> Sin::approximateSelf() const {
   const auto real = convert<Real>(getArguments().front());
   if (!real) {
-    return nullptr;
+    return {};
   }
 
   return makeShared<Real>(sin(*real));

@@ -113,7 +113,7 @@ std::string Rational::toString() const noexcept {
   return res;
 }
 
-Shared<IMathObject> Rational::unwrapp() const noexcept {
+SharedPtr<IMathObject> Rational::unwrapp() const noexcept {
   if (denom == 1) {
     return numer.clone();
   }
@@ -133,7 +133,7 @@ const Integer &Rational::denominator() const noexcept {
   return denom;
 }
 
-bool Rational::equals(const Shared<IMathObject> &lhs, const Shared<IMathObject> &rhs) const noexcept {
+bool Rational::equals(const SharedRef<IMathObject> &lhs, const SharedRef<IMathObject> &rhs) const noexcept {
   return Super::equals(lhs, rhs);
 }
 

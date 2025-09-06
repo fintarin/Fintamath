@@ -14,7 +14,7 @@
 // public:
 //   MathObjectClass getValueClass() const noexcept override;
 
-//   Unique<MathObject> getValue(bool shouldApproximate) const noexcept override;
+//   UniqueRef<MathObject> getValue(bool shouldApproximate) const noexcept override;
 // };
 
 // }

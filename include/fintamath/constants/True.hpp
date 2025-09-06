@@ -14,7 +14,7 @@ public:
     return Boolean::getClassStatic();
   }
 
-  Shared<IMathObject> getValue() const noexcept override;
+  SharedPtr<IMathObject> getValue() const noexcept override;
 };
 
 }

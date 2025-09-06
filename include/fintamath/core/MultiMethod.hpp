@@ -31,7 +31,7 @@ public:
     constexpr auto funcId = CallbackId(Args::getClassStatic()...);
 
     idToFunctionMap[funcId] = [func = std::move(func)](ArgsBase... args) -> ResBase {
-      return func(cast<Args>(args)...);
+      return func(castRef<Args>(args)...);
     };
   }
 
@@ -50,8 +50,7 @@ public:
 private:
   template <typename... Args>
   static CallbackId getFunctionId(const Args &...args) {
-    if constexpr (requires { (args->getClass(), ...); }) {
-      assert((args && ...));
+    if constexpr ((IsSmartPointer<Args> && ...)) {
       return CallbackId(args->getClass()...);
     }
     else {

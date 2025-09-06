@@ -8,16 +8,15 @@ std::string IMathObject::toString() const noexcept {
   return std::string(getClass()->getName());
 }
 
-Shared<IMathObject> IMathObject::unwrapp() const noexcept {
-  return nullptr;
+SharedPtr<IMathObject> IMathObject::unwrapp() const noexcept {
+  return {};
 }
 
 void IMathObject::registerDefaultObject() const {
 }
 
-bool equals(const Shared<IMathObject> &lhs, const Shared<IMathObject> &rhs) noexcept {
-  return lhs == rhs &&
-         (!lhs || lhs->equals(lhs, rhs));
+bool equals(const SharedRef<IMathObject> &lhs, const SharedRef<IMathObject> &rhs) noexcept {
+  return lhs->equals(lhs, rhs);
 }
 
 std::ostream &operator<<(std::ostream &out, const IMathObject &rhs) {

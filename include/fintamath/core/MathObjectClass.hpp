@@ -56,8 +56,10 @@ public:
   }
 
   constexpr bool is(const Ptr to) const noexcept {
-    assert(to);
-    return this == to || (parentsSize > to->parentsSize && parents[to->parentsSize] == to);
+    return this == to ||
+           (to &&
+            parentsSize > to->parentsSize &&
+            parents[to->parentsSize] == to);
   }
 
 private:

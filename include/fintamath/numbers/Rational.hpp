@@ -29,7 +29,7 @@ public:
 
   std::string toString() const noexcept override;
 
-  Shared<IMathObject> unwrapp() const noexcept override;
+  SharedPtr<IMathObject> unwrapp() const noexcept override;
 
   int sign() const;
 
@@ -38,7 +38,7 @@ public:
   const Integer &denominator() const noexcept;
 
 protected:
-  bool equals(const Shared<IMathObject> &lhs, const Shared<IMathObject> &rhs) const noexcept override;
+  bool equals(const SharedRef<IMathObject> &lhs, const SharedRef<IMathObject> &rhs) const noexcept override;
 
   bool equals(const Rational &rhs) const noexcept override;
 

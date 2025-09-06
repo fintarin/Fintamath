@@ -22,7 +22,7 @@ IFunction::FunctionMaker::FunctionMaker(const IFunction &inDefaultFunc)
     : defaultFunc(inDefaultFunc) {
 }
 
-Shared<IFunction> IFunction::FunctionMaker::make(Arguments inArgs) const {
+SharedRef<IFunction> IFunction::FunctionMaker::make(Arguments inArgs) const {
   return defaultFunc.get().makeSelf(std::move(inArgs));
 }
 
@@ -53,7 +53,7 @@ std::string IFunction::toString() const noexcept {
   return "(" + outStr + ")";
 }
 
-Shared<IMathObject> IFunction::unwrapp() const noexcept {
+SharedPtr<IMathObject> IFunction::unwrapp() const noexcept {
   if (getDeclaration().isVariadic && args.size() == 1) {
     return args.front();
   }
@@ -71,15 +71,15 @@ const IFunction::FunctionMakers *IFunction::parseFunctionMakers(const std::strin
   return iter != nameToMakersMap.end() ? &iter->second : nullptr;
 }
 
-void IFunction::compress(Argument &arg) {
+void IFunction::compress(SharedRef<IMathObject> &arg) {
   if (const auto func = cast<IFunction>(arg)) {
     if (auto res = func->compressSelf()) {
-      arg = res;
+      arg = std::move(res).toRef();
     }
   }
 }
 
-void IFunction::preSimplify(Argument &arg) {
+void IFunction::preSimplify(SharedRef<IMathObject> &arg) {
   modify(
     arg,
     [](const IFunction &func) { return func.preSimplifySelf(); },
@@ -89,7 +89,7 @@ void IFunction::preSimplify(Argument &arg) {
   );
 }
 
-void IFunction::simplify(Argument &arg) {
+void IFunction::simplify(SharedRef<IMathObject> &arg) {
   modify(
     arg,
     [](const IFunction &func) { return func.simplifySelf(); },
@@ -99,7 +99,7 @@ void IFunction::simplify(Argument &arg) {
   );
 }
 
-void IFunction::solve(Argument &arg) {
+void IFunction::solve(SharedRef<IMathObject> &arg) {
   modify(
     arg,
     [](const IFunction &func) { return func.solveSelf(); },
@@ -109,16 +109,16 @@ void IFunction::solve(Argument &arg) {
   );
 }
 
-void IFunction::approximate(Argument &arg) {
+void IFunction::approximate(SharedRef<IMathObject> &arg) {
   if (const auto constant = cast<IConstant>(arg)) {
     if (auto res = constant->approximateValue()) {
-      arg = res;
+      arg = std::move(res).toRef();
     }
     return;
   }
 
   if (auto real = convert<Real>(arg)) {
-    arg = real;
+    arg = std::move(real).toRef();
     return;
   }
 
@@ -131,7 +131,7 @@ void IFunction::approximate(Argument &arg) {
   );
 }
 
-Shared<IMathObject> IFunction::compressSelf() const {
+SharedPtr<IMathObject> IFunction::compressSelf() const {
   if (!getDeclaration().isVariadic) {
     return nullptr;
   }
@@ -141,7 +141,7 @@ Shared<IMathObject> IFunction::compressSelf() const {
   std::optional<Arguments> outArgs;
 
   for (; selfArgIndex < args.size(); selfArgIndex++) {
-    const Argument &arg = args[selfArgIndex];
+    const SharedRef<IMathObject> &arg = args[selfArgIndex];
 
     if (is(selfClass, arg->getClass())) {
       outArgs = Arguments(
@@ -149,7 +149,7 @@ Shared<IMathObject> IFunction::compressSelf() const {
         args.begin() + static_cast<ptrdiff_t>(selfArgIndex)
       );
 
-      appendVariadicFunctionArguments(cast<IFunction>(*arg), selfClass, *outArgs);
+      appendVariadicFunctionArguments(castRef<IFunction>(*arg), selfClass, *outArgs);
 
       break;
     }
@@ -168,25 +168,26 @@ Shared<IMathObject> IFunction::compressSelf() const {
   return makeSelf(std::move(*outArgs));
 }
 
-Shared<IMathObject> IFunction::preSimplifySelf() const {
-  return nullptr;
+SharedPtr<IMathObject> IFunction::preSimplifySelf() const {
+  return {};
 }
 
-Shared<IMathObject> IFunction::simplifySelf() const {
-  return nullptr;
+SharedPtr<IMathObject> IFunction::simplifySelf() const {
+  return {};
 }
 
-Shared<IMathObject> IFunction::solveSelf() const {
-  return nullptr;
+SharedPtr<IMathObject> IFunction::solveSelf() const {
+  return {};
 }
 
-Shared<IMathObject> IFunction::approximateSelf() const {
-  return nullptr;
+SharedPtr<IMathObject> IFunction::approximateSelf() const {
+  return {};
 }
 
-bool IFunction::equals(const Shared<IMathObject> & /*lhs*/, const Shared<IMathObject> &rhs) const noexcept {
+bool IFunction::equals(const SharedRef<IMathObject> & /*lhs*/, const SharedRef<IMathObject> &rhs) const noexcept {
   if (const auto rhsFunc = cast<IFunction>(rhs)) {
-    return getClass() == rhsFunc->getClass() && detail::areContainersEqual(args, rhsFunc->args, &fintamath::equals);
+    return getClass() == rhsFunc->getClass() &&
+           detail::areContainersEqual(args, rhsFunc->args, &fintamath::equals);
   }
 
   return false;
@@ -204,19 +205,12 @@ void IFunction::registerDefaultObject() const {
   detail::Tokenizer::registerToken(decl.name);
 
   FunctionMakers &makers = getNameToFunctionMakersMap()[decl.name];
-  makers.emplace_back(cast<IFunction>(getDefaultObject()));
+  makers.emplace_back(castRef<IFunction>(getDefaultObject()));
 }
 
 void IFunction::initSelf(Arguments inArgs) {
-  assert(areArgumentsNonNull(inArgs));
   args = unwrappArguments(std::move(inArgs));
   assert(doArgumentsMatch(getDeclaration(), args));
-}
-
-bool IFunction::areArgumentsNonNull(const Arguments &args) {
-  return std::ranges::all_of(args, [](const Argument &arg) {
-    return static_cast<bool>(arg);
-  });
 }
 
 bool IFunction::doArgumentsMatch(const Declaration &decl, const Arguments &args) noexcept {
@@ -243,14 +237,14 @@ bool IFunction::doArgumentsMatchVariadic(const Declaration &decl, const Argument
     return false;
   }
 
-  return std::ranges::all_of(args, [&decl](const Argument &arg) {
+  return std::ranges::all_of(args, [&decl](const SharedRef<IMathObject> &arg) {
     return std::ranges::all_of(decl.argumentClasses, [&arg](MathObjectClass expectedClass) {
       return doesArgumentMatch(expectedClass, arg);
     });
   });
 }
 
-bool IFunction::doesArgumentMatch(MathObjectClass expectedClass, const Argument &arg) noexcept {
+bool IFunction::doesArgumentMatch(MathObjectClass expectedClass, const SharedRef<IMathObject> &arg) noexcept {
   const MathObjectClass argClass = arg->getClass();
 
   if (is(expectedClass, argClass) || is<Variable>(argClass)) {
@@ -258,7 +252,7 @@ bool IFunction::doesArgumentMatch(MathObjectClass expectedClass, const Argument 
   }
 
   if (is<IFunction>(argClass)) {
-    const auto &func = cast<IFunction>(*arg);
+    const auto &func = castRef<IFunction>(*arg);
     return is(expectedClass, func.getDeclaration().returnClass);
   }
 
@@ -268,16 +262,16 @@ bool IFunction::doesArgumentMatch(MathObjectClass expectedClass, const Argument 
 IFunction::Arguments IFunction::unwrappArguments(Arguments args) noexcept {
   for (auto &arg : args) {
     if (auto unwrappedArg = arg->unwrapp()) {
-      arg = std::move(unwrappedArg);
+      arg = unwrappedArg.toRef();
     }
   }
 
   return args;
 }
 
-void IFunction::appendVariadicFunctionArgument(const Argument &arg, const MathObjectClass &selfClass, Arguments &outArgs) {
+void IFunction::appendVariadicFunctionArgument(const SharedRef<IMathObject> &arg, const MathObjectClass &selfClass, Arguments &outArgs) {
   if (is(selfClass, arg->getClass())) {
-    appendVariadicFunctionArguments(cast<IFunction>(*arg), selfClass, outArgs);
+    appendVariadicFunctionArguments(castRef<IFunction>(*arg), selfClass, outArgs);
   }
   else {
     outArgs.emplace_back(arg);

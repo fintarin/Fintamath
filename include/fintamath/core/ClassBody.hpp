@@ -10,9 +10,9 @@ public:                                                          \
     return getClassStatic();                                     \
   }                                                              \
                                                                  \
-  Unique<IMathObject> clone() const & noexcept override;         \
+  UniqueRef<IMathObject> clone() const & noexcept override;         \
                                                                  \
-  Unique<IMathObject> clone() && noexcept override;              \
+  UniqueRef<IMathObject> clone() && noexcept override;              \
                                                                  \
 protected:                                                       \
   const Class &getDefaultObject() const noexcept override;       \
@@ -29,11 +29,11 @@ private:                                                         \
     return object;                                        \
   }();                                                    \
                                                           \
-  Unique<IMathObject> Class::clone() const & noexcept {   \
+  UniqueRef<IMathObject> Class::clone() const & noexcept {   \
     return makeUnique<Class>(*this);                      \
   }                                                       \
                                                           \
-  Unique<IMathObject> Class::clone() && noexcept {        \
+  UniqueRef<IMathObject> Class::clone() && noexcept {        \
     return makeUnique<Class>(std::move(*this));           \
   }                                                       \
                                                           \

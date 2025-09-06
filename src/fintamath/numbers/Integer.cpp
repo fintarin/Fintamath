@@ -55,7 +55,7 @@ const Integer::Backend &Integer::getBackend() const noexcept {
   return backend;
 }
 
-bool Integer::equals(const Shared<IMathObject> &lhs, const Shared<IMathObject> &rhs) const noexcept {
+bool Integer::equals(const SharedRef<IMathObject> &lhs, const SharedRef<IMathObject> &rhs) const noexcept {
   return Super::equals(lhs, rhs);
 }
 

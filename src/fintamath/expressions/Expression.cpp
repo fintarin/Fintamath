@@ -1,7 +1,5 @@
 #include "fintamath/expressions/Expression.hpp"
 
-#include <cassert>
-
 #include <fmt/core.h>
 
 #include "fintamath/constants/IConstant.hpp"
@@ -18,56 +16,41 @@ namespace fintamath {
 
 FINTAMATH_CLASS_IMPLEMENTATION(Expression)
 
-Expression::Expression() {
-  static const Argument zero = makeShared<Integer>(0);
-  *this = Expression(zero);
+namespace {
+
+const auto &getZero() {
+  static const auto zero = makeShared<Integer>(0);
+  return zero;
 }
 
-Expression::Expression(Argument inArg) : arg(std::move(inArg)) {
-  assert(arg);
+}
 
-  if (Argument minimalArg = arg->unwrapp()) {
-    arg = minimalArg;
+Expression::Expression() : arg(getZero()) {
+}
+
+Expression::Expression(SharedRef<IMathObject> inArg) : arg(std::move(inArg)) {
+  if (auto unwrappedArg = arg->unwrapp()) {
+    arg = std::move(unwrappedArg).toRef();
   }
 }
 
-Expression::Expression(const IMathObject &obj) : Expression(obj.clone()) {
-}
+Expression::Expression(const IMathObject &obj) : Expression(obj.clone()) {}
 
-Expression::Expression(IMathObject &&obj) : Expression(std::move(obj).clone()) {
-}
+Expression::Expression(IMathObject &&obj) : Expression(std::move(obj).clone()) {}
 
-Expression::Expression(const int64_t val) : Expression(Integer(val)) {
-}
+Expression::Expression(const int64_t val) : Expression(Integer(val)) {}
 
-Expression::Expression(const std::string &str) {
-  try {
-    detail::Tokens tokens = detail::Tokenizer::tokenize(str);
-    TokenToTermVector tokensToTerms = Expression::parseTokensToTerms(tokens);
-    TermStack termsRPN = Expression::parseTermsRPN(tokensToTerms);
-    *this = parseExpression(termsRPN);
-  }
-  catch (const InvalidInputException &exc) {
-    std::string message = exc.what();
-    message[0] = static_cast<char>(std::tolower(message[0]));
-
-    throw InvalidInputException(fmt::format(
-      R"(Unable to parse an expression from "{}" ({}))",
-      str,
-      message
-    ));
-  }
-}
+Expression::Expression(const std::string &str) : Expression(parseExpression(str)) {}
 
 std::string Expression::toString() const noexcept {
   return arg->toString();
 }
 
-Shared<IMathObject> Expression::unwrapp() const noexcept {
+SharedPtr<IMathObject> Expression::unwrapp() const noexcept {
   return arg;
 }
 
-bool Expression::equals(const Shared<IMathObject> & /*lhs*/, const Shared<IMathObject> &rhs) const noexcept {
+bool Expression::equals(const SharedRef<IMathObject> & /*lhs*/, const SharedRef<IMathObject> &rhs) const noexcept {
   if (const auto rhsExpr = cast<Expression>(rhs)) {
     return fintamath::equals(arg, rhsExpr->arg);
   }
@@ -127,7 +110,7 @@ Expression::TermStack Expression::parseTermsRPN(TokenToTermVector &tokensToTerms
 
     std::visit(
       detail::Overload{
-        [&](Argument &argTerm) {
+        [&](SharedRef<IMathObject> &argTerm) {
           outTermStack.emplace(std::move(argTerm));
         },
         [&](FunctionTerm &funcTerm) {
@@ -151,7 +134,7 @@ Expression::TermStack Expression::parseTermsRPN(TokenToTermVector &tokensToTerms
   return outTermStack;
 }
 
-Expression::Argument Expression::parseExpression(TermStack &termsRPN) {
+SharedRef<IMathObject> Expression::parseExpression(TermStack &termsRPN) {
   if (termsRPN.empty()) {
     throw InvalidInputException("incomplete expression inside brackets");
   }
@@ -159,9 +142,9 @@ Expression::Argument Expression::parseExpression(TermStack &termsRPN) {
   Term term = std::move(termsRPN.top());
   termsRPN.pop();
 
-  Argument outArg = std::visit(
+  SharedRef<IMathObject> outArg = std::visit(
     detail::Overload{
-      [&](Argument &argTerm) {
+      [&](SharedRef<IMathObject> &argTerm) {
         return std::move(argTerm);
       },
       [&](FunctionTerm &funcTerm) {
@@ -176,6 +159,25 @@ Expression::Argument Expression::parseExpression(TermStack &termsRPN) {
   );
 
   return outArg;
+}
+
+SharedRef<IMathObject> Expression::parseExpression(const std::string &str) {
+  try {
+    detail::Tokens tokens = detail::Tokenizer::tokenize(str);
+    TokenToTermVector tokensToTerms = Expression::parseTokensToTerms(tokens);
+    TermStack termsRPN = Expression::parseTermsRPN(tokensToTerms);
+    return parseExpression(termsRPN);
+  }
+  catch (const InvalidInputException &exc) {
+    std::string message = exc.what();
+    message[0] = static_cast<char>(std::tolower(message[0]));
+
+    throw InvalidInputException(fmt::format(
+      R"(Unable to parse an expression from "{}" ({}))",
+      str,
+      message
+    ));
+  }
 }
 
 std::optional<Expression::Term> Expression::parseTerm(const detail::Token &token) {
@@ -196,8 +198,8 @@ std::optional<Expression::Term> Expression::parseTerm(const detail::Token &token
           .operatorPriority = getOperatorPriority(*functionMakers),
         };
       }
-      if (Shared<IConstant> constant = IConstant::parseConstant(token.name)) {
-        return constant;
+      if (SharedPtr<IConstant> constant = IConstant::parseConstant(token.name)) {
+        return constant.toRef();
       }
       throw InvalidInputException(fmt::format(R"(invalid term {})", token.name));
     }
@@ -364,7 +366,7 @@ void Expression::moveFunctionTerms(TermStack &outTermStack, FunctionTermStack &f
 //   return is<IFunction>(val) && !is<IOperator>(val);
 // }
 
-Expression::Argument Expression::parseOperator(TermStack &argTermsRPN, const FunctionTerm &funcTerm) {
+SharedRef<IMathObject> Expression::parseOperator(TermStack &argTermsRPN, const FunctionTerm &funcTerm) {
   size_t expectedArgsSize = 0;
   for (const auto &maker : funcTerm.functionMakers.get()) {
     const IFunction::Declaration &makerDecl = maker.getDeclaration();
@@ -385,7 +387,7 @@ Expression::Argument Expression::parseOperator(TermStack &argTermsRPN, const Fun
   }
   std::ranges::reverse(args);
 
-  Shared<IFunction> outOper;
+  SharedPtr<IFunction> outOper;
   for (const auto &maker : funcTerm.functionMakers.get()) {
     if (!maker.doArgumentsMatch(args)) {
       continue;
@@ -402,13 +404,13 @@ Expression::Argument Expression::parseOperator(TermStack &argTermsRPN, const Fun
     throw InvalidInputException("Operator args are invalid"); // TODO
   }
 
-  return outOper;
+  return outOper.toRef();
 }
 
-Expression::Argument Expression::parseFunction(TermStack &argTermsRPN, const FunctionTerm &funcTerm) {
+SharedRef<IMathObject> Expression::parseFunction(TermStack &argTermsRPN, const FunctionTerm &funcTerm) {
   Arguments args = unwrappComma(parseExpression(argTermsRPN));
 
-  Shared<IFunction> outFunc;
+  SharedPtr<IFunction> outFunc;
   for (const auto &maker : funcTerm.functionMakers.get()) {
     if (!maker.doArgumentsMatch(args)) {
       continue;
@@ -425,10 +427,10 @@ Expression::Argument Expression::parseFunction(TermStack &argTermsRPN, const Fun
     throw InvalidInputException("Function args are invalid"); // TODO
   }
 
-  return outFunc;
+  return outFunc.toRef();
 }
 
-Expression::Arguments Expression::unwrappComma(Argument inArg) {
+Expression::Arguments Expression::unwrappComma(SharedRef<IMathObject> inArg) {
   if (const auto argFunc = cast<IFunction>(inArg); is<Comma>(argFunc)) {
     Comma::compress(inArg);
     return cast<IFunction>(inArg)->getArguments();

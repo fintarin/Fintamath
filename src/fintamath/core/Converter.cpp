@@ -4,9 +4,7 @@
 
 namespace fintamath::detail {
 
-Shared<IMathObject> Converter::convert(MathObjectClass toClass, const Shared<IMathObject> &from) {
-  assert(from);
-
+SharedPtr<IMathObject> Converter::convert(MathObjectClass toClass, const SharedRef<IMathObject> &from) {
   const MathObjectClass fromClass = from->getClass();
   if (toClass == from->getClass()) {
     return from;
@@ -14,7 +12,7 @@ Shared<IMathObject> Converter::convert(MathObjectClass toClass, const Shared<IMa
 
   const auto &map = getClassPairToCallbackMap();
   auto iter = map.find(ClassPair{toClass, fromClass});
-  return iter != map.end() ? iter->second(from) : nullptr;
+  return iter != map.end() ? iter->second(from) : SharedPtr<IMathObject>{};
 }
 
 Converter::ClassPairToCallbackMap &Converter::getClassPairToCallbackMap() {

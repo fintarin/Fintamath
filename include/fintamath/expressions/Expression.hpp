@@ -15,12 +15,9 @@ class Expression : public IMathObject {
   FINTAMATH_CLASS_BODY(Expression, IMathObject)
 
 public:
-  using Argument = IFunction::Argument;
-
-public:
   Expression();
 
-  Expression(Argument inArg);
+  Expression(SharedRef<IMathObject> inArg);
 
   Expression(const std::string &str);
 
@@ -32,10 +29,10 @@ public:
 
   std::string toString() const noexcept override;
 
-  Shared<IMathObject> unwrapp() const noexcept override;
+  SharedPtr<IMathObject> unwrapp() const noexcept override;
 
 protected:
-  bool equals(const Shared<IMathObject> &lhs, const Shared<IMathObject> &rhs) const noexcept override;
+  bool equals(const SharedRef<IMathObject> &lhs, const SharedRef<IMathObject> &rhs) const noexcept override;
 
 private:
   using Arguments = IFunction::Arguments;
@@ -45,7 +42,7 @@ private:
     std::optional<OperatorPriority> operatorPriority;
   };
 
-  using Term = std::variant<Argument, FunctionTerm>;
+  using Term = std::variant<SharedRef<IMathObject>, FunctionTerm>;
 
   struct TokenToFunctionTerm {
     detail::Token token;
@@ -66,7 +63,9 @@ private:
 
   static TermStack parseTermsRPN(TokenToTermVector &tokensToTerms);
 
-  static Argument parseExpression(TermStack &termsRPN);
+  static SharedRef<IMathObject> parseExpression(TermStack &termsRPN);
+
+  static SharedRef<IMathObject> parseExpression(const std::string &str);
 
   static std::optional<Term> parseTerm(const detail::Token &token);
 
@@ -74,14 +73,14 @@ private:
 
   static void moveFunctionTerms(TermStack &outTermStack, FunctionTermStack &functionTermStack, const FunctionTerm *nextFunctionTerm);
 
-  static Argument parseFunction(TermStack &argTermsRPN, const FunctionTerm &funcTerm);
+  static SharedRef<IMathObject> parseFunction(TermStack &argTermsRPN, const FunctionTerm &funcTerm);
 
-  static Argument parseOperator(TermStack &argTermsRPN, const FunctionTerm &funcTerm);
+  static SharedRef<IMathObject> parseOperator(TermStack &argTermsRPN, const FunctionTerm &funcTerm);
 
-  static Arguments unwrappComma(Argument arg);
+  static Arguments unwrappComma(SharedRef<IMathObject> arg);
 
 private:
-  Argument arg;
+  SharedRef<IMathObject> arg;
 };
 
 }

@@ -11,17 +11,15 @@ FINTAMATH_INTERFACE_IMPLEMENTATION(INumber)
 
 namespace {
 
-auto callBinaryMultimethod(const auto &multimethod, const Shared<INumber> &lhs, const Shared<INumber> &rhs) {
-  assert(lhs && rhs);
-
+auto callBinaryMultimethod(const auto &multimethod, const SharedRef<INumber> &lhs, const SharedRef<INumber> &rhs) {
   auto res = multimethod(lhs, rhs);
 
   if (!res) {
     if (auto convRhs = convert(lhs, rhs)) {
-      res = multimethod(lhs, convRhs);
+      res = multimethod(lhs, convRhs.toRef());
     }
     else if (auto convLhs = convert(rhs, lhs)) {
-      res = multimethod(convLhs, rhs);
+      res = multimethod(convLhs.toRef(), rhs);
     }
   }
 
@@ -38,7 +36,7 @@ bool INumber::isComplex() const noexcept {
   return false;
 }
 
-bool INumber::equals(const Shared<IMathObject> &lhs, const Shared<IMathObject> &rhs) const noexcept {
+bool INumber::equals(const SharedRef<IMathObject> &lhs, const SharedRef<IMathObject> &rhs) const noexcept {
   const auto rhsNum = cast<INumber>(rhs);
   if (!rhsNum) {
     return false;
@@ -46,11 +44,11 @@ bool INumber::equals(const Shared<IMathObject> &lhs, const Shared<IMathObject> &
 
   const auto lhsNum = cast<INumber>(lhs);
 
-  auto res = callBinaryMultimethod(INumber::getEqualsMultimethod(), lhsNum, rhsNum);
+  auto res = callBinaryMultimethod(INumber::getEqualsMultimethod(), lhsNum.toRef(), rhsNum.toRef());
   return res.value_or(false);
 }
 
-Shared<INumber> add(const Shared<INumber> &lhs, const Shared<INumber> &rhs) {
+SharedRef<INumber> add(const SharedRef<INumber> &lhs, const SharedRef<INumber> &rhs) {
   auto res = callBinaryMultimethod(INumber::getAddMultimethod(), lhs, rhs);
 
   if (!res) {

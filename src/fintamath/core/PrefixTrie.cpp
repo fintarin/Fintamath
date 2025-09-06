@@ -1,7 +1,5 @@
 #include "fintamath/core/PrefixTrie.hpp"
 
-#include <cassert>
-
 namespace fintamath::detail {
 
 void PrefixTrie::add(const std::string_view str) {

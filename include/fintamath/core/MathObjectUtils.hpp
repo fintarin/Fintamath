@@ -2,10 +2,10 @@
 
 #include <cassert>
 #include <concepts>
-#include <memory>
 #include <type_traits>
 
 #include "fintamath/core/MathObjectClass.hpp"
+#include "fintamath/core/Pointers.hpp"
 #include "fintamath/core/Qualifiers.hpp"
 
 namespace fintamath {
@@ -40,19 +40,9 @@ inline bool is(const From *from) noexcept {
 }
 
 template <std::derived_from<IMathObject> To, typename From>
-  requires(std::is_base_of_v<IMathObject, typename detail::RemoveQualifiers<From>::element_type>)
+  requires(std::is_base_of_v<IMathObject, typename detail::RemoveQualifiers<From>::ElementType>)
 inline bool is(const From &from) noexcept {
   return is<To>(from.get());
-}
-
-template <std::derived_from<IMathObject> To, typename From>
-  requires(std::is_base_of_v<IMathObject, typename detail::RemoveQualifiers<From>>)
-inline decltype(auto) cast(From &&from) noexcept {
-  using ResultType = detail::CopyQualifiersFromToType<From, To>;
-
-  assert(is<To>(from));
-
-  return static_cast<ResultType>(std::forward<From>(from));
 }
 
 template <std::derived_from<IMathObject> To, typename From>
@@ -68,15 +58,35 @@ inline decltype(auto) cast(From *from) noexcept {
 }
 
 template <std::derived_from<IMathObject> To, typename From>
-  requires(std::is_base_of_v<IMathObject, typename detail::RemoveQualifiers<From>::element_type>)
-inline decltype(auto) cast(From &&from) noexcept {
-  using ResultType = detail::CopyQualifiersFromToType<typename detail::RemoveQualifiers<From>::element_type, To>;
+  requires(std::is_base_of_v<IMathObject, typename detail::RemoveQualifiers<From>::ElementType>)
+inline auto cast(From &&from) noexcept {
+  using ResultType = detail::CopyQualifiersFromToType<typename detail::RemoveQualifiers<From>::ElementType, To>;
 
   if (!is<To>(from)) {
-    return std::shared_ptr<ResultType>();
+    return SharedPtr<ResultType>{};
   }
 
-  return std::static_pointer_cast<ResultType>(std::forward<From>(from));
+  return SharedPtr<ResultType>(staticPointerCast<ResultType>(std::forward<From>(from)));
+}
+
+template <std::derived_from<IMathObject> To, typename From>
+  requires(std::is_base_of_v<IMathObject, typename detail::RemoveQualifiers<From>>)
+inline decltype(auto) castRef(From &&from) noexcept {
+  using ResultType = detail::CopyQualifiersFromToType<From, To>;
+
+  assert(is<To>(from));
+
+  return static_cast<ResultType>(std::forward<From>(from));
+}
+
+template <std::derived_from<IMathObject> To, typename From>
+  requires(std::is_base_of_v<IMathObject, typename detail::RemoveQualifiers<From>::ElementType>)
+inline auto castRef(From &&from) noexcept {
+  using ResultType = detail::CopyQualifiersFromToType<typename detail::RemoveQualifiers<From>::ElementType, To>;
+
+  assert(is<To>(from));
+
+  return SharedRef<ResultType>(staticPointerCast<ResultType>(std::forward<From>(from)));
 }
 
 }
