@@ -3,6 +3,7 @@
 #include "fintamath/core/Cache.hpp"
 
 #include "fintamath/constants/E.hpp"
+#include "fintamath/core/MathObjectUtils.hpp"
 #include "fintamath/numbers/Integer.hpp"
 
 using namespace fintamath;

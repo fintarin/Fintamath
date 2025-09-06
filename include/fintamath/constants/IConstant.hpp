@@ -7,7 +7,7 @@
 namespace fintamath {
 
 class IConstant : public IMathObject {
-  FINTAMATH_INTERFACE_BODY(Constant, IMathObject)
+  FINTAMATH_INTERFACE_BODY(IConstant, IMathObject)
 
 public:
   virtual constexpr MathObjectClass getValueClass() const noexcept = 0;

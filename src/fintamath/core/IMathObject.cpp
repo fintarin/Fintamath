@@ -2,6 +2,8 @@
 
 namespace fintamath {
 
+FINTAMATH_INTERFACE_IMPLEMENTATION(IMathObject)
+
 std::string IMathObject::toString() const noexcept {
   return std::string(getClass()->getName());
 }
