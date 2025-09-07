@@ -47,6 +47,10 @@ std::string Integer::toString() const noexcept {
   return backend.str();
 }
 
+bool Integer::isZero() const noexcept {
+  return backend.is_zero();
+}
+
 int Integer::sign() const {
   return backend.sign();
 }
@@ -72,17 +76,17 @@ Integer &Integer::add(const Integer &rhs) {
   return *this;
 }
 
-Integer &Integer::substract(const Integer &rhs) {
+Integer &Integer::sub(const Integer &rhs) {
   backend -= rhs.backend;
   return *this;
 }
 
-Integer &Integer::multiply(const Integer &rhs) {
+Integer &Integer::mul(const Integer &rhs) {
   backend *= rhs.backend;
   return *this;
 }
 
-Integer &Integer::divide(const Integer &rhs) {
+Integer &Integer::div(const Integer &rhs) {
   if (rhs == 0) {
     throw UndefinedException(fmt::format(
       R"(div({}, {}) is undefined (division by zero))",
@@ -95,7 +99,7 @@ Integer &Integer::divide(const Integer &rhs) {
   return *this;
 }
 
-Integer &Integer::negate() {
+Integer &Integer::neg() {
   backend = -backend;
   return *this;
 }
@@ -169,21 +173,6 @@ Integer &Integer::decrease() {
   return *this;
 }
 
-void Integer::registerDefaultObject() const {
-  registerEqualsFunction<Integer>();
-  registerLessFunction<Integer>();
-  registerGreaterFunction<Integer>();
-  registerLessEqualsFunction<Integer>();
-  registerGreaterEqualsFunction<Integer>();
-  registerLessFunction<Integer>();
-  registerAddFunction<Integer>();
-  registerSubFunction<Integer>();
-  registerMulFunction<Integer>();
-  registerNegFunction<Integer>();
-
-  // registerDivFunction is called in Rational 
-}
-
 Integer &Integer::operator%=(const Integer &rhs) {
   return mod(rhs);
 }
@@ -255,6 +244,25 @@ Integer Integer::operator--(int) {
   Integer res = *this;
   decrease();
   return res;
+}
+
+const SharedRef<Integer>& Integer::getZero() {
+  static const SharedRef<Integer> zero = makeShared<Integer>(0);
+  return zero;
+}
+
+void Integer::registerDefaultObject() const {
+  registerEqualsFunction<Integer>();
+  registerLessFunction<Integer>();
+  registerGreaterFunction<Integer>();
+  registerLessEqualsFunction<Integer>();
+  registerGreaterEqualsFunction<Integer>();
+  registerAddFunction<Integer>();
+  registerSubFunction<Integer>();
+  registerMulFunction<Integer>();
+  registerNegFunction<Integer>();
+
+  // registerDivFunction is called in Rational 
 }
 
 }

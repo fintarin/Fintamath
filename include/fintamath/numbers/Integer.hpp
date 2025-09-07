@@ -34,6 +34,8 @@ public:
 
   std::string toString() const noexcept override;
 
+  bool isZero() const noexcept override;
+
   int sign() const;
 
   const Backend &getBackend() const noexcept;
@@ -77,6 +79,8 @@ public:
 
   Integer operator--(int);
 
+  static const SharedRef<Integer>& getZero();
+
 protected:
   bool equals(const SharedRef<IMathObject> &self, const SharedRef<IMathObject> &rhs) const noexcept override;
 
@@ -86,13 +90,13 @@ protected:
 
   Integer &add(const Integer &rhs) override;
 
-  Integer &substract(const Integer &rhs) override;
+  Integer &sub(const Integer &rhs) override;
 
-  Integer &multiply(const Integer &rhs) override;
+  Integer &mul(const Integer &rhs) override;
 
-  Integer &divide(const Integer &rhs) override;
+  Integer &div(const Integer &rhs) override;
 
-  Integer &negate() override;
+  Integer &neg() override;
 
   Integer &mod(const Integer &rhs);
 

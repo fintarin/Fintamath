@@ -142,15 +142,7 @@ std::string Real::toString(unsigned precision) const {
   return str;
 }
 
-int Real::sign() const {
-  if (mpfr_signbit(backend.backend().data())) {
-    return -1;
-  }
-
-  return backend.sign();
-}
-
-bool Real::isZero() const {
+bool Real::isZero() const noexcept {
   return backend.is_zero();
 }
 
@@ -160,6 +152,14 @@ bool Real::isPosZero() const {
 
 bool Real::isNegZero() const {
   return isZero() && sign() < 0;
+}
+
+int Real::sign() const {
+  if (mpfr_signbit(backend.backend().data())) {
+    return -1;
+  }
+
+  return backend.sign();
 }
 
 const Real::Backend &Real::getBackend() const noexcept {
@@ -226,7 +226,7 @@ Real &Real::add(const Real &rhs) {
   return *this;
 }
 
-Real &Real::substract(const Real &rhs) {
+Real &Real::sub(const Real &rhs) {
   updatePrecision(rhs);
 
   bool isResultNegZero = isZero() &&
@@ -244,13 +244,13 @@ Real &Real::substract(const Real &rhs) {
   return *this;
 }
 
-Real &Real::multiply(const Real &rhs) {
+Real &Real::mul(const Real &rhs) {
   updatePrecision(rhs);
   backend *= rhs.backend;
   return *this;
 }
 
-Real &Real::divide(const Real &rhs) {
+Real &Real::div(const Real &rhs) {
   if (rhs.isZero()) {
     throw UndefinedException(fmt::format(
       R"(div({}, {}) is undefined (division by zero))",
@@ -264,7 +264,7 @@ Real &Real::divide(const Real &rhs) {
   return *this;
 }
 
-Real &Real::negate() {
+Real &Real::neg() {
   backend = -backend;
   return *this;
 }
@@ -278,7 +278,6 @@ void Real::registerDefaultObject() const {
   registerGreaterFunction<Real>();
   registerLessEqualsFunction<Real>();
   registerGreaterEqualsFunction<Real>();
-  registerLessFunction<Real>();
   registerAddFunction<Real>();
   registerSubFunction<Real>();
   registerMulFunction<Real>();

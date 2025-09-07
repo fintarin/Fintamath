@@ -594,6 +594,15 @@ TEST(RationalTests, signTest) {
   EXPECT_EQ(Rational(2).sign(), 1);
 }
 
+TEST(RationalTests, isZeroTest) {
+  EXPECT_TRUE(Rational(0).isZero());
+  EXPECT_TRUE(Rational(0, 2).isZero());
+  EXPECT_FALSE(Rational(1).isZero());
+  EXPECT_FALSE(Rational(-1).isZero());
+  EXPECT_FALSE(Rational(1, 2).isZero());
+  EXPECT_FALSE(Rational(-1, 2).isZero());
+}
+
 TEST(RationalTests, getPrecisionTest) {
   EXPECT_FALSE(Rational(1, 2).getPrecision());
 }

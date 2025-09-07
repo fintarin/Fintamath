@@ -121,6 +121,10 @@ SharedPtr<IMathObject> Rational::unwrapp() const noexcept {
   return nullptr;
 }
 
+bool Rational::isZero() const noexcept {
+  return numer.isZero();
+}
+
 int Rational::sign() const {
   return numer.sign();
 }
@@ -156,7 +160,7 @@ Rational &Rational::add(const Rational &rhs) {
   return *this;
 }
 
-Rational &Rational::substract(const Rational &rhs) {
+Rational &Rational::sub(const Rational &rhs) {
   Rational tmpRhs = rhs;
   toCommonDenominators(*this, tmpRhs);
   numer -= tmpRhs.numer;
@@ -164,14 +168,14 @@ Rational &Rational::substract(const Rational &rhs) {
   return *this;
 }
 
-Rational &Rational::multiply(const Rational &rhs) {
+Rational &Rational::mul(const Rational &rhs) {
   numer *= rhs.numer;
   denom *= rhs.denom;
   toIrreducibleRational();
   return *this;
 }
 
-Rational &Rational::divide(const Rational &rhs) {
+Rational &Rational::div(const Rational &rhs) {
   if (rhs == 0) {
     throw UndefinedException(fmt::format(
       R"(div({}, {}) is undefined (division by zero))",
@@ -186,7 +190,7 @@ Rational &Rational::divide(const Rational &rhs) {
   return *this;
 }
 
-Rational &Rational::negate() {
+Rational &Rational::neg() {
   numer = -numer;
   return *this;
 }
@@ -199,7 +203,6 @@ void Rational::registerDefaultObject() const noexcept {
   registerGreaterFunction<Rational>();
   registerLessEqualsFunction<Rational>();
   registerGreaterEqualsFunction<Rational>();
-  registerLessFunction<Rational>();
   registerAddFunction<Rational>();
   registerSubFunction<Rational>();
   registerMulFunction<Rational>();

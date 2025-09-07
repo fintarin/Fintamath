@@ -31,6 +31,8 @@ public:
 
   SharedPtr<IMathObject> unwrapp() const noexcept override;
 
+  bool isZero() const noexcept override;
+
   int sign() const;
 
   const Integer &numerator() const noexcept;
@@ -46,13 +48,13 @@ protected:
 
   Rational &add(const Rational &rhs) override;
 
-  Rational &substract(const Rational &rhs) override;
+  Rational &sub(const Rational &rhs) override;
 
-  Rational &multiply(const Rational &rhs) override;
+  Rational &mul(const Rational &rhs) override;
 
-  Rational &divide(const Rational &rhs) override;
+  Rational &div(const Rational &rhs) override;
 
-  Rational &negate() override;
+  Rational &neg() override;
 
   void registerDefaultObject() const noexcept override;
 

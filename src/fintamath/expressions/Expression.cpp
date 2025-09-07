@@ -18,14 +18,18 @@ FINTAMATH_CLASS_IMPLEMENTATION(Expression)
 
 namespace {
 
-const auto &getZero() {
-  static const auto zero = makeShared<Integer>(0);
-  return zero;
+template <typename T>
+SharedRef<IMathObject> unwrappOrClone(T &&arg) {
+  if (auto unwrapped = arg.unwrapp()) {
+    return unwrapped.toRef();
+  }
+
+  return std::forward<T>(arg).clone();
 }
 
 }
 
-Expression::Expression() : arg(getZero()) {
+Expression::Expression() : arg(Integer::getZero()) {
 }
 
 Expression::Expression(SharedRef<IMathObject> inArg) : arg(std::move(inArg)) {
@@ -34,11 +38,11 @@ Expression::Expression(SharedRef<IMathObject> inArg) : arg(std::move(inArg)) {
   }
 }
 
-Expression::Expression(const IMathObject &obj) : Expression(obj.clone()) {}
+Expression::Expression(const IMathObject &obj) : arg(unwrappOrClone(obj)) {}
 
-Expression::Expression(IMathObject &&obj) : Expression(std::move(obj).clone()) {}
+Expression::Expression(IMathObject &&obj) : arg(unwrappOrClone(std::move(obj))) {}
 
-Expression::Expression(const int64_t val) : Expression(Integer(val)) {}
+Expression::Expression(const int64_t val) : Expression(makeShared<Integer>(val)) {}
 
 Expression::Expression(const std::string &str) : Expression(parseExpression(str)) {}
 

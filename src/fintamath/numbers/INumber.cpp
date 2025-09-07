@@ -23,6 +23,18 @@ auto callMultimethod(const auto &multimethod, const SharedRef<INumber> &lhs, con
     }
   }
 
+  std::string lhsStr = lhs->toString();
+  std::string rhsStr = rhs->toString();
+
+  if constexpr (requires { (*res)->toString(); }) {
+    std::string resStr = res ? (*res)->toString() : "";
+    int a = 0;
+  }
+  else {
+    std::string resStr = res ? (*res ? "true" : "false") : "";
+    int a = 0;
+  }
+
   return res;
 }
 
@@ -134,6 +146,13 @@ SharedRef<INumber> sub(const SharedRef<INumber> &lhs, const SharedRef<INumber> &
 }
 
 SharedRef<INumber> mul(const SharedRef<INumber> &lhs, const SharedRef<INumber> &rhs) {
+  if (lhs->isZero() && !lhs->getPrecision()) {
+    return lhs;
+  }
+  if (rhs->isZero() && !rhs->getPrecision()) {
+    return rhs;
+  }
+
   std::optional<SharedRef<INumber>> res = callMultimethod(INumber::getMulMultimethod(), lhs, rhs);
 
   if (!res) {
@@ -144,6 +163,10 @@ SharedRef<INumber> mul(const SharedRef<INumber> &lhs, const SharedRef<INumber> &
 }
 
 SharedRef<INumber> div(const SharedRef<INumber> &lhs, const SharedRef<INumber> &rhs) {
+  if (lhs->isZero() && !lhs->getPrecision() && !rhs->isZero()) {
+    return lhs;
+  }
+
   std::optional<SharedRef<INumber>> res = callMultimethod(INumber::getDivMultimethod(), lhs, rhs);
 
   if (!res) {

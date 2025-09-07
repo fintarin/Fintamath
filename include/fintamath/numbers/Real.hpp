@@ -55,13 +55,13 @@ public:
 
   std::string toString(unsigned precision) const;
 
-  int sign() const;
-
-  bool isZero() const;
+  bool isZero() const noexcept override;
 
   bool isPosZero() const;
 
   bool isNegZero() const;
+
+  int sign() const;
 
   const Backend &getBackend() const noexcept;
 
@@ -86,13 +86,13 @@ protected:
 
   Real &add(const Real &rhs) override;
 
-  Real &substract(const Real &rhs) override;
+  Real &sub(const Real &rhs) override;
 
-  Real &multiply(const Real &rhs) override;
+  Real &mul(const Real &rhs) override;
 
-  Real &divide(const Real &rhs) override;
+  Real &div(const Real &rhs) override;
 
-  Real &negate() override;
+  Real &neg() override;
 
   void registerDefaultObject() const override;
 

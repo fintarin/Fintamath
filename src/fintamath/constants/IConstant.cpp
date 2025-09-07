@@ -35,11 +35,11 @@ void IConstant::registerDefaultObject() const {
 
   auto self = cast<IConstant>(SharedPtr<IMathObject>(clone()));
 
-  [[maybe_unused]] const auto empaceRes = getNameToConstantMap().emplace(
+  [[maybe_unused]] const auto emplaceRes = getNameToConstantMap().emplace(
     std::move(name),
     std::move(self).toRef()
   );
-  assert(empaceRes.second);
+  assert(emplaceRes.second);
 }
 
 IConstant::NameToConstantMap &IConstant::getNameToConstantMap() {

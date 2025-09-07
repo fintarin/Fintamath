@@ -14,15 +14,15 @@ public:
   }
 
   Derived &operator-=(const Derived &rhs) {
-    return substract(rhs);
+    return sub(rhs);
   }
 
   Derived &operator*=(const Derived &rhs) {
-    return multiply(rhs);
+    return mul(rhs);
   }
 
   Derived &operator/=(const Derived &rhs) {
-    return divide(rhs);
+    return div(rhs);
   }
 
   Derived operator+(const Derived &rhs) const {
@@ -52,19 +52,19 @@ public:
   Derived operator-() const {
     auto rhs = static_cast<const Derived &>(*this);
     auto &rhsParent = static_cast<IWithArithmeticOperators<Derived> &>(rhs);
-    return rhsParent.negate();
+    return rhsParent.neg();
   }
 
 protected:
   virtual Derived &add(const Derived &rhs) = 0;
 
-  virtual Derived &substract(const Derived &rhs) = 0;
+  virtual Derived &sub(const Derived &rhs) = 0;
 
-  virtual Derived &multiply(const Derived &rhs) = 0;
+  virtual Derived &mul(const Derived &rhs) = 0;
 
-  virtual Derived &divide(const Derived &rhs) = 0;
+  virtual Derived &div(const Derived &rhs) = 0;
 
-  virtual Derived &negate() = 0;
+  virtual Derived &neg() = 0;
 };
 
 template <typename Lhs, detail::ConvertibleToAndNotSameAs<Lhs> Rhs>

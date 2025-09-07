@@ -26,6 +26,8 @@ class INumber : public IMathObject {
   )>;
 
 public:
+  virtual bool isZero() const noexcept = 0;
+
   virtual std::optional<unsigned> getPrecision() const noexcept;
 
   virtual bool isComplex() const noexcept;
@@ -115,6 +117,24 @@ private:
   static SharedRef<INumber> numberToSharedRef(Num &&num);
 };
 
+bool less(const SharedRef<INumber> &lhs, const SharedRef<INumber> &rhs);
+
+bool greater(const SharedRef<INumber> &lhs, const SharedRef<INumber> &rhs);
+
+bool lessEquals(const SharedRef<INumber> &lhs, const SharedRef<INumber> &rhs);
+
+bool greaterEquals(const SharedRef<INumber> &lhs, const SharedRef<INumber> &rhs);
+
+SharedRef<INumber> add(const SharedRef<INumber> &lhs, const SharedRef<INumber> &rhs);
+
+SharedRef<INumber> sub(const SharedRef<INumber> &lhs, const SharedRef<INumber> &rhs);
+
+SharedRef<INumber> mul(const SharedRef<INumber> &lhs, const SharedRef<INumber> &rhs);
+
+SharedRef<INumber> div(const SharedRef<INumber> &lhs, const SharedRef<INumber> &rhs);
+
+SharedRef<INumber> neg(const SharedRef<INumber> &rhs);
+
 template <typename Num, typename Func = std::equal_to<Num>>
 inline void INumber::registerEqualsFunction(Func func) {
   registerBoolBinaryFunction<Num>(getEqualsMultimethod(), std::move(func));
@@ -157,7 +177,7 @@ inline void INumber::registerMulFunction(Func func) {
 
 template <typename Num, typename Func = detail::DivCallable<Num>>
 inline void INumber::registerDivFunction(Func func) {
-  registerNumberBinaryFunction<Num>(getMulMultimethod(), std::move(func));
+  registerNumberBinaryFunction<Num>(getDivMultimethod(), std::move(func));
 }
 
 template <typename Num, typename Func = detail::NegCallable<Num>>

@@ -694,12 +694,22 @@ TEST(IntegerTests, intOperatorTest) {
   EXPECT_EQ(static_cast<int64_t>(Integer("-100000000000000000000000000000000000000000000000000")) + 1, -9223372036854775807);
 }
 
+TEST(IntegerTests, isZeroTest) {
+  EXPECT_TRUE(Integer(0).isZero());
+  EXPECT_FALSE(Integer(1).isZero());
+  EXPECT_FALSE(Integer(-1).isZero());
+}
+
 TEST(IntegerTests, getPrecisionTest) {
   EXPECT_FALSE(Integer(1).getPrecision());
 }
 
 TEST(IntegerTests, isComplexTest) {
   EXPECT_FALSE(Integer(1).isComplex());
+}
+
+TEST(IntegerTests, getZeroTest) {
+  EXPECT_TRUE(Integer::getZero()->isZero());
 }
 
 TEST(IntegerTests, getClassTest) {

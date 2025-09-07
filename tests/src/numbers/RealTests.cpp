@@ -1149,10 +1149,12 @@ TEST(RealTests, signTest) {
 }
 
 TEST(RealTests, isZeroTest) {
-  EXPECT_TRUE(Real("0").isZero());
-  EXPECT_TRUE(Real("-0").isZero());
-  EXPECT_FALSE(Real("1").isZero());
-  EXPECT_FALSE(Real("-1").isZero());
+  EXPECT_TRUE(Real(0).isZero());
+  EXPECT_TRUE(Real(-0).isZero());
+  EXPECT_FALSE(Real(1).isZero());
+  EXPECT_FALSE(Real(-1).isZero());
+  EXPECT_FALSE(Real("0.1").isZero());
+  EXPECT_FALSE(Real("-0.1").isZero());
 }
 
 TEST(RealTests, isPosZeroTest) {

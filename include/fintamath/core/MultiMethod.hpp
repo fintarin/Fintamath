@@ -30,9 +30,13 @@ public:
   void add(auto func) {
     constexpr auto funcId = CallbackId(Args::getClassStatic()...);
 
-    idToFunctionMap[funcId] = [func = std::move(func)](ArgsBase... args) -> ResBase {
-      return func(castChecked<Args>(args)...);
-    };
+    [[maybe_unused]] const auto emplaceRes = idToFunctionMap.try_emplace(
+      funcId,
+      [func = std::move(func)](ArgsBase... args) -> ResBase {
+        return func(castChecked<Args>(args)...);
+      }
+    );
+    assert(emplaceRes.second);
   }
 
   template <typename... Args>

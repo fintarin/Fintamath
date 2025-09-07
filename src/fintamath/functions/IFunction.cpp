@@ -257,6 +257,10 @@ bool IFunction::doesArgumentMatch(MathObjectClass expectedClass, const SharedRef
     return true;
   }
 
+  if (auto constant = cast<IConstant>(arg)) {
+    return is(expectedClass, constant->getValueClass());
+  }
+
   if (auto func = cast<IFunction>(arg)) {
     return is(expectedClass, func->getDeclaration().returnClass);
   }

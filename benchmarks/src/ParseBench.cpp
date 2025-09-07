@@ -9,7 +9,7 @@ using namespace fintamath::detail;
 
 namespace {
 
-constexpr size_t functionsNum = 10'000;
+constexpr size_t functionsNum = 5'000;
 
 std::string getAddExprStr() {
   std::string str = "x";
