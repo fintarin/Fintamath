@@ -24,7 +24,7 @@ public:
   static SharedPtr<IConstant> parseConstant(const std::string &str);
 
 protected:
-  bool equals(const SharedRef<IMathObject> &lhs, const SharedRef<IMathObject> &rhs) const noexcept override;
+  bool equals(const SharedRef<IMathObject> &self, const SharedRef<IMathObject> &rhs) const noexcept override;
 
   void registerDefaultObject() const override;
 

@@ -193,7 +193,7 @@ SharedPtr<IMathObject> IFunction::approximateSelf() const {
   return nullptr;
 }
 
-bool IFunction::equals(const SharedRef<IMathObject> & /*lhs*/, const SharedRef<IMathObject> &rhs) const noexcept {
+bool IFunction::equals(const SharedRef<IMathObject> & /*self*/, const SharedRef<IMathObject> &rhs) const noexcept {
   using fintamath::equals;
 
   if (const auto rhsFunc = cast<IFunction>(rhs)) {

@@ -38,7 +38,7 @@ public:
   const Integer &denominator() const noexcept;
 
 protected:
-  bool equals(const SharedRef<IMathObject> &lhs, const SharedRef<IMathObject> &rhs) const noexcept override;
+  bool equals(const SharedRef<IMathObject> &self, const SharedRef<IMathObject> &rhs) const noexcept override;
 
   bool equals(const Rational &rhs) const noexcept override;
 

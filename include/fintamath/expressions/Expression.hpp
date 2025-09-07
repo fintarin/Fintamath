@@ -32,7 +32,7 @@ public:
   SharedPtr<IMathObject> unwrapp() const noexcept override;
 
 protected:
-  bool equals(const SharedRef<IMathObject> &lhs, const SharedRef<IMathObject> &rhs) const noexcept override;
+  bool equals(const SharedRef<IMathObject> &self, const SharedRef<IMathObject> &rhs) const noexcept override;
 
 private:
   using Arguments = IFunction::Arguments;

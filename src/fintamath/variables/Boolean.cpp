@@ -34,7 +34,7 @@ Boolean::operator bool() const noexcept {
   return val;
 }
 
-bool Boolean::equals(const SharedRef<IMathObject> & /*lhs*/, const SharedRef<IMathObject> &rhs) const noexcept {
+bool Boolean::equals(const SharedRef<IMathObject> & /*self*/, const SharedRef<IMathObject> &rhs) const noexcept {
   if (const auto rhsBool = cast<Boolean>(rhs)) {
     return equals(*rhsBool);
   }

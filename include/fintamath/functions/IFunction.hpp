@@ -106,7 +106,7 @@ protected:
 
   virtual SharedPtr<IMathObject> approximateSelf() const;
 
-  bool equals(const SharedRef<IMathObject> &lhs, const SharedRef<IMathObject> &rhs) const noexcept override;
+  bool equals(const SharedRef<IMathObject> &self, const SharedRef<IMathObject> &rhs) const noexcept override;
 
   void registerDefaultObject() const override;
 

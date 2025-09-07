@@ -57,19 +57,19 @@ bool INumber::isComplex() const noexcept {
   return false;
 }
 
-bool INumber::equals(const SharedRef<IMathObject> &lhs, const SharedRef<IMathObject> &rhs) const noexcept {
+bool INumber::equals(const SharedRef<IMathObject> &self, const SharedRef<IMathObject> &rhs) const noexcept {
   const auto rhsNum = cast<INumber>(rhs);
   if (!rhsNum) {
     return false;
   }
 
-  const auto lhsNum = cast<INumber>(lhs);
+  const auto selfNum = cast<INumber>(self);
 
-  if (static_cast<bool>(lhsNum->getPrecision()) != static_cast<bool>(rhsNum->getPrecision())) {
+  if (static_cast<bool>(selfNum->getPrecision()) != static_cast<bool>(rhsNum->getPrecision())) {
     return false;
   }
 
-  std::optional<bool> res = callMultimethod(INumber::getEqualsMultimethod(), lhsNum.toRef(), rhsNum.toRef());
+  std::optional<bool> res = callMultimethod(INumber::getEqualsMultimethod(), selfNum.toRef(), rhsNum.toRef());
   return res.value_or(false);
 }
 

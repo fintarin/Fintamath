@@ -192,8 +192,8 @@ void Real::setPrecisionStaticForAllThreads(const unsigned precision) {
   Backend::default_precision(toCalculationPrecision(precision));
 }
 
-bool Real::equals(const SharedRef<IMathObject> &lhs, const SharedRef<IMathObject> &rhs) const noexcept {
-  return Super::equals(lhs, rhs);
+bool Real::equals(const SharedRef<IMathObject> &self, const SharedRef<IMathObject> &rhs) const noexcept {
+  return Super::equals(self, rhs);
 }
 
 bool Real::equals(const Real &rhs) const noexcept {

@@ -28,7 +28,7 @@ public:
   friend bool equals(const SharedRef<IMathObject> &lhs, const SharedRef<IMathObject> &rhs) noexcept;
 
 protected:
-  virtual bool equals(const SharedRef<IMathObject> &lhs, const SharedRef<IMathObject> &rhs) const noexcept = 0;
+  virtual bool equals(const SharedRef<IMathObject> &self, const SharedRef<IMathObject> &rhs) const noexcept = 0;
 
   virtual const IMathObject &getDefaultObject() const noexcept = 0;
 

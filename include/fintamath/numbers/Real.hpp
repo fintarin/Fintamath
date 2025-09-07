@@ -78,7 +78,7 @@ public:
   static void setPrecisionStaticForAllThreads(unsigned precision);
 
 protected:
-  bool equals(const SharedRef<IMathObject> &lhs, const SharedRef<IMathObject> &rhs) const noexcept override;
+  bool equals(const SharedRef<IMathObject> &self, const SharedRef<IMathObject> &rhs) const noexcept override;
 
   bool equals(const Real &rhs) const noexcept override;
 

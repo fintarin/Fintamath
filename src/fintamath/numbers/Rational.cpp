@@ -133,8 +133,8 @@ const Integer &Rational::denominator() const noexcept {
   return denom;
 }
 
-bool Rational::equals(const SharedRef<IMathObject> &lhs, const SharedRef<IMathObject> &rhs) const noexcept {
-  return Super::equals(lhs, rhs);
+bool Rational::equals(const SharedRef<IMathObject> &self, const SharedRef<IMathObject> &rhs) const noexcept {
+  return Super::equals(self, rhs);
 }
 
 bool Rational::equals(const Rational &rhs) const noexcept {

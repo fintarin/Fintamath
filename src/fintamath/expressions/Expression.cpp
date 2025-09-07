@@ -50,7 +50,7 @@ SharedPtr<IMathObject> Expression::unwrapp() const noexcept {
   return arg;
 }
 
-bool Expression::equals(const SharedRef<IMathObject> & /*lhs*/, const SharedRef<IMathObject> &rhs) const noexcept {
+bool Expression::equals(const SharedRef<IMathObject> & /*self*/, const SharedRef<IMathObject> &rhs) const noexcept {
   using fintamath::equals;
 
   if (const auto rhsExpr = cast<Expression>(rhs)) {

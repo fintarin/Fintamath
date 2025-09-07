@@ -25,7 +25,7 @@ SharedPtr<IConstant> IConstant::parseConstant(const std::string &str) {
   return iter != nameToConstMap.end() ? iter->second : SharedPtr<IConstant>{};
 }
 
-bool IConstant::equals(const SharedRef<IMathObject> & /*lhs*/, const SharedRef<IMathObject> &rhs) const noexcept {
+bool IConstant::equals(const SharedRef<IMathObject> & /*self*/, const SharedRef<IMathObject> &rhs) const noexcept {
   return getClass() == rhs->getClass();
 }
 

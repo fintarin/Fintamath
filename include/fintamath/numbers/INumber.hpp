@@ -49,7 +49,7 @@ public:
   friend SharedRef<INumber> neg(const SharedRef<INumber> &rhs);
 
 protected:
-  bool equals(const SharedRef<IMathObject> &lhs, const SharedRef<IMathObject> &rhs) const noexcept override;
+  bool equals(const SharedRef<IMathObject> &self, const SharedRef<IMathObject> &rhs) const noexcept override;
 
   template <typename Num, typename Func>
   static void registerEqualsFunction(Func func = {});

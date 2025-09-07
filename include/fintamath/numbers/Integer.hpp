@@ -78,7 +78,7 @@ public:
   Integer operator--(int);
 
 protected:
-  bool equals(const SharedRef<IMathObject> &lhs, const SharedRef<IMathObject> &rhs) const noexcept override;
+  bool equals(const SharedRef<IMathObject> &self, const SharedRef<IMathObject> &rhs) const noexcept override;
 
   bool equals(const Integer &rhs) const noexcept override;
 
