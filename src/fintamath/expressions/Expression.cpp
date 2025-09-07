@@ -211,6 +211,70 @@ std::optional<Expression::Term> Expression::parseTerm(const detail::Token &token
   }
 }
 
+SharedRef<IMathObject> Expression::parseOperator(TermStack &argTermsRPN, const FunctionTerm &funcTerm) {
+  size_t expectedArgsSize = 0;
+  for (const auto &maker : funcTerm.functionMakers.get()) {
+    const IFunction::Declaration &makerDecl = maker.getDeclaration();
+    if (makerDecl.operatorPriority != funcTerm.operatorPriority) {
+      continue;
+    }
+
+    if (expectedArgsSize > 0) {
+      throw InvalidInputException("Ambiguous operator"); // TODO!!!
+    }
+
+    expectedArgsSize = makerDecl.argumentClasses.size();
+  }
+
+  Arguments args;
+  while (!argTermsRPN.empty() && args.size() != expectedArgsSize) {
+    args.emplace_back(parseExpression(argTermsRPN));
+  }
+  std::ranges::reverse(args);
+
+  SharedPtr<IFunction> outOper;
+  for (const auto &maker : funcTerm.functionMakers.get()) {
+    if (!maker.doArgumentsMatch(args)) {
+      continue;
+    }
+
+    if (outOper) {
+      throw InvalidInputException("Ambiguous operator"); // TODO!!!
+    }
+
+    outOper = maker.make(std::move(args));
+  }
+
+  if (!outOper) {
+    throw InvalidInputException("Operator args are invalid"); // TODO!!!
+  }
+
+  return outOper.toRef();
+}
+
+SharedRef<IMathObject> Expression::parseFunction(TermStack &argTermsRPN, const FunctionTerm &funcTerm) {
+  Arguments args = unwrappComma(parseExpression(argTermsRPN));
+
+  SharedPtr<IFunction> outFunc;
+  for (const auto &maker : funcTerm.functionMakers.get()) {
+    if (!maker.doArgumentsMatch(args)) {
+      continue;
+    }
+
+    if (outFunc) {
+      throw InvalidInputException("Ambiguous function"); // TODO!!!
+    }
+
+    outFunc = maker.make(std::move(args));
+  }
+
+  if (!outFunc) {
+    throw InvalidInputException("Function args are invalid"); // TODO!!!
+  }
+
+  return outFunc.toRef();
+}
+
 std::optional<OperatorPriority> Expression::getOperatorPriority(const IFunction::FunctionMakers &functionMakers) {
   std::optional<OperatorPriority> outPriority;
 
@@ -367,70 +431,6 @@ void Expression::moveFunctionTerms(TermStack &outTermStack, FunctionTermStack &f
 // bool Expression::isNonOperatorFunction(const IMathObject *val) {
 //   return is<IFunction>(val) && !is<IOperator>(val);
 // }
-
-SharedRef<IMathObject> Expression::parseOperator(TermStack &argTermsRPN, const FunctionTerm &funcTerm) {
-  size_t expectedArgsSize = 0;
-  for (const auto &maker : funcTerm.functionMakers.get()) {
-    const IFunction::Declaration &makerDecl = maker.getDeclaration();
-    if (makerDecl.operatorPriority != funcTerm.operatorPriority) {
-      continue;
-    }
-
-    if (expectedArgsSize > 0) {
-      throw InvalidInputException("Ambiguous operator"); // TODO!!!
-    }
-
-    expectedArgsSize = makerDecl.argumentClasses.size();
-  }
-
-  Arguments args;
-  while (!argTermsRPN.empty() && args.size() != expectedArgsSize) {
-    args.emplace_back(parseExpression(argTermsRPN));
-  }
-  std::ranges::reverse(args);
-
-  SharedPtr<IFunction> outOper;
-  for (const auto &maker : funcTerm.functionMakers.get()) {
-    if (!maker.doArgumentsMatch(args)) {
-      continue;
-    }
-
-    if (outOper) {
-      throw InvalidInputException("Ambiguous operator"); // TODO!!!
-    }
-
-    outOper = maker.make(std::move(args));
-  }
-
-  if (!outOper) {
-    throw InvalidInputException("Operator args are invalid"); // TODO!!!
-  }
-
-  return outOper.toRef();
-}
-
-SharedRef<IMathObject> Expression::parseFunction(TermStack &argTermsRPN, const FunctionTerm &funcTerm) {
-  Arguments args = unwrappComma(parseExpression(argTermsRPN));
-
-  SharedPtr<IFunction> outFunc;
-  for (const auto &maker : funcTerm.functionMakers.get()) {
-    if (!maker.doArgumentsMatch(args)) {
-      continue;
-    }
-
-    if (outFunc) {
-      throw InvalidInputException("Ambiguous function"); // TODO!!!
-    }
-
-    outFunc = maker.make(std::move(args));
-  }
-
-  if (!outFunc) {
-    throw InvalidInputException("Function args are invalid"); // TODO!!!
-  }
-
-  return outFunc.toRef();
-}
 
 Expression::Arguments Expression::unwrappComma(SharedRef<IMathObject> inArg) {
   if (const auto argFunc = cast<IFunction>(inArg); is<Comma>(argFunc)) {

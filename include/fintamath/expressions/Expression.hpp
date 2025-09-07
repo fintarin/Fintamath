@@ -19,13 +19,13 @@ public:
 
   Expression(SharedRef<IMathObject> inArg);
 
-  Expression(const std::string &str);
-
   Expression(const IMathObject &obj);
 
   Expression(IMathObject &&obj);
 
   Expression(int64_t val);
+
+  Expression(const std::string &str);
 
   std::string toString() const noexcept override;
 
@@ -69,13 +69,13 @@ private:
 
   static std::optional<Term> parseTerm(const detail::Token &token);
 
-  static std::optional<OperatorPriority> getOperatorPriority(const IFunction::FunctionMakers &functionMakers);
-
-  static void moveFunctionTerms(TermStack &outTermStack, FunctionTermStack &functionTermStack, const FunctionTerm *nextFunctionTerm);
-
   static SharedRef<IMathObject> parseFunction(TermStack &argTermsRPN, const FunctionTerm &funcTerm);
 
   static SharedRef<IMathObject> parseOperator(TermStack &argTermsRPN, const FunctionTerm &funcTerm);
+
+  static std::optional<OperatorPriority> getOperatorPriority(const IFunction::FunctionMakers &functionMakers);
+
+  static void moveFunctionTerms(TermStack &outTermStack, FunctionTermStack &functionTermStack, const FunctionTerm *nextFunctionTerm);
 
   static Arguments unwrappComma(SharedRef<IMathObject> arg);
 
