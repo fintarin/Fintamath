@@ -16,7 +16,7 @@ void IMathObject::registerDefaultObject() const {
 }
 
 bool equals(const SharedRef<IMathObject> &lhs, const SharedRef<IMathObject> &rhs) noexcept {
-  return lhs->equals(lhs, rhs);
+  return lhs == rhs || lhs->equals(lhs, rhs);
 }
 
 std::ostream &operator<<(std::ostream &out, const IMathObject &rhs) {

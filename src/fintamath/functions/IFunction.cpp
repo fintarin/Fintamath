@@ -194,9 +194,11 @@ SharedPtr<IMathObject> IFunction::approximateSelf() const {
 }
 
 bool IFunction::equals(const SharedRef<IMathObject> & /*lhs*/, const SharedRef<IMathObject> &rhs) const noexcept {
+  using fintamath::equals;
+
   if (const auto rhsFunc = cast<IFunction>(rhs)) {
     return getClass() == rhsFunc->getClass() &&
-           detail::areContainersEqual(args, rhsFunc->args, &fintamath::equals);
+           detail::areContainersEqual(args, rhsFunc->args, &equals);
   }
 
   return false;

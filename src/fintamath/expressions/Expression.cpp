@@ -51,11 +51,13 @@ SharedPtr<IMathObject> Expression::unwrapp() const noexcept {
 }
 
 bool Expression::equals(const SharedRef<IMathObject> & /*lhs*/, const SharedRef<IMathObject> &rhs) const noexcept {
+  using fintamath::equals;
+
   if (const auto rhsExpr = cast<Expression>(rhs)) {
-    return fintamath::equals(arg, rhsExpr->arg);
+    return equals(arg, rhsExpr->arg);
   }
 
-  return fintamath::equals(arg, rhs);
+  return equals(arg, rhs);
 }
 
 Expression::TokenToTermVector Expression::parseTokensToTerms(detail::Tokens &tokens) {
