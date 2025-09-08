@@ -31,6 +31,8 @@ public:
 
   SharedPtr<IMathObject> unwrapp() const noexcept override;
 
+  SharedRef<IMathObject> getArgument() const noexcept;
+
 protected:
   bool equals(const SharedRef<IMathObject> &self, const SharedRef<IMathObject> &rhs) const noexcept override;
 
