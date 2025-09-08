@@ -5,6 +5,6 @@
 namespace fintamath {
 
 BadCastException::BadCastException(std::string_view fromClassName, std::string_view toClassName) noexcept
-    : Exception(fmt::format(R"(Bad cast from {} to {})", fromClassName, toClassName)) {}
+    : Exception(fmt::format("Bad cast from {} to {}", fromClassName, toClassName)) {}
 
 }

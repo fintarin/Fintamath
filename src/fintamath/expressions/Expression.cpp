@@ -108,7 +108,7 @@ Expression::TermStack Expression::parseTermsRPN(TokenToTermVector &tokensToTerms
         funcTermStack.pop();
       }
       else {
-        throw InvalidInputException(fmt::format(R"(invalid term "{}")", token.name));
+        throw InvalidInputException(fmt::format("invalid term \"{}\"", token.name));
       }
 
       continue;
@@ -179,7 +179,7 @@ SharedRef<IMathObject> Expression::parseExpression(const std::string &str) {
     message[0] = static_cast<char>(std::tolower(message[0]));
 
     throw InvalidInputException(fmt::format(
-      R"(Unable to parse an expression from "{}" ({}))",
+      "Unable to parse an expression from \"{}\" ({})",
       str,
       message
     ));
@@ -207,7 +207,7 @@ std::optional<Expression::Term> Expression::parseTerm(const detail::Token &token
       if (SharedPtr<IConstant> constant = IConstant::parseConstant(token.name)) {
         return constant.toRef();
       }
-      throw InvalidInputException(fmt::format(R"(invalid term {})", token.name));
+      throw InvalidInputException(fmt::format("invalid term {}", token.name));
     }
     default: {
       return std::nullopt;

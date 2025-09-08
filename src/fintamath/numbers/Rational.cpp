@@ -30,7 +30,7 @@ Rational::Rational(Integer inNumer, Integer inDenom)
 
   if (denom == 0) {
     throw UndefinedException(fmt::format(
-      R"(div({}, {}) is undefined (division by zero))",
+      "div({}, {}) is undefined (division by zero)",
       numer.toString(),
       denom.toString()
     ));
@@ -42,7 +42,7 @@ Rational::Rational(Integer inNumer, Integer inDenom)
 Rational::Rational(const std::string_view str) {
   constexpr auto throwInvalidInputException = [](const std::string_view invalidStr) {
     throw InvalidInputException(fmt::format(
-      R"(Unable to parse {} from "{}")",
+      "Unable to parse {} from \"{}\"",
       getClassStatic()->getName(),
       invalidStr
     ));
@@ -178,7 +178,7 @@ Rational &Rational::mul(const Rational &rhs) {
 Rational &Rational::div(const Rational &rhs) {
   if (rhs == 0) {
     throw UndefinedException(fmt::format(
-      R"(div({}, {}) is undefined (division by zero))",
+      "div({}, {}) is undefined (division by zero)",
       toString(),
       rhs.toString()
     ));

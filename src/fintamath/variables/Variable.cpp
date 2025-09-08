@@ -17,7 +17,7 @@ FINTAMATH_CLASS_IMPLEMENTATION(Variable)
 Variable::Variable(std::string_view inName) {
   if (inName.size() != 1 || inName.front() < 'a' || inName.front() > 'z') {
     throw InvalidInputException(fmt::format(
-      R"(Unable to parse {} name from "{}" (expected single English lowercase letter))",
+      "Unable to parse {} name from \"{}\" (expected single English lowercase letter)",
       getClassStatic()->getName(),
       inName
     ));
@@ -29,7 +29,7 @@ Variable::Variable(std::string_view inName) {
 Variable::Variable(std::string_view inName, Integer inIndex) : Variable(inName) {
   if (inIndex < 0) {
     throw InvalidInputException(fmt::format(
-      R"(Negative {} index {} is not allowed)",
+      "Negative {} index {} is not allowed",
       getClassStatic()->getName(),
       inIndex.toString()
     ));

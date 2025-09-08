@@ -23,18 +23,6 @@ auto callMultimethod(const auto &multimethod, const SharedRef<INumber> &lhs, con
     }
   }
 
-  std::string lhsStr = lhs->toString();
-  std::string rhsStr = rhs->toString();
-
-  if constexpr (requires { (*res)->toString(); }) {
-    std::string resStr = res ? (*res)->toString() : "";
-    int a = 0;
-  }
-  else {
-    std::string resStr = res ? (*res ? "true" : "false") : "";
-    int a = 0;
-  }
-
   return res;
 }
 
@@ -44,7 +32,7 @@ auto callMultimethod(const auto &multimethod, const SharedRef<INumber> &rhs) {
 
 void throwInvalidInputException(const std::string_view funcName, const MathObjectClass lhsClass, const MathObjectClass rhsClass) {
   throw InvalidInputException(fmt::format(
-    R"(Unable to call {} with arguments {} and {})",
+    "Unable to call {} with arguments {} and {}",
     funcName,
     lhsClass->getName(),
     rhsClass->getName()
@@ -53,7 +41,7 @@ void throwInvalidInputException(const std::string_view funcName, const MathObjec
 
 void throwInvalidInputException(const std::string_view funcName, const MathObjectClass rhsClass) {
   throw InvalidInputException(fmt::format(
-    R"(Unable to call {} with argument)",
+    "Unable to call {} with argument",
     funcName,
     rhsClass->getName()
   ));

@@ -25,7 +25,7 @@ Integer::Integer(Backend inBackend) : backend(std::move(inBackend)) {
 Integer::Integer(const std::string_view str) {
   constexpr auto throwInvalidInputException = [](const std::string_view invalidStr) {
     throw InvalidInputException(fmt::format(
-      R"(Unable to parse {} from "{}")",
+      "Unable to parse {} from \"{}\"",
       getClassStatic()->getName(),
       invalidStr
     ));
@@ -89,7 +89,7 @@ Integer &Integer::mul(const Integer &rhs) {
 Integer &Integer::div(const Integer &rhs) {
   if (rhs == 0) {
     throw UndefinedException(fmt::format(
-      R"(div({}, {}) is undefined (division by zero))",
+      "div({}, {}) is undefined (division by zero)",
       toString(),
       rhs.toString()
     ));
@@ -107,7 +107,7 @@ Integer &Integer::neg() {
 Integer &Integer::mod(const Integer &rhs) {
   if (rhs == 0) {
     throw UndefinedException(fmt::format(
-      R"(mod({}, {}) is undefined (modulo by zero))",
+      "mod({}, {}) is undefined (modulo by zero)",
       toString(),
       rhs.toString()
     ));
@@ -135,7 +135,7 @@ Integer &Integer::bitXor(const Integer &rhs) {
 Integer &Integer::bitLeftShift(const Integer &rhs) {
   if (rhs < 0) {
     throw UndefinedException(fmt::format(
-      R"(bitLeftShift({}, {}) is undefined (negative shift))",
+      "bitLeftShift({}, {}) is undefined (negative shift)",
       toString(),
       rhs.toString()
     ));
@@ -148,7 +148,7 @@ Integer &Integer::bitLeftShift(const Integer &rhs) {
 Integer &Integer::bitRightShift(const Integer &rhs) {
   if (rhs < 0) {
     throw UndefinedException(fmt::format(
-      R"(bitRightShift({}, {}) is undefined (negative shift))",
+      "bitRightShift({}, {}) is undefined (negative shift)",
       toString(),
       rhs.toString()
     ));

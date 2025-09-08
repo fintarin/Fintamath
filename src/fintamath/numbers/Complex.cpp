@@ -63,7 +63,7 @@ Complex::Complex(const INumber &inReal, const INumber &inImage)
 
   if (is<Complex>(inReal) || is<Complex>(inImage)) {
     throw InvalidInputException(fmt::format(
-      R"(Nested {} numbers are not allowed)",
+      "Nested {} numbers are not allowed",
       getClassStatic()->getName()
     ));
   }
@@ -97,7 +97,7 @@ Complex::Complex(const std::string &str)
   }
   catch (const InvalidInputException &) {
     throw InvalidInputException(fmt::format(
-      R"(Unable to parse {} from "{}")",
+      "Unable to parse {} from \"{}\"",
       getClassStatic()->getName(),
       str
     ));
@@ -262,7 +262,7 @@ Complex &Complex::div(const Complex &rhs) {
   }
   catch (const UndefinedException &) {
     throw UndefinedException(fmt::format(
-      R"(div({}, {}) is undefined (division by zero))",
+      "div({}, {}) is undefined (division by zero)",
       lhs.toString(),
       rhs.toString()
     ));
