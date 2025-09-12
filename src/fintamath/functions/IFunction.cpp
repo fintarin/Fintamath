@@ -199,11 +199,7 @@ bool IFunction::equals(const SharedRef<IMathObject> & /*self*/, const SharedRef<
 void IFunction::registerDefaultObject() const {
   const Declaration &decl = getDeclaration();
 
-  assert(!decl.argumentClasses.empty());
-
-  if (decl.name.empty()) {
-    return;
-  }
+  assert(!decl.name.empty() && decl.returnClass && !decl.argumentClasses.empty());
 
   detail::Tokenizer::registerToken(decl.name);
 
