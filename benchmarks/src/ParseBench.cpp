@@ -19,12 +19,12 @@ std::string getAddExprStr() {
   return str;
 }
 
-std::string getAddVariadicStr() {
+std::string getMinStr() {
   std::string str = "x";
   repeat(functionsNum - 1, [&str] {
     str += ",x";
   });
-  return "add(" + str + ")";
+  return "min(" + str + ")";
 }
 
 std::string getSinExprStr() {
@@ -53,16 +53,16 @@ static void BM_ParseSimplifyAddExpression(benchmark::State &state) {
   }
 }
 
-static void BM_ParseAddVariadicExpression(benchmark::State &state) {
-  const std::string str = getAddVariadicStr();
+static void BM_ParseMinExpression(benchmark::State &state) {
+  const std::string str = getMinStr();
 
   for (auto _ : state) {
     benchmark::DoNotOptimize(Expression(str));
   }
 }
 
-static void BM_ParseSimplifyAddVariadicExpression(benchmark::State &state) {
-  const std::string str = getAddVariadicStr();
+static void BM_ParseSimplifyMinExpression(benchmark::State &state) {
+  const std::string str = getMinStr();
 
   for (auto _ : state) {
     benchmark::DoNotOptimize(simplify(Expression(str)));
@@ -87,8 +87,8 @@ static void BM_ParseSimplifySinExpression(benchmark::State &state) {
 
 BENCHMARK(BM_ParseAddExpression)->Unit(benchmark::TimeUnit::kMillisecond);
 BENCHMARK(BM_ParseSimplifyAddExpression)->Unit(benchmark::TimeUnit::kMillisecond);
-BENCHMARK(BM_ParseAddVariadicExpression)->Unit(benchmark::TimeUnit::kMillisecond);
-BENCHMARK(BM_ParseSimplifyAddVariadicExpression)->Unit(benchmark::TimeUnit::kMillisecond);
+BENCHMARK(BM_ParseMinExpression)->Unit(benchmark::TimeUnit::kMillisecond);
+BENCHMARK(BM_ParseSimplifyMinExpression)->Unit(benchmark::TimeUnit::kMillisecond);
 BENCHMARK(BM_ParseSinExpression)->Unit(benchmark::TimeUnit::kMillisecond);
 BENCHMARK(BM_ParseSimplifySinExpression)->Unit(benchmark::TimeUnit::kMillisecond);
 

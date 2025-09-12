@@ -8,7 +8,7 @@ FINTAMATH_FUNCTION_CLASS_IMPLEMENTATION(
   Min,
   {
     .name = "min",
-    .argumentClasses = {INumber::getClassStatic(), INumber::getClassStatic()},
+    .argumentClasses = {INumber::getClassStatic()},
     .returnClass = INumber::getClassStatic(),
     .isVariadic = true,
   }

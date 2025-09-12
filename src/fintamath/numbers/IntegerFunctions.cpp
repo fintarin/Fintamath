@@ -7,12 +7,10 @@
 
 #include <boost/multiprecision/detail/default_ops.hpp>
 
-#include <fmt/core.h>
+#include <fmt/format.h>
 
 #include "fintamath/exceptions/UndefinedException.hpp"
 #include "fintamath/numbers/Integer.hpp"
-
-using namespace boost::multiprecision;
 
 namespace fintamath {
 

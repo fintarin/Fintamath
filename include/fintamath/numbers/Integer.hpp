@@ -81,6 +81,10 @@ public:
 
   static const SharedRef<Integer>& getZero();
 
+  static const SharedRef<Integer>& getOne();
+
+  static const SharedRef<Integer>& getNegOne();
+
 protected:
   bool equals(const SharedRef<IMathObject> &self, const SharedRef<IMathObject> &rhs) const noexcept override;
 

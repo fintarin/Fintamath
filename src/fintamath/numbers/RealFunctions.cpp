@@ -2,7 +2,7 @@
 
 #include <stdexcept>
 
-#include <fmt/core.h>
+#include <fmt/format.h>
 
 #include <boost/math/policies/error_handling.hpp>
 #include <boost/multiprecision/detail/default_ops.hpp>
@@ -15,8 +15,6 @@
 
 namespace fintamath {
 
-using namespace detail;
-
 namespace {
 
 constexpr std::string_view backendIsInfException = "Undefined backend inf";
@@ -24,6 +22,8 @@ constexpr std::string_view backendIsNegInfException = "Undefined backend -inf";
 constexpr std::string_view backendIsNanException = "Undefined backend nan";
 
 bool isOverflow(const Real &rhs) {
+  using detail::Cache;
+
   static Cache<unsigned, Real::Backend> precisionToMaxValueCache([](const unsigned precision) {
     static const Real::Backend powBase = 10;
     return pow(powBase, precision);
@@ -35,6 +35,8 @@ bool isOverflow(const Real &rhs) {
 }
 
 bool isUnderflow(const Real &rhs) {
+  using detail::Cache;
+
   static Cache<unsigned, Real::Backend> precisionToMinValueCache([](const unsigned precision) {
     static const Real::Backend powBase = 10;
     return 1 / pow(powBase, precision);
@@ -46,6 +48,8 @@ bool isUnderflow(const Real &rhs) {
 }
 
 bool isLogUnderflow(const Real &rhs) {
+  using detail::Cache;
+
   static Cache<unsigned, Real::Backend> precisionToLogMinValueCache([](const unsigned precision) {
     return 1 / pow(precision, getE().getBackend());
   });
@@ -619,6 +623,8 @@ Real tgamma(const Real &rhs) {
 }
 
 const Real &getE() {
+  using detail::Cache;
+
   static Cache<unsigned, Real> cache([](const unsigned precision) {
     Real::Backend::backend_type res;
     boost::multiprecision::default_ops::calc_e(res, precision);
@@ -629,6 +635,8 @@ const Real &getE() {
 }
 
 const Real &getPi() {
+  using detail::Cache;
+
   static Cache<unsigned, Real> cache([](const unsigned precision) {
     Real::Backend::backend_type res;
     boost::multiprecision::default_ops::calc_pi(res, precision);

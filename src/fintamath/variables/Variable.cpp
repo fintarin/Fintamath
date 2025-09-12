@@ -4,7 +4,7 @@
 #include <string_view>
 #include <utility>
 
-#include <fmt/core.h>
+#include <fmt/format.h>
 
 #include "fintamath/core/MathObjectUtils.hpp"
 #include "fintamath/exceptions/InvalidInputException.hpp"

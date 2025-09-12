@@ -712,6 +712,14 @@ TEST(IntegerTests, getZeroTest) {
   EXPECT_TRUE(Integer::getZero()->isZero());
 }
 
+TEST(IntegerTests, getOneTest) {
+  EXPECT_EQ(*Integer::getOne(), 1);
+}
+
+TEST(IntegerTests, getNegOneTest) {
+  EXPECT_EQ(*Integer::getNegOne(), -1);
+}
+
 TEST(IntegerTests, getClassTest) {
   EXPECT_EQ(Integer().getClass()->getName(), "Integer");
   EXPECT_EQ(Integer().getClass()->getParent(), INumber::getClassStatic());

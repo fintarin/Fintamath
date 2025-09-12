@@ -4,6 +4,7 @@
 
 #define FINTAMATH_FUNCTION_CLASS_BODY(Class, SuperClass)          \
   FINTAMATH_CLASS_BODY(Class, SuperClass)                         \
+                                                                  \
 protected:                                                        \
   Class() = default;                                              \
                                                                   \

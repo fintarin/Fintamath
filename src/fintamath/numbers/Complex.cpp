@@ -2,7 +2,7 @@
 
 #include <string>
 
-#include <fmt/core.h>
+#include <fmt/format.h>
 
 #include "fintamath/core/Converter.hpp"
 #include "fintamath/core/IMathObject.hpp"

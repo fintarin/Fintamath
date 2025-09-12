@@ -7,7 +7,7 @@
 #include <string_view>
 #include <utility>
 
-#include <fmt/core.h>
+#include <fmt/format.h>
 
 #include "fintamath/exceptions/InvalidInputException.hpp"
 #include "fintamath/exceptions/UndefinedException.hpp"
@@ -16,8 +16,6 @@
 namespace fintamath {
 
 FINTAMATH_CLASS_IMPLEMENTATION(Integer)
-
-using namespace detail;
 
 Integer::Integer(Backend inBackend) : backend(std::move(inBackend)) {
 }
@@ -36,7 +34,7 @@ Integer::Integer(const std::string_view str) {
   }
 
   try {
-    backend.assign(removeLeadingZeroes(std::string(str)));
+    backend.assign(detail::removeLeadingZeroes(std::string(str)));
   }
   catch (const std::runtime_error &) {
     throwInvalidInputException(str);
@@ -249,6 +247,16 @@ Integer Integer::operator--(int) {
 const SharedRef<Integer>& Integer::getZero() {
   static const SharedRef<Integer> zero = makeShared<Integer>(0);
   return zero;
+}
+
+const SharedRef<Integer>& Integer::getOne() {
+  static const SharedRef<Integer> one = makeShared<Integer>(1);
+  return one;
+}
+
+const SharedRef<Integer>& Integer::getNegOne() {
+  static const SharedRef<Integer> neg = makeShared<Integer>(-1);
+  return neg;
 }
 
 void Integer::registerDefaultObject() const {

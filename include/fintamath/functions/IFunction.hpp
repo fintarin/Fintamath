@@ -9,6 +9,14 @@
 
 namespace fintamath {
 
+enum class FunctionState : uint8_t {
+  Raw,
+  PreSimplify,
+  Simplify,
+  Solve,
+  Approximate,
+};
+
 enum class OperatorPriority : uint8_t {
   Exponentiation, // e.g.  a ^ b
   PostfixUnary,   // e.g.  a!
@@ -24,23 +32,20 @@ enum class OperatorPriority : uint8_t {
   Comma,          // e.g.  a , b
 };
 
-enum class FunctionState : uint8_t {
-  None,
-  PreSimplify,
-  Simplify,
-  Solve,
-  Approximate,
-};
-
 class IFunction : public IMathObject {
   FINTAMATH_INTERFACE_BODY(IFunction, IMathObject)
 
 public:
+  struct OperatorDeclaration {
+    OperatorPriority priority = OperatorPriority::Exponentiation;
+    bool isAssociative = false;
+  };
+
   struct Declaration {
     std::string name;
     std::vector<MathObjectClass> argumentClasses;
-    MathObjectClass returnClass;
-    std::optional<OperatorPriority> operatorPriority = std::nullopt;
+    MathObjectClass returnClass = nullptr;
+    std::optional<OperatorDeclaration> operatorDeclaration = std::nullopt;
     bool isVariadic = false;
   };
 
@@ -67,10 +72,9 @@ public:
 private:
   using NameToFunctionMakersMap = std::unordered_map<std::string, FunctionMakers>;
 
-protected:
+public:
   IFunction() = default;
 
-public:
   explicit IFunction(const Declaration &inDeclaration, Arguments inArgs);
 
   virtual const Declaration &getDeclaration() const noexcept = 0;
@@ -80,10 +84,6 @@ public:
   const Arguments &getArguments() const noexcept;
 
   static const FunctionMakers *parseFunctionMakers(const std::string &str);
-
-  static void compress(SharedRef<IMathObject> &arg);
-
-  static void preSimplify(SharedRef<IMathObject> &arg);
 
   static void simplify(SharedRef<IMathObject> &arg);
 
@@ -104,11 +104,13 @@ protected:
 
   virtual SharedPtr<IMathObject> approximateSelf() const;
 
-  bool equals(const SharedRef<IMathObject> &self, const SharedRef<IMathObject> &rhs) const noexcept override;
+  bool equals(const SharedRef<IMathObject> &self, const SharedRef<IMathObject> &rhs) const noexcept final;
 
   void registerDefaultObject() const override;
 
 private:
+  bool hasUndefined() const noexcept;
+
   static bool doArgumentsMatch(const Declaration &decl, const Arguments &args) noexcept;
 
   static bool doArgumentsMatchNonVariadic(const Declaration &decl, const Arguments &args) noexcept;
@@ -119,9 +121,9 @@ private:
 
   static Arguments unwrappArguments(Arguments args) noexcept;
 
-  static void appendVariadicFunctionArgument(const SharedRef<IMathObject> &arg, const MathObjectClass &selfClass, Arguments &outArgs);
+  static void compress(SharedRef<IMathObject> &arg);
 
-  static void appendVariadicFunctionArguments(const IFunction &func, const MathObjectClass &selfClass, Arguments &outArgs) noexcept;
+  static void preSimplify(SharedRef<IMathObject> &arg);
 
   template <typename ModifySelfCallback, typename ModifyCallback, typename PreviousModifyCallback>
   static void modify(SharedRef<IMathObject> &arg, const ModifySelfCallback &modifySelf, const ModifyCallback &modify, const PreviousModifyCallback &prevModify, FunctionState stateAfterModify);
@@ -134,7 +136,7 @@ private:
 private:
   Arguments args;
 
-  mutable FunctionState state = FunctionState::None;
+  mutable FunctionState state = FunctionState::Raw;
 
   static std::mutex modifyStateMutex;
 };

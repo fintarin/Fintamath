@@ -14,3 +14,4 @@ BraceWrapping:
   BeforeWhile: true
 AlignAfterOpenBracket: BlockIndent
 ContinuationIndentWidth: 2
+InsertNewlineAtEOF: true

@@ -9,7 +9,7 @@
 #include <string_view>
 #include <utility>
 
-#include <fmt/core.h>
+#include <fmt/format.h>
 
 #include "fintamath/core/Converter.hpp"
 #include "fintamath/exceptions/InvalidInputException.hpp"

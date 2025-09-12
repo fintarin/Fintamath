@@ -1,6 +1,6 @@
 #include "fintamath/expressions/Expression.hpp"
 
-#include <fmt/core.h>
+#include <fmt/format.h>
 
 #include "fintamath/constants/IConstant.hpp"
 #include "fintamath/core/MathObjectUtils.hpp"
@@ -223,7 +223,7 @@ SharedRef<IMathObject> Expression::parseOperator(TermStack &argTermsRPN, const F
   size_t expectedArgsSize = 0;
   for (const auto &maker : funcTerm.functionMakers.get()) {
     const IFunction::Declaration &makerDecl = maker.getDeclaration();
-    if (makerDecl.operatorPriority != funcTerm.operatorPriority) {
+    if (makerDecl.operatorDeclaration->priority != funcTerm.operatorPriority) {
       continue;
     }
 
@@ -231,7 +231,8 @@ SharedRef<IMathObject> Expression::parseOperator(TermStack &argTermsRPN, const F
       throw InvalidInputException("Ambiguous operator"); // TODO!!!
     }
 
-    expectedArgsSize = makerDecl.argumentClasses.size();
+    const size_t variadicOperArgSize = 2;
+    expectedArgsSize = makerDecl.isVariadic ? variadicOperArgSize : makerDecl.argumentClasses.size();
   }
 
   Arguments args;
@@ -261,11 +262,13 @@ SharedRef<IMathObject> Expression::parseOperator(TermStack &argTermsRPN, const F
 }
 
 SharedRef<IMathObject> Expression::parseFunction(TermStack &argTermsRPN, const FunctionTerm &funcTerm) {
-  Arguments args = unwrappComma(parseExpression(argTermsRPN));
+  SharedRef<IMathObject> parsedArg = parseExpression(argTermsRPN);
+  const auto comma = cast<Comma>(parsedArg);
+  Arguments funcArgs = comma ? comma->toFunctionArguments() : Arguments{parsedArg};
 
   SharedPtr<IFunction> outFunc;
   for (const auto &maker : funcTerm.functionMakers.get()) {
-    if (!maker.doArgumentsMatch(args)) {
+    if (!maker.doArgumentsMatch(funcArgs)) {
       continue;
     }
 
@@ -273,7 +276,7 @@ SharedRef<IMathObject> Expression::parseFunction(TermStack &argTermsRPN, const F
       throw InvalidInputException("Ambiguous function"); // TODO!!!
     }
 
-    outFunc = maker.make(std::move(args));
+    outFunc = maker.make(std::move(funcArgs));
   }
 
   if (!outFunc) {
@@ -288,8 +291,8 @@ std::optional<OperatorPriority> Expression::getOperatorPriority(const IFunction:
 
   for (const auto &maker : functionMakers) {
     const IFunction::Declaration &decl = maker.getDeclaration();
-    if (decl.operatorPriority && (!outPriority || *outPriority < decl.operatorPriority)) {
-      outPriority = decl.operatorPriority;
+    if (decl.operatorDeclaration && (!outPriority || *outPriority < decl.operatorDeclaration->priority)) {
+      outPriority = decl.operatorDeclaration->priority;
     }
   }
 
@@ -441,8 +444,8 @@ void Expression::moveFunctionTerms(TermStack &outTermStack, FunctionTermStack &f
 // }
 
 Expression::Arguments Expression::unwrappComma(SharedRef<IMathObject> inArg) {
-  if (const auto argFunc = cast<IFunction>(inArg); is<Comma>(argFunc)) {
-    Comma::compress(inArg);
+  if (const auto comma = cast<Comma>(inArg)) {
+    comma->toFunctionArguments();
     return castChecked<IFunction>(*inArg).getArguments();
   }
 

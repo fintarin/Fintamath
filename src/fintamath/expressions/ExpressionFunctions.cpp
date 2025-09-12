@@ -1,5 +1,6 @@
 #include "fintamath/expressions/ExpressionFunctions.hpp"
 
+#include "fintamath/functions/arithmetic/Pow.hpp"
 #include "fintamath/functions/trigonometry/Sin.hpp"
 
 namespace fintamath {
@@ -25,6 +26,10 @@ Expression solve(const Expression &rhs) {
 
 Expression approximate(const Expression &rhs) {
   return modify(rhs, &IFunction::approximate);
+}
+
+Expression pow(const Expression &lhs, const Expression &rhs) {
+  return {makeShared<Pow>({lhs.getArgument(), rhs.getArgument()})};
 }
 
 Expression sin(const Expression &rhs) {

@@ -1,21 +1,22 @@
-#include "fintamath/functions/arithmetic/Mul.hpp"
+#include "fintamath/functions/arithmetic/AddF.hpp"
 
+#include "fintamath/functions/arithmetic/Add.hpp"
 #include "fintamath/numbers/INumber.hpp"
 
 namespace fintamath {
 
 FINTAMATH_FUNCTION_CLASS_IMPLEMENTATION(
-  Mul,
+  AddF,
   {
-    .name = "*",
+    .name = "add",
     .argumentClasses = {INumber::getClassStatic()},
     .returnClass = INumber::getClassStatic(),
-    .operatorDeclaration = OperatorDeclaration{
-      .priority = OperatorPriority::Multiplication,
-      .isAssociative = true,
-    },
     .isVariadic = true,
   }
 )
+
+SharedPtr<IMathObject> AddF::preSimplifySelf() const {
+  return makeShared<Add>(getArguments());
+}
 
 }

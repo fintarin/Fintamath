@@ -2,9 +2,10 @@
 
 #include <cassert>
 
-#include <fmt/core.h>
+#include <fmt/format.h>
 
 #include "fintamath/constants/IConstant.hpp"
+#include "fintamath/constants/Undefined.hpp"
 #include "fintamath/core/Converter.hpp"
 #include "fintamath/core/CoreUtils.hpp"
 #include "fintamath/core/MathObjectUtils.hpp"
@@ -73,19 +74,26 @@ const IFunction::FunctionMakers *IFunction::parseFunctionMakers(const std::strin
 }
 
 void IFunction::compress(SharedRef<IMathObject> &arg) {
-  if (const auto func = cast<IFunction>(arg)) {
-    if (auto res = func->compressSelf()) {
-      arg = std::move(res).toRef();
+  if (auto func = cast<IFunction>(arg)) {
+    if (auto compressed = func->compressSelf()) {
+      arg = compressed.toRef();
     }
   }
 }
 
 void IFunction::preSimplify(SharedRef<IMathObject> &arg) {
+  constexpr auto preSimplifySelfCallback = [](const IFunction &self) -> SharedPtr<IMathObject> {
+    if (self.hasUndefined()) {
+      return makeShared<Undefined>();
+    }
+    return self.preSimplifySelf();
+  };
+
   modify(
     arg,
-    [](const IFunction &func) { return func.preSimplifySelf(); },
+    preSimplifySelfCallback,
     &preSimplify,
-    &compress,
+    compress,
     FunctionState::PreSimplify
   );
 }
@@ -133,40 +141,7 @@ void IFunction::approximate(SharedRef<IMathObject> &arg) {
 }
 
 SharedPtr<IMathObject> IFunction::compressSelf() const {
-  if (!getDeclaration().isVariadic) {
-    return nullptr;
-  }
-
-  const MathObjectClass selfClass = getClass();
-  size_t selfArgIndex = 0;
-  std::optional<Arguments> outArgs;
-
-  for (; selfArgIndex < args.size(); selfArgIndex++) {
-    const SharedRef<IMathObject> &arg = args[selfArgIndex];
-
-    if (is(selfClass, arg->getClass())) {
-      outArgs = Arguments(
-        args.begin(),
-        args.begin() + static_cast<ptrdiff_t>(selfArgIndex)
-      );
-
-      appendVariadicFunctionArguments(castChecked<IFunction>(*arg), selfClass, *outArgs);
-
-      break;
-    }
-  }
-
-  if (!outArgs) {
-    return nullptr;
-  }
-
-  selfArgIndex++;
-
-  for (; selfArgIndex < args.size(); selfArgIndex++) {
-    appendVariadicFunctionArgument(args[selfArgIndex], selfClass, *outArgs);
-  }
-
-  return makeSelf(std::move(*outArgs));
+  return nullptr;
 }
 
 SharedPtr<IMathObject> IFunction::preSimplifySelf() const {
@@ -207,6 +182,15 @@ void IFunction::registerDefaultObject() const {
   makers.emplace_back(castChecked<IFunction>(getDefaultObject()));
 }
 
+bool IFunction::hasUndefined() const noexcept {
+  return std::ranges::find_if(
+           args,
+           [](const auto &selfArg) {
+             return is<Undefined>(selfArg);
+           }
+         ) != args.end();
+}
+
 bool IFunction::doArgumentsMatch(const Declaration &decl, const Arguments &args) noexcept {
   return decl.isVariadic ? doArgumentsMatchVariadic(decl, args)
                          : doArgumentsMatchNonVariadic(decl, args);
@@ -227,23 +211,15 @@ bool IFunction::doArgumentsMatchNonVariadic(const Declaration &decl, const Argum
 }
 
 bool IFunction::doArgumentsMatchVariadic(const Declaration &decl, const Arguments &args) noexcept {
-  if (decl.argumentClasses.size() > args.size()) {
+  if (args.empty()) {
     return false;
   }
 
-  size_t declArgIndex = 0;
-  for (const auto& arg : args) {
-    if (!doesArgumentMatch(decl.argumentClasses[declArgIndex], arg)) {
-      return false;
-    }
-
-    declArgIndex++;
-    if (declArgIndex >= decl.argumentClasses.size()) {
-      declArgIndex = 0;
-    }
-  }
-
-  return true;
+  return std::ranges::all_of(args, [&decl](const SharedRef<IMathObject> &arg) {
+    return std::ranges::all_of(decl.argumentClasses, [&arg](MathObjectClass expectedClass) {
+      return doesArgumentMatch(expectedClass, arg);
+    });
+  });
 }
 
 bool IFunction::doesArgumentMatch(MathObjectClass expectedClass, const SharedRef<IMathObject> &arg) noexcept {
@@ -272,25 +248,6 @@ IFunction::Arguments IFunction::unwrappArguments(Arguments args) noexcept {
   }
 
   return args;
-}
-
-void IFunction::appendVariadicFunctionArgument(const SharedRef<IMathObject> &arg, const MathObjectClass &selfClass, Arguments &outArgs) {
-  if (is(selfClass, arg->getClass())) {
-    appendVariadicFunctionArguments(castChecked<IFunction>(*arg), selfClass, outArgs);
-  }
-  else {
-    outArgs.emplace_back(arg);
-  }
-}
-
-void IFunction::appendVariadicFunctionArguments(const IFunction &func, const MathObjectClass &selfClass, Arguments &outArgs) noexcept {
-  const Arguments &args = func.getArguments();
-
-  outArgs.reserve(outArgs.size() + args.size());
-
-  for (const auto &arg : args) {
-    appendVariadicFunctionArgument(arg, selfClass, outArgs);
-  }
 }
 
 IFunction::NameToFunctionMakersMap &IFunction::getNameToFunctionMakersMap() {

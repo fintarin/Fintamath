@@ -8,9 +8,12 @@ FINTAMATH_FUNCTION_CLASS_IMPLEMENTATION(
   Add,
   {
     .name = "+",
-    .argumentClasses = {INumber::getClassStatic(), INumber::getClassStatic()},
+    .argumentClasses = {INumber::getClassStatic()},
     .returnClass = INumber::getClassStatic(),
-    .operatorPriority = OperatorPriority::Addition,
+    .operatorDeclaration = OperatorDeclaration{
+      .priority = OperatorPriority::Addition,
+      .isAssociative = true,
+    },
     .isVariadic = true,
   }
 )

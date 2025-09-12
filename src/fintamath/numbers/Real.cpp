@@ -12,7 +12,7 @@
 
 #include <boost/multiprecision/detail/default_ops.hpp>
 
-#include <fmt/core.h>
+#include <fmt/format.h>
 
 #include "fintamath/core/Converter.hpp"
 #include "fintamath/exceptions/InvalidInputException.hpp"
@@ -24,8 +24,6 @@
 namespace fintamath {
 
 FINTAMATH_CLASS_IMPLEMENTATION(Real)
-
-using namespace detail;
 
 constexpr unsigned calcPrecisionIncrement = 10;
 constexpr unsigned calcPrecisionMultiplier = 2;
@@ -71,7 +69,7 @@ Real::Real(const std::string_view str) {
   }
 
   const std::string processedStr = [&str] {
-    std::string outProcessedStr = removeLeadingZeroes(std::string(str));
+    std::string outProcessedStr = detail::removeLeadingZeroes(std::string(str));
     const std::string expStr = "*10^";
     const size_t expPos = outProcessedStr.find(expStr);
 
