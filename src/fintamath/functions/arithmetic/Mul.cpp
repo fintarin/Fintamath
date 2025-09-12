@@ -4,28 +4,15 @@
 
 namespace fintamath {
 
-FINTAMATH_FUNCTION_CLASS_IMPLEMENTATION_WITH_MAKE(
-  Mul,
-  {
-    .name = "mul",
-    .argumentClasses = {INumber::getClassStatic()},
-    .returnClass = INumber::getClassStatic(),
-    .isVariadic = true,
-  }
-)
-
 FINTAMATH_FUNCTION_CLASS_IMPLEMENTATION(
-  MulOper,
+  Mul,
   {
     .name = "*",
     .argumentClasses = {INumber::getClassStatic(), INumber::getClassStatic()},
     .returnClass = INumber::getClassStatic(),
     .operatorPriority = OperatorPriority::Multiplication,
+    .isVariadic = true,
   }
 )
-
-SharedRef<Mul> MulOper::make(Arguments inArgs) {
-  return Mul::make(std::move(inArgs));
-}
 
 }

@@ -5,8 +5,8 @@
 
 namespace fintamath {
 
-class Mul : public IFunction {
-  FINTAMATH_FUNCTION_CLASS_BODY(Mul, IFunction)
+class Min : public IFunction {
+  FINTAMATH_FUNCTION_CLASS_BODY(Min, IFunction)
 };
 
 }

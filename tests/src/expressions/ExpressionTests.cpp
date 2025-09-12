@@ -8,13 +8,13 @@
 using namespace fintamath;
 
 TEST(ExpressionTests, stringConstructorTest) {
-  EXPECT_EQ(simplify(Expression("2 + 2")).toString(), "(add 2 2)");
-  EXPECT_EQ(simplify(Expression("2 + 3 + 4 + 5")).toString(), "(add 2 3 4 5)");
-  EXPECT_EQ(simplify(Expression("2 + 3 * 4 + 2")).toString(), "(add 2 (mul 3 4) 2)");
-  EXPECT_EQ(simplify(Expression("add(2, 3, 4, 5)")).toString(), "(add 2 3 4 5)");
-  EXPECT_EQ(simplify(Expression("mul(2, 3, 4, 5)")).toString(), "(mul 2 3 4 5)");
-  EXPECT_EQ(simplify(Expression("sin(sin(x + x))")).toString(), "(sin (sin (add x x)))");
-  EXPECT_EQ(simplify(Expression("(2 + I) * 2")).toString(), "(mul (add 2 I) 2)");
+  EXPECT_EQ(simplify(Expression("2 + 2")).toString(), "(+ 2 2)");
+  EXPECT_EQ(simplify(Expression("2 + 3 + 4 + 5")).toString(), "(+ 2 3 4 5)");
+  EXPECT_EQ(simplify(Expression("2 + 3 * 4 + 2")).toString(), "(+ 2 (* 3 4) 2)");
+  EXPECT_EQ(simplify(Expression("min(2, 3)")).toString(), "(min 2 3)");
+  EXPECT_EQ(simplify(Expression("min(2, 3, 4, 5)")).toString(), "(min 2 3 4 5)");
+  EXPECT_EQ(simplify(Expression("sin(sin(x + x))")).toString(), "(sin (sin (+ x x)))");
+  EXPECT_EQ(simplify(Expression("(2 + I) * 2")).toString(), "(* (+ 2 I) 2)");
 
   EXPECT_THAT(
     [] { Expression("True + False"); },

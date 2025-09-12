@@ -28,7 +28,7 @@ Expression approximate(const Expression &rhs) {
 }
 
 Expression sin(const Expression &rhs) {
-  return {Sin::make({rhs.getArgument()})};
+  return {makeShared<Sin>({rhs.getArgument()})};
 }
 
 }

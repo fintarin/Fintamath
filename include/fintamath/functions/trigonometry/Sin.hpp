@@ -6,7 +6,7 @@
 namespace fintamath {
 
 class Sin : public IFunction {
-  FINTAMATH_FUNCTION_CLASS_BODY_WITH_MAKE(Sin, IFunction)
+  FINTAMATH_FUNCTION_CLASS_BODY(Sin, IFunction)
 
 protected:
   SharedPtr<IMathObject> approximateSelf() const override;

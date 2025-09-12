@@ -8,7 +8,7 @@
 
 namespace fintamath {
 
-FINTAMATH_FUNCTION_CLASS_IMPLEMENTATION_WITH_MAKE(
+FINTAMATH_FUNCTION_CLASS_IMPLEMENTATION(
   Sin,
   {
     .name = "sin",

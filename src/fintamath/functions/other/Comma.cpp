@@ -2,28 +2,14 @@
 
 namespace fintamath {
 
-FINTAMATH_FUNCTION_CLASS_IMPLEMENTATION_WITH_MAKE(
-  Comma,
-  {
-    .name = "",
-    .argumentClasses = {IMathObject::getClassStatic(), IMathObject::getClassStatic()},
-    .returnClass = IMathObject::getClassStatic(),
-    .isVariadic = true,
-  }
-)
-
 FINTAMATH_FUNCTION_CLASS_IMPLEMENTATION(
-  CommaOper,
+  Comma,
   {
     .name = ",",
     .argumentClasses = {IMathObject::getClassStatic(), IMathObject::getClassStatic()},
     .returnClass = IMathObject::getClassStatic(),
     .operatorPriority = OperatorPriority::Comma,
+    .isVariadic = true,
   }
 )
-
-SharedRef<Comma> CommaOper::make(Arguments inArgs) {
-  return Comma::make(std::move(inArgs));
-}
-
 }

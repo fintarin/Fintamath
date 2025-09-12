@@ -62,14 +62,6 @@ std::string IFunction::toString() const noexcept {
   return "(" + outStr + ")";
 }
 
-SharedPtr<IMathObject> IFunction::unwrapp() const noexcept {
-  if (getDeclaration().isVariadic && args.size() == 1) {
-    return args.front();
-  }
-
-  return nullptr;
-}
-
 const IFunction::Arguments &IFunction::getArguments() const noexcept {
   return args;
 }
@@ -239,15 +231,23 @@ bool IFunction::doArgumentsMatchNonVariadic(const Declaration &decl, const Argum
 }
 
 bool IFunction::doArgumentsMatchVariadic(const Declaration &decl, const Arguments &args) noexcept {
-  if (args.empty()) {
+  if (decl.argumentClasses.size() > args.size()) {
     return false;
   }
 
-  return std::ranges::all_of(args, [&decl](const SharedRef<IMathObject> &arg) {
-    return std::ranges::all_of(decl.argumentClasses, [&arg](MathObjectClass expectedClass) {
-      return doesArgumentMatch(expectedClass, arg);
-    });
-  });
+  size_t declArgIndex = 0;
+  for (const auto& arg : args) {
+    if (!doesArgumentMatch(decl.argumentClasses[declArgIndex], arg)) {
+      return false;
+    }
+
+    declArgIndex++;
+    if (declArgIndex >= decl.argumentClasses.size()) {
+      declArgIndex = 0;
+    }
+  }
+
+  return true;
 }
 
 bool IFunction::doesArgumentMatch(MathObjectClass expectedClass, const SharedRef<IMathObject> &arg) noexcept {

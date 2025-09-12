@@ -70,14 +70,12 @@ private:
 protected:
   IFunction() = default;
 
+public:
   explicit IFunction(const Declaration &inDeclaration, Arguments inArgs);
 
-public:
   virtual const Declaration &getDeclaration() const noexcept = 0;
 
   std::string toString() const noexcept override;
-
-  SharedPtr<IMathObject> unwrapp() const noexcept override;
 
   const Arguments &getArguments() const noexcept;
 
@@ -140,6 +138,11 @@ private:
 
   static std::mutex modifyStateMutex;
 };
+
+template <std::derived_from<IFunction> T>
+SharedRef<T> makeShared(std::initializer_list<IFunction::Arguments::value_type> inArgs) {
+  return makeShared<T>(IFunction::Arguments(inArgs));
+}
 
 template <typename ModifySelfCallback, typename ModifyCallback, typename PreviousModifyCallback>
 inline void IFunction::modify(SharedRef<IMathObject> &arg, const ModifySelfCallback &modifySelf, const ModifyCallback &modify, const PreviousModifyCallback &prevModify, FunctionState stateAfterModify) {
