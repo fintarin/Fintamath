@@ -7,11 +7,6 @@ namespace fintamath {
 class IFunctionBinary : public IFunction {
   FINTAMATH_INTERFACE_BODY(IFunctionBinary, IFunction)
 
-protected:
-  using SimplifyFunction = std::function<SharedPtr<IMathObject>(const SharedRef<IMathObject> &, const SharedRef<IMathObject> &)>;
-
-  using SimplifyFunctions = std::vector<SimplifyFunction>;
-
 public:
   using IFunction::IFunction;
 
@@ -20,6 +15,11 @@ public:
   const SharedRef<IMathObject> &getLeftArgument() const;
 
   const SharedRef<IMathObject> &getRightArgument() const;
+
+protected:
+  using SimplifyFunction = std::function<SharedPtr<IMathObject>(const SharedRef<IMathObject> &, const SharedRef<IMathObject> &)>;
+
+  using SimplifyFunctions = std::vector<SimplifyFunction>;
 
 protected:
   virtual SimplifyFunctions getFunctionsForPreSimplify() const;

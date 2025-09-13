@@ -15,14 +15,13 @@ class MultiMethod;
 
 template <typename ResBase, typename... ArgsBase>
 class MultiMethod<ResBase(ArgsBase...)> final {
+public:
   template <typename>
   using ArgId = MathObjectClass;
 
   using CallbackId = std::tuple<ArgId<ArgsBase>...>;
 
   using CallbackBase = std::function<ResBase(ArgsBase...)>;
-
-  using IdToCallbackMap = std::unordered_map<CallbackId, CallbackBase, Hash<CallbackId>>;
 
 public:
   template <typename... Args>
@@ -61,6 +60,9 @@ private:
       return CallbackId(args.getClass()...);
     }
   }
+
+private:
+  using IdToCallbackMap = std::unordered_map<CallbackId, CallbackBase, Hash<CallbackId>>;
 
 private:
   IdToCallbackMap idToFunctionMap;

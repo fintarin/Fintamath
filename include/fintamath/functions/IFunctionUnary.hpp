@@ -7,17 +7,17 @@ namespace fintamath {
 class IFunctionUnary : public IFunction {
   FINTAMATH_INTERFACE_BODY(IFunctionUnary, IFunction)
 
-protected:
-  using SimplifyFunction = std::function<SharedPtr<IMathObject>(const SharedRef<IMathObject> &)>;
-
-  using SimplifyFunctions = std::vector<SimplifyFunction>;
-
 public:
   using IFunction::IFunction;
 
   std::string toString() const noexcept override;
 
   const SharedRef<IMathObject> &getArgument() const;
+
+protected:
+  using SimplifyFunction = std::function<SharedPtr<IMathObject>(const SharedRef<IMathObject> &)>;
+
+  using SimplifyFunctions = std::vector<SimplifyFunction>;
 
 protected:
   virtual SimplifyFunctions getFunctionsForPreSimplify() const;

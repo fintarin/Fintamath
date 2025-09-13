@@ -69,9 +69,6 @@ public:
 
   using FunctionMakers = std::vector<FunctionMaker>;
 
-private:
-  using NameToFunctionMakersMap = std::unordered_map<std::string, FunctionMakers>;
-
 public:
   IFunction() = default;
 
@@ -107,6 +104,9 @@ protected:
   bool equals(const SharedRef<IMathObject> &self, const SharedRef<IMathObject> &rhs) const noexcept final;
 
   void registerDefaultObject() const override;
+
+private:
+  using NameToFunctionMakersMap = std::unordered_map<std::string, FunctionMakers>;
 
 private:
   bool hasUndefined() const noexcept;

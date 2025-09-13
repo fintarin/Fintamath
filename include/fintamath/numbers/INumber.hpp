@@ -11,20 +11,6 @@ namespace fintamath {
 class INumber : public IMathObject {
   FINTAMATH_INTERFACE_BODY(INumber, IMathObject)
 
-  using BoolBinaryMultiMethod = detail::MultiMethod<bool(
-    const SharedRef<INumber> &,
-    const SharedRef<INumber> &
-  )>;
-
-  using NumberBinaryMultiMethod = detail::MultiMethod<SharedRef<INumber>(
-    const SharedRef<INumber> &,
-    const SharedRef<INumber> &
-  )>;
-
-  using NumberUnaryMultiMethod = detail::MultiMethod<SharedRef<INumber>(
-    const SharedRef<INumber> &
-  )>;
-
 public:
   virtual bool isZero() const noexcept = 0;
 
@@ -82,6 +68,21 @@ protected:
 
   template <typename Num, typename Func>
   static void registerNegFunction(Func func = {});
+
+private:
+  using BoolBinaryMultiMethod = detail::MultiMethod<bool(
+    const SharedRef<INumber> &,
+    const SharedRef<INumber> &
+  )>;
+
+  using NumberBinaryMultiMethod = detail::MultiMethod<SharedRef<INumber>(
+    const SharedRef<INumber> &,
+    const SharedRef<INumber> &
+  )>;
+
+  using NumberUnaryMultiMethod = detail::MultiMethod<SharedRef<INumber>(
+    const SharedRef<INumber> &
+  )>;
 
 private:
   static BoolBinaryMultiMethod &getEqualsMultimethod();

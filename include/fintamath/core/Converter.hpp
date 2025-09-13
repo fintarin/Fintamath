@@ -15,17 +15,18 @@ class IMathObject;
 namespace detail {
 
 class Converter final {
-  using ClassPair = std::pair<MathObjectClass, MathObjectClass>;
-
-  using ConvertCallback = std::function<SharedPtr<IMathObject>(const SharedRef<IMathObject> &)>;
-
-  using ClassPairToCallbackMap = std::unordered_map<ClassPair, ConvertCallback, Hash<ClassPair>>;
-
 public:
   static SharedPtr<IMathObject> convert(MathObjectClass toClass, const SharedRef<IMathObject> &from);
 
   template <typename To, typename From>
   static void add();
+
+private:
+  using ClassPair = std::pair<MathObjectClass, MathObjectClass>;
+
+  using ConvertCallback = std::function<SharedPtr<IMathObject>(const SharedRef<IMathObject> &)>;
+
+  using ClassPairToCallbackMap = std::unordered_map<ClassPair, ConvertCallback, Hash<ClassPair>>;
 
 private:
   static ClassPairToCallbackMap &getClassPairToCallbackMap();

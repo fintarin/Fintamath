@@ -9,6 +9,11 @@ class IOperator;
 class IFunctionVariadic : public IFunction {
   FINTAMATH_INTERFACE_BODY(IFunctionVariadic, IFunction)
 
+public:
+  using IFunction::IFunction;
+
+  std::string toString() const noexcept override;
+
 protected:
   struct ArgumentStringData {
     std::string delimiter;
@@ -22,11 +27,6 @@ protected:
 
   using SimplifyFunctions = std::vector<SimplifyFunction>;
 
-public:
-  using IFunction::IFunction;
-
-  std::string toString() const noexcept override;
-
 protected:
   virtual ArgumentStringData getArgumentStringData(const SharedRef<IMathObject> &arg, const SharedPtr<IMathObject> &prevArg) const;
 
@@ -34,7 +34,7 @@ protected:
 
   virtual SimplifyFunctions getFunctionsForSimplify() const;
 
-  SharedPtr<IMathObject> compressSelf() const ;
+  SharedPtr<IMathObject> compressSelf() const override;
 
   SharedPtr<IMathObject> preSimplifySelf() const override;
 
