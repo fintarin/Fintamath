@@ -23,7 +23,7 @@ protected:
 };
 
 template <typename Lhs, detail::ConvertibleToAndNotSameAs<Lhs> Rhs>
-  requires(std::is_base_of_v<IWithEqualsOperators<Lhs>, Lhs>)
+  requires(std::derived_from<Lhs, IWithEqualsOperators<Lhs>>)
 bool operator==(const Lhs &lhs, const Rhs &rhs) {
   return lhs == Lhs(rhs);
 }

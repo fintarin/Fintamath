@@ -23,7 +23,7 @@ protected:
 };
 
 template <typename Lhs, detail::ConvertibleToAndNotSameAs<Lhs> Rhs>
-  requires(std::is_base_of_v<IWithCompareOperators<Lhs>, Lhs>)
+  requires(std::derived_from<Lhs, IWithCompareOperators<Lhs>>)
 inline std::strong_ordering operator<=>(const Lhs &lhs, const Rhs &rhs) {
   return lhs <=> Lhs(rhs);
 }

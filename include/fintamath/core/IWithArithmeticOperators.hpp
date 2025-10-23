@@ -68,73 +68,73 @@ protected:
 };
 
 template <typename Lhs, detail::ConvertibleToAndNotSameAs<Lhs> Rhs>
-  requires(std::is_base_of_v<IWithArithmeticOperators<Lhs>, Lhs>)
+  requires(std::derived_from<Lhs, IWithArithmeticOperators<Lhs>>)
 Lhs &operator+=(Lhs &lhs, const Rhs &rhs) {
   return lhs += Lhs(rhs);
 }
 
 template <typename Lhs, detail::ConvertibleToAndNotSameAs<Lhs> Rhs>
-  requires(std::is_base_of_v<IWithArithmeticOperators<Lhs>, Lhs>)
+  requires(std::derived_from<Lhs, IWithArithmeticOperators<Lhs>>)
 Lhs &operator-=(Lhs &lhs, const Rhs &rhs) {
   return lhs -= Lhs(rhs);
 }
 
 template <typename Lhs, detail::ConvertibleToAndNotSameAs<Lhs> Rhs>
-  requires(std::is_base_of_v<IWithArithmeticOperators<Lhs>, Lhs>)
+  requires(std::derived_from<Lhs, IWithArithmeticOperators<Lhs>>)
 Lhs &operator*=(Lhs &lhs, const Rhs &rhs) {
   return lhs *= Lhs(rhs);
 }
 
 template <typename Lhs, detail::ConvertibleToAndNotSameAs<Lhs> Rhs>
-  requires(std::is_base_of_v<IWithArithmeticOperators<Lhs>, Lhs>)
+  requires(std::derived_from<Lhs, IWithArithmeticOperators<Lhs>>)
 Lhs &operator/=(Lhs &lhs, const Rhs &rhs) {
   return lhs /= Lhs(rhs);
 }
 
 template <typename Lhs, detail::ConvertibleToAndNotSameAs<Lhs> Rhs>
-  requires(std::is_base_of_v<IWithArithmeticOperators<Lhs>, Lhs>)
+  requires(std::derived_from<Lhs, IWithArithmeticOperators<Lhs>>)
 Lhs operator+(const Lhs &lhs, const Rhs &rhs) {
   return lhs + Lhs(rhs);
 }
 
 template <typename Rhs, detail::ConvertibleToAndNotSameAs<Rhs> Lhs>
-  requires(std::is_base_of_v<IWithArithmeticOperators<Rhs>, Rhs>)
+  requires(std::derived_from<Rhs, IWithArithmeticOperators<Rhs>>)
 Rhs operator+(const Lhs &lhs, const Rhs &rhs) {
   return Rhs(lhs) + rhs;
 }
 
 template <typename Lhs, detail::ConvertibleToAndNotSameAs<Lhs> Rhs>
-  requires(std::is_base_of_v<IWithArithmeticOperators<Lhs>, Lhs>)
+  requires(std::derived_from<Lhs, IWithArithmeticOperators<Lhs>>)
 Lhs operator-(const Lhs &lhs, const Rhs &rhs) {
   return lhs - Lhs(rhs);
 }
 
 template <typename Rhs, detail::ConvertibleToAndNotSameAs<Rhs> Lhs>
-  requires(std::is_base_of_v<IWithArithmeticOperators<Rhs>, Rhs>)
+  requires(std::derived_from<Rhs, IWithArithmeticOperators<Rhs>>)
 Rhs operator-(const Lhs &lhs, const Rhs &rhs) {
   return Rhs(lhs) - rhs;
 }
 
 template <typename Lhs, detail::ConvertibleToAndNotSameAs<Lhs> Rhs>
-  requires(std::is_base_of_v<IWithArithmeticOperators<Lhs>, Lhs>)
+  requires(std::derived_from<Lhs, IWithArithmeticOperators<Lhs>>)
 Lhs operator*(const Lhs &lhs, const Rhs &rhs) {
   return lhs * Lhs(rhs);
 }
 
 template <typename Rhs, detail::ConvertibleToAndNotSameAs<Rhs> Lhs>
-  requires(std::is_base_of_v<IWithArithmeticOperators<Rhs>, Rhs>)
+  requires(std::derived_from<Rhs, IWithArithmeticOperators<Rhs>>)
 Rhs operator*(const Lhs &lhs, const Rhs &rhs) {
   return Rhs(lhs) * rhs;
 }
 
 template <typename Lhs, detail::ConvertibleToAndNotSameAs<Lhs> Rhs>
-  requires(std::is_base_of_v<IWithArithmeticOperators<Lhs>, Lhs>)
+  requires(std::derived_from<Lhs, IWithArithmeticOperators<Lhs>>)
 Lhs operator/(const Lhs &lhs, const Rhs &rhs) {
   return lhs / Lhs(rhs);
 }
 
 template <typename Rhs, detail::ConvertibleToAndNotSameAs<Rhs> Lhs>
-  requires(std::is_base_of_v<IWithArithmeticOperators<Rhs>, Rhs>)
+  requires(std::derived_from<Rhs, IWithArithmeticOperators<Rhs>>)
 Rhs operator/(const Lhs &lhs, const Rhs &rhs) {
   return Rhs(lhs) / rhs;
 }

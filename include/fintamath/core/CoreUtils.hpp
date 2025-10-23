@@ -3,10 +3,18 @@
 #include <functional>
 #include <utility>
 
+#include "fintamath/core/Qualifiers.hpp"
+
 namespace fintamath::detail {
 
 template <typename From, typename To>
 concept ConvertibleToAndNotSameAs = std::convertible_to<From, To> && !std::same_as<From, To>;
+
+template <typename Derived, typename Base>
+concept DerivedFromNoQualifiers = std::derived_from<RemoveQualifiers<Derived>, Base>;
+
+template <typename Derived, typename Base>
+concept DerivedFromWithElementType = std::derived_from<typename detail::RemoveQualifiers<Derived>::ElementType, Base>;
 
 template <typename T>
 concept TupleLike = requires {
