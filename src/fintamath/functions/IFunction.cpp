@@ -242,9 +242,7 @@ bool IFunction::doesArgumentMatch(MathObjectClass expectedClass, const SharedRef
 
 IFunction::Arguments IFunction::unwrappArguments(Arguments args) noexcept {
   for (auto &arg : args) {
-    if (auto unwrappedArg = arg->unwrapp()) {
-      arg = unwrappedArg.toRef();
-    }
+    arg = unwrapp(arg);
   }
 
   return args;

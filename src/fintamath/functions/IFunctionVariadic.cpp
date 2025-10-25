@@ -96,7 +96,7 @@ SharedPtr<IMathObject> IFunctionVariadic::simplifySelf() const {
   // return useSimplifyFunctions(getFunctionsForSimplify(), getArguments());
 }
 
-SharedPtr<IMathObject> IFunctionVariadic::unwrapp() const noexcept {
+SharedPtr<IMathObject> IFunctionVariadic::unwrappSelf() const noexcept {
   const Arguments &selfArgs = getArguments();
 
   if (selfArgs.size() == 1) {

@@ -53,7 +53,7 @@ public:
 private:
   template <typename... Args>
   static CallbackId getFunctionId(const Args &...args) {
-    if constexpr ((IsSmartPointer<Args> && ...)) {
+    if constexpr ((IsSmartReference<Args> && ...)) {
       return CallbackId(args->getClass()...);
     }
     else {

@@ -16,7 +16,7 @@ public:
 
   virtual SharedPtr<IMathObject> approximateValue() const noexcept;
 
-  SharedPtr<IMathObject> unwrapp() const noexcept final;
+  SharedPtr<IMathObject> unwrappSelf() const noexcept final;
 
   static SharedPtr<IConstant> parseConstant(const std::string &str);
 

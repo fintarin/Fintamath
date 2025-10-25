@@ -576,14 +576,14 @@ TEST(RationalTests, toStringTest) {
 }
 
 TEST(RationalTests, unwrappTest) {
-  EXPECT_TRUE(is<Integer>(Rational(55, 5).unwrapp()));
-  EXPECT_TRUE(is<Integer>(Rational(-55, 5).unwrapp()));
+  EXPECT_TRUE(is<Integer>(Rational(55, 5).unwrappSelf()));
+  EXPECT_TRUE(is<Integer>(Rational(-55, 5).unwrappSelf()));
 
-  EXPECT_EQ(Rational(55, 5).unwrapp()->toString(), "11");
-  EXPECT_EQ(Rational(-55, 5).unwrapp()->toString(), "-11");
+  EXPECT_EQ(Rational(55, 5).unwrappSelf()->toString(), "11");
+  EXPECT_EQ(Rational(-55, 5).unwrappSelf()->toString(), "-11");
 
-  EXPECT_FALSE(Rational(5, 2).unwrapp());
-  EXPECT_FALSE(Rational(-5, 2).unwrapp());
+  EXPECT_FALSE(Rational(5, 2).unwrappSelf());
+  EXPECT_FALSE(Rational(-5, 2).unwrappSelf());
 }
 
 TEST(RationalTests, signTest) {

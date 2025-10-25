@@ -213,7 +213,7 @@ inline void INumber::registerNumberUnaryFunction(auto &multimethod, auto func) {
 
 template <typename Num>
 inline SharedRef<INumber> INumber::numberToSharedRef(Num &&num) {
-  if (auto unwrapped = cast<INumber>(num.unwrapp())) {
+  if (auto unwrapped = cast<INumber>(unwrapp(num))) {
     return unwrapped.toRef();
   }
 

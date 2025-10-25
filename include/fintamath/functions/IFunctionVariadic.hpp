@@ -40,7 +40,7 @@ protected:
 
   SharedPtr<IMathObject> simplifySelf() const override;
 
-  SharedPtr<IMathObject> unwrapp() const noexcept override;
+  SharedPtr<IMathObject> unwrappSelf() const noexcept override;
 
   void registerDefaultObject() const override;
 

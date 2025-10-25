@@ -16,31 +16,15 @@ namespace fintamath {
 
 FINTAMATH_CLASS_IMPLEMENTATION(Expression)
 
-namespace {
-
-template <typename T>
-SharedRef<IMathObject> unwrappOrClone(T &&arg) {
-  if (auto unwrapped = arg.unwrapp()) {
-    return unwrapped.toRef();
-  }
-
-  return std::forward<T>(arg).clone();
-}
-
-}
-
 Expression::Expression() : arg(Integer::getZero()) {
 }
 
-Expression::Expression(SharedRef<IMathObject> inArg) : arg(std::move(inArg)) {
-  if (auto unwrappedArg = arg->unwrapp()) {
-    arg = std::move(unwrappedArg).toRef();
-  }
+Expression::Expression(SharedRef<IMathObject> inArg) : arg(unwrapp(std::move(inArg))) {
 }
 
-Expression::Expression(const IMathObject &obj) : arg(unwrappOrClone(obj)) {}
+Expression::Expression(const IMathObject &obj) : arg(unwrapp(obj)) {}
 
-Expression::Expression(IMathObject &&obj) : arg(unwrappOrClone(std::move(obj))) {}
+Expression::Expression(IMathObject &&obj) : arg(unwrapp(std::move(obj))) {}
 
 Expression::Expression(const int64_t val) : Expression(makeShared<Integer>(val)) {}
 
@@ -50,7 +34,7 @@ std::string Expression::toString() const noexcept {
   return arg->toString();
 }
 
-SharedPtr<IMathObject> Expression::unwrapp() const noexcept {
+SharedPtr<IMathObject> Expression::unwrappSelf() const noexcept {
   return arg;
 }
 

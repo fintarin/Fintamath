@@ -10,9 +10,9 @@ public:                                                          \
     return getClassStatic();                                     \
   }                                                              \
                                                                  \
-  UniqueRef<IMathObject> clone() const & noexcept override;         \
+  UniqueRef<IMathObject> cloneSelf() const & noexcept override;  \
                                                                  \
-  UniqueRef<IMathObject> clone() && noexcept override;              \
+  UniqueRef<IMathObject> cloneSelf() && noexcept override;       \
                                                                  \
 protected:                                                       \
   const Class &getDefaultObject() const noexcept override;       \
@@ -20,23 +20,23 @@ protected:                                                       \
 private:                                                         \
   FINTAMATH_EXPORT static const Class defaultObject##Class;
 
-#define FINTAMATH_CLASS_IMPLEMENTATION(Class)             \
-  FINTAMATH_INTERFACE_IMPLEMENTATION(Class)               \
-                                                          \
-  const Class Class::defaultObject##Class = [] {          \
-    Class object;                                         \
-    object.registerDefaultObject();                       \
-    return object;                                        \
-  }();                                                    \
-                                                          \
-  UniqueRef<IMathObject> Class::clone() const & noexcept {   \
-    return makeUnique<Class>(*this);                      \
-  }                                                       \
-                                                          \
-  UniqueRef<IMathObject> Class::clone() && noexcept {        \
-    return makeUnique<Class>(std::move(*this));           \
-  }                                                       \
-                                                          \
-  const Class &Class::getDefaultObject() const noexcept { \
-    return defaultObject##Class;                          \
+#define FINTAMATH_CLASS_IMPLEMENTATION(Class)                  \
+  FINTAMATH_INTERFACE_IMPLEMENTATION(Class)                    \
+                                                               \
+  const Class Class::defaultObject##Class = [] {               \
+    Class object;                                              \
+    object.registerDefaultObject();                            \
+    return object;                                             \
+  }();                                                         \
+                                                               \
+  UniqueRef<IMathObject> Class::cloneSelf() const & noexcept { \
+    return makeUnique<Class>(*this);                           \
+  }                                                            \
+                                                               \
+  UniqueRef<IMathObject> Class::cloneSelf() && noexcept {      \
+    return makeUnique<Class>(std::move(*this));                \
+  }                                                            \
+                                                               \
+  const Class &Class::getDefaultObject() const noexcept {      \
+    return defaultObject##Class;                               \
   }

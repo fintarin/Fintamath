@@ -15,7 +15,7 @@ SharedPtr<IMathObject> IConstant::approximateValue() const noexcept {
   return nullptr;
 }
 
-SharedPtr<IMathObject> IConstant::unwrapp() const noexcept {
+SharedPtr<IMathObject> IConstant::unwrappSelf() const noexcept {
   return getValue();
 }
 
@@ -33,7 +33,7 @@ void IConstant::registerDefaultObject() const {
   std::string name = toString();
   detail::Tokenizer::registerToken(name);
 
-  auto self = cast<IConstant>(SharedPtr<IMathObject>(clone()));
+  auto self = cast<IConstant>(SharedPtr<IMathObject>(cloneSelf()));
 
   [[maybe_unused]] const auto emplaceRes = getNameToConstantMap().emplace(
     std::move(name),

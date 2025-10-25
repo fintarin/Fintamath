@@ -18,48 +18,26 @@ namespace fintamath {
 
 FINTAMATH_CLASS_IMPLEMENTATION(Complex)
 
-namespace {
-
-template <typename T>
-SharedRef<INumber> unwrappOrClone(const T &num) {
-  if (auto unwrapped = num.unwrapp()) {
-    return castChecked<INumber>(unwrapped.toRef());
-  }
-
-  return castChecked<INumber>(SharedRef<IMathObject>(num.clone()));
-}
-
-template <typename T>
-SharedRef<INumber> unwrappOrReturn(const T &num) {
-  if (auto unwrapped = num->unwrapp()) {
-    return castChecked<INumber>(unwrapped.toRef());
-  }
-
-  return num;
-}
-
-}
-
 Complex::Complex()
     : re(Integer::getZero()),
       im(Integer::getZero()) {}
 
 Complex::Complex(const Integer &rhs)
-    : re(unwrappOrClone(rhs)),
+    : re(castChecked<INumber>(unwrapp(rhs))),
       im(Integer::getZero()) {}
 
 Complex::Complex(const Rational &rhs)
-    : re(unwrappOrClone(rhs)),
+    : re(castChecked<INumber>(unwrapp(rhs))),
       im(Integer::getZero()) {}
 
 Complex::Complex(const Real &rhs)
-    : re(unwrappOrClone(rhs)),
+    : re(castChecked<INumber>(unwrapp(rhs))),
       im(Integer::getZero()) {
 }
 
 Complex::Complex(const INumber &inReal, const INumber &inImage)
-    : re(unwrappOrClone(inReal)),
-      im(unwrappOrClone(inImage)) {
+    : re(castChecked<INumber>(unwrapp(inReal))),
+      im(castChecked<INumber>(unwrapp(inImage))) {
 
   if (is<Complex>(inReal) || is<Complex>(inImage)) {
     throw InvalidInputException(fmt::format(
@@ -70,13 +48,13 @@ Complex::Complex(const INumber &inReal, const INumber &inImage)
 }
 
 Complex::Complex(const SharedRef<INumber> &inReal, const SharedRef<INumber> &inImage)
-    : re(unwrappOrReturn(inReal)),
-      im(unwrappOrReturn(inImage)) {
+    : re(castChecked<INumber>(unwrapp(inReal))),
+      im(castChecked<INumber>(unwrapp(inImage))) {
 
-  if (auto reUnwrapped = re->unwrapp()) {
+  if (auto reUnwrapped = re->unwrappSelf()) {
     re = castChecked<INumber>(reUnwrapped.toRef());
   }
-  if (auto imUnwrapped = im->unwrapp()) {
+  if (auto imUnwrapped = im->unwrappSelf()) {
     im = castChecked<INumber>(imUnwrapped.toRef());
   }
 }
@@ -147,12 +125,12 @@ std::string Complex::toString() const noexcept {
   return res;
 }
 
-SharedPtr<IMathObject> Complex::unwrapp() const noexcept {
+SharedPtr<IMathObject> Complex::unwrappSelf() const noexcept {
   if (!isComplex()) {
     return re;
   }
 
-  return clone();
+  return cloneSelf();
 }
 
 std::optional<unsigned> Complex::getPrecision() const noexcept {
@@ -282,8 +260,11 @@ Complex &Complex::neg() {
 
 SharedRef<INumber> Complex::parseNonComplexNumber(const std::string &str) {
   if (str.find('.') != std::string::npos) {
-    return unwrappOrReturn(makeShared<Rational>(str));
+    auto rational = makeShared<Rational>(str);
+    return castChecked<INumber>(unwrapp(std::move(rational)));
   }
-  return unwrappOrReturn(makeShared<Integer>(str));
+
+  auto integer = makeShared<Integer>(str);
+  return castChecked<INumber>(unwrapp(std::move(integer)));
 }
 }

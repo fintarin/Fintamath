@@ -39,7 +39,7 @@ public:
 
   std::string toString() const noexcept override;
 
-  SharedPtr<IMathObject> unwrapp() const noexcept override;
+  SharedPtr<IMathObject> unwrappSelf() const noexcept override;
 
   std::optional<unsigned> getPrecision() const noexcept override;
 

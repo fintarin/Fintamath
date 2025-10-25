@@ -29,7 +29,7 @@ public:
 
   std::string toString() const noexcept override;
 
-  SharedPtr<IMathObject> unwrapp() const noexcept override;
+  SharedPtr<IMathObject> unwrappSelf() const noexcept override;
 
   SharedRef<IMathObject> getArgument() const noexcept;
 

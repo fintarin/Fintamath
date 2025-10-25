@@ -8,7 +8,7 @@ std::string IMathObject::toString() const noexcept {
   return std::string(getClass()->getName());
 }
 
-SharedPtr<IMathObject> IMathObject::unwrapp() const noexcept {
+SharedPtr<IMathObject> IMathObject::unwrappSelf() const noexcept {
   return nullptr;
 }
 

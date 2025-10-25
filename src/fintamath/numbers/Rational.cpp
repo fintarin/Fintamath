@@ -113,9 +113,9 @@ std::string Rational::toString() const noexcept {
   return res;
 }
 
-SharedPtr<IMathObject> Rational::unwrapp() const noexcept {
+SharedPtr<IMathObject> Rational::unwrappSelf() const noexcept {
   if (denom == 1) {
-    return numer.clone();
+    return clone(numer);
   }
 
   return nullptr;

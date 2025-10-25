@@ -34,6 +34,11 @@ concept IsSmartPointer = requires(T v) {
 };
 
 template <typename T>
+concept IsSmartReference = IsSmartPointer<T> && !requires(T v) {
+  static_cast<bool>(v);
+};
+
+template <typename T>
 struct AddCallable {
   constexpr T operator()(const T &lhs, const T &rhs) const { return lhs + rhs; }
 };

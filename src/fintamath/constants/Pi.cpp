@@ -8,7 +8,7 @@ namespace fintamath {
 FINTAMATH_CLASS_IMPLEMENTATION(Pi)
 
 SharedPtr<IMathObject> Pi::approximateValue() const noexcept {
-  return getPi().clone();
+  return clone(getPi());
 }
 
 }
