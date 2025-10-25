@@ -1,49 +1,56 @@
 #pragma once
 
-#include <concepts>
-#include <memory>
+#include <string>
 
-#include "fintamath/core/IMathObject.hpp"
-#include "fintamath/functions/FunctionArguments.hpp"
+#include "fintamath/functions/IFunction.hpp"
 
-#define FINTAMATH_FUNCTION_EXPRESSION(Function, name)                  \
-  std::unique_ptr<IMathObject> name(auto &&...args) {                  \
-    static const Function f;                                           \
-    return detail::makeExpr(f, std::forward<decltype(args)>(args)...); \
+namespace fintamath::detail {
+
+template <typename... Args, typename ModifyFunctions>
+SharedPtr<IMathObject> useModifyFunctions(const ModifyFunctions &simplFuncs, const Args &...args) {
+  for (const auto &simplFunc : simplFuncs) {
+    if (auto res = simplFunc(args...)) {
+      return res;
+    }
   }
 
-namespace fintamath {
-
-class IFunction;
-
-namespace detail {
-
-extern std::unique_ptr<IMathObject> makeExpr(const IFunction &func, ArgumentPtrVector args);
-
-std::unique_ptr<IMathObject> makeExpr(const IFunction &func, const ArgumentRefVector &args);
-
-std::unique_ptr<IMathObject> makeExpr(const IFunction &func, const std::derived_from<IMathObject> auto &...args) {
-  return makeExpr(func, ArgumentPtrVector{args.clone()...});
+  return nullptr;
 }
 
-std::unique_ptr<IMathObject> makeExpr(const IFunction &func, std::convertible_to<ArgumentPtr> auto &&...args) {
-  return makeExpr(func, ArgumentPtrVector{ArgumentPtr(std::forward<decltype(args)>(args))...});
-}
+bool isInfinity(const SharedRef<IMathObject> &arg);
 
-extern std::unique_ptr<IMathObject> makeExprWithValidation(const IFunction &func, ArgumentPtrVector args);
+// bool isMulInfinity(const SharedRef<IMathObject> &arg);
 
-std::unique_ptr<IMathObject> makeExprWithValidation(const IFunction &func, const ArgumentRefVector &args);
+// bool isNegated(const SharedRef<IMathObject> &arg);
 
-std::unique_ptr<IMathObject> makeExprWithValidation(const IFunction &func, const std::derived_from<IMathObject> auto &...args) {
-  return makeExprWithValidation(func, ArgumentPtrVector{args.clone()...});
-}
+bool isNumberNegated(const SharedRef<IMathObject> &arg);
 
-std::unique_ptr<IMathObject> makeExprWithValidation(const IFunction &func, std::convertible_to<ArgumentPtr> auto &&...args) {
-  return makeExprWithValidation(func, ArgumentPtrVector{ArgumentPtr(std::forward<decltype(args)>(args))...});
-}
+bool isComplexNumber(const SharedRef<IMathObject> &arg);
 
-ArgumentPtrVector argumentRefVectorToArgumentPtrVector(const ArgumentRefVector &args);
+// bool containsIf(const SharedRef<IMathObject> &arg, const std::function<bool(const SharedRef<IMathObject> &)> &comp);
 
-}
+// bool containsChild(const SharedRef<IMathObject> &arg, const SharedRef<IMathObject> &child);
+
+// bool containsVariable(const SharedRef<IMathObject> &arg);
+
+// bool containsVariable(const SharedRef<IMathObject> &arg, const Variable &var);
+
+// bool containsInfinity(const SharedRef<IMathObject> &arg);
+
+// bool containsComplex(const SharedRef<IMathObject> &arg);
+
+// std::pair<SharedRef<IMathObject>, SharedRef<IMathObject>> splitMulExpr(const SharedRef<IMathObject> &inChild, bool checkVariables = true);
+
+// std::pair<SharedRef<IMathObject>, SharedRef<IMathObject>> splitPowExpr(const SharedRef<IMathObject> &rhs);
+
+// std::pair<SharedRef<IMathObject>, SharedRef<IMathObject>> splitRational(const SharedRef<IMathObject> &arg);
+
+// SharedRef<IMathObject> negate(const SharedRef<IMathObject> &arg);
+
+// SharedRef<IMathObject> invert(const SharedRef<IMathObject> &arg);
+
+// IFunction::Arguments getPolynomChildren(const IFunction &func, const SharedRef<IMathObject> &arg);
+
+std::string argumentToString(const IFunction::Declaration &decl, const SharedRef<IMathObject> &arg) noexcept;
 
 }

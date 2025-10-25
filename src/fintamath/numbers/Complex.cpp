@@ -1,11 +1,8 @@
 #include "fintamath/numbers/Complex.hpp"
 
-#include <compare>
-#include <cstdint>
-#include <memory>
 #include <string>
 
-#include <fmt/core.h>
+#include <fmt/format.h>
 
 #include "fintamath/core/Converter.hpp"
 #include "fintamath/core/IMathObject.hpp"
@@ -21,65 +18,81 @@ namespace fintamath {
 
 FINTAMATH_CLASS_IMPLEMENTATION(Complex)
 
-Complex::Complex(const Complex &rhs) : re(cast<INumber>(rhs.re->clone())), im(cast<INumber>(rhs.im->clone())) {
+Complex::Complex()
+    : re(Integer::getZero()),
+      im(Integer::getZero()) {}
+
+Complex::Complex(const Integer &rhs)
+    : re(castChecked<INumber>(unwrapp(rhs))),
+      im(Integer::getZero()) {}
+
+Complex::Complex(const Rational &rhs)
+    : re(castChecked<INumber>(unwrapp(rhs))),
+      im(Integer::getZero()) {}
+
+Complex::Complex(const Real &rhs)
+    : re(castChecked<INumber>(unwrapp(rhs))),
+      im(Integer::getZero()) {
 }
 
-Complex &Complex::operator=(const Complex &rhs) {
-  if (this != &rhs) {
-    re = cast<INumber>(rhs.re->clone());
-    im = cast<INumber>(rhs.im->clone());
-  }
+Complex::Complex(const INumber &inReal, const INumber &inImage)
+    : re(castChecked<INumber>(unwrapp(inReal))),
+      im(castChecked<INumber>(unwrapp(inImage))) {
 
-  return *this;
-}
-
-Complex::Complex(const INumber &inRe, const INumber &inIm) {
-  if (is<Complex>(inRe) || is<Complex>(inIm)) {
+  if (is<Complex>(inReal) || is<Complex>(inImage)) {
     throw InvalidInputException(fmt::format(
-        R"(Nested {} numbers are not allowed)",
-        getClassStatic()->getName()));
-  }
-
-  re = cast<INumber>(inRe.toMinimalObject());
-  im = cast<INumber>(inIm.toMinimalObject());
-}
-
-Complex::Complex(const Integer &rhs) : re(cast<INumber>(rhs.toMinimalObject())) {
-}
-
-Complex::Complex(const Rational &rhs) : re(cast<INumber>(rhs.toMinimalObject())) {
-}
-
-Complex::Complex(const Real &rhs) : re(cast<INumber>(rhs.toMinimalObject())) {
-}
-
-Complex::Complex(const std::string &str) try {
-  if (!str.empty() && str.back() == 'I') {
-    im = parseNonComplexNumber(str.substr(0, str.size() - 1));
-  }
-  else {
-    re = parseNonComplexNumber(str);
-  }
-
-  if (!re || !im) {
-    throw InvalidInputException("");
+      "Nested {} numbers are not allowed",
+      getClassStatic()->getName()
+    ));
   }
 }
-catch (const InvalidInputException &) {
-  throw InvalidInputException(fmt::format(
-      R"(Unable to parse {} from "{}")",
+
+Complex::Complex(const SharedRef<INumber> &inReal, const SharedRef<INumber> &inImage)
+    : re(castChecked<INumber>(unwrapp(inReal))),
+      im(castChecked<INumber>(unwrapp(inImage))) {
+
+  if (auto reUnwrapped = re->unwrappSelf()) {
+    re = castChecked<INumber>(reUnwrapped.toRef());
+  }
+  if (auto imUnwrapped = im->unwrappSelf()) {
+    im = castChecked<INumber>(imUnwrapped.toRef());
+  }
+}
+
+Complex::Complex(const std::string &str)
+    : re(Integer::getZero()),
+      im(Integer::getZero()) {
+
+  try {
+    if (!str.empty() && str.back() == 'I') {
+      re = Integer::getZero();
+      im = parseNonComplexNumber(str.substr(0, str.size() - 1));
+    }
+    else {
+      re = parseNonComplexNumber(str);
+      im = Integer::getZero();
+    }
+  }
+  catch (const InvalidInputException &) {
+    throw InvalidInputException(fmt::format(
+      "Unable to parse {} from \"{}\"",
       getClassStatic()->getName(),
-      str));
+      str
+    ));
+  }
 }
 
-std::string Complex::toString() const {
+std::string Complex::toString() const noexcept {
+  const auto *reInt = cast<Integer>(re.get());
+  const auto *imInt = cast<Integer>(im.get());
+
   std::string res;
 
-  if (*re != Integer(0)) {
+  if (!reInt || !reInt->isZero()) {
     res += re->toString();
   }
 
-  if (*im != Integer(0)) {
+  if (!imInt || !imInt->isZero()) {
     std::string imStr = im->toString();
     bool isImNeg = false;
 
@@ -88,7 +101,7 @@ std::string Complex::toString() const {
       isImNeg = true;
     }
 
-    if (*im == Integer(1) || *im == Integer(-1)) {
+    if (imInt && (*imInt == 1 || *imInt == -1)) {
       imStr.clear();
     }
     else {
@@ -112,12 +125,12 @@ std::string Complex::toString() const {
   return res;
 }
 
-std::unique_ptr<IMathObject> Complex::toMinimalObject() const {
-  if (*im == Integer(0)) {
-    return re->toMinimalObject();
+SharedPtr<IMathObject> Complex::unwrappSelf() const noexcept {
+  if (!isComplex()) {
+    return re;
   }
 
-  return clone();
+  return cloneSelf();
 }
 
 std::optional<unsigned> Complex::getPrecision() const noexcept {
@@ -129,116 +142,129 @@ std::optional<unsigned> Complex::getPrecision() const noexcept {
   }
 
   if (rePrecision) {
-    return *rePrecision;
+    return rePrecision;
   }
 
   if (imPrecision) {
-    return *imPrecision;
+    return imPrecision;
   }
 
   return {};
 }
 
+bool Complex::isZero() const noexcept {
+  return re->isZero() && im->isZero();
+}
+
 bool Complex::isComplex() const noexcept {
-  return *im != Integer(0);
+  const auto *imInt = cast<Integer>(im.get());
+  return !imInt->isZero();
 }
 
-const INumber &Complex::real() const noexcept {
-  return *re;
+const SharedRef<INumber> &Complex::real() const noexcept {
+  return re;
 }
 
-const INumber &Complex::imag() const noexcept {
-  return *im;
+const SharedRef<INumber> &Complex::imag() const noexcept {
+  return im;
 }
 
-bool Complex::equals(const Complex &rhs) const {
-  return *re == *rhs.re && *im == *rhs.im;
+bool Complex::equals(const SharedRef<IMathObject> &self, const SharedRef<IMathObject> &rhs) const noexcept {
+  return Super::equals(self, rhs);
 }
 
-std::strong_ordering Complex::compare(const Complex &rhs) const {
-  if (*re == *rhs.re) {
-    return *im <=> *rhs.im;
-  }
-
-  return *re <=> *rhs.re;
+bool Complex::equals(const Complex &rhs) const noexcept {
+  using fintamath::equals;
+  return equals(re, rhs.re) && equals(im, rhs.im);
 }
 
 Complex &Complex::add(const Complex &rhs) {
-  re = *re + *rhs.re;
-  im = *im + *rhs.im;
+  using fintamath::add;
+
+  re = add(re, rhs.re);
+  im = add(im, rhs.im);
 
   return *this;
 }
 
-Complex &Complex::substract(const Complex &rhs) {
-  re = *re - *rhs.re;
-  im = *im - *rhs.im;
+Complex &Complex::sub(const Complex &rhs) {
+  using fintamath::sub;
+
+  re = sub(re, rhs.re);
+  im = sub(im, rhs.im);
 
   return *this;
 }
 
 // https://en.wikipedia.org/wiki/Complex_number#Multiplication_and_square
-Complex &Complex::multiply(const Complex &rhs) {
-  const Complex lhs = *this;
+Complex &Complex::mul(const Complex &rhs) {
+  using fintamath::add;
+  using fintamath::mul;
+  using fintamath::sub;
 
-  const auto &x = *lhs.re;
-  const auto &y = *lhs.im;
-  const auto &u = *rhs.re;
-  const auto &v = *rhs.im;
+  Complex lhs = *this;
 
-  re = *(x * u) - *(y * v);
-  im = *(x * v) + *(y * u);
+  const auto &x = lhs.re;
+  const auto &y = lhs.im;
+  const auto &u = rhs.re;
+  const auto &v = rhs.im;
+
+  re = sub(mul(x, u), mul(y, v));
+  im = add(mul(x, v), mul(y, u));
 
   return *this;
 }
 
 // https://en.wikipedia.org/wiki/Complex_number#Reciprocal_and_division
-Complex &Complex::divide(const Complex &rhs) {
-  const Complex lhs = *this;
+Complex &Complex::div(const Complex &rhs) {
+  using fintamath::add;
+  using fintamath::div;
+  using fintamath::mul;
+  using fintamath::sub;
 
-  const auto &x = *lhs.re;
-  const auto &y = *lhs.im;
-  const auto &u = *rhs.re;
-  const auto &v = *rhs.im;
+  Complex lhs = *this;
 
-  auto divisor = *(u * u) + *(v * v);
+  const auto &x = lhs.re;
+  const auto &y = lhs.im;
+  const auto &u = rhs.re;
+  const auto &v = rhs.im;
 
-  if (is<Integer>(divisor)) {
-    divisor = convert<Rational>(*divisor);
-  }
+  re = add(mul(x, u), mul(y, v));
+  im = sub(mul(y, u), mul(x, v));
+
+  auto divisor = add(mul(u, u), mul(v, v));
 
   try {
-    re = *(*(x * u) + *(y * v)) / *divisor;
-    im = *(*(y * u) - *(x * v)) / *divisor;
+    re = div(re, divisor);
+    im = div(im, divisor);
   }
   catch (const UndefinedException &) {
     throw UndefinedException(fmt::format(
-        R"(div({}, {}) is undefined (division by zero))",
-        toString(),
-        rhs.toString()));
+      "div({}, {}) is undefined (division by zero)",
+      lhs.toString(),
+      rhs.toString()
+    ));
   }
 
   return *this;
 }
 
-Complex &Complex::negate() {
-  re = -(*re);
-  im = -(*im);
+Complex &Complex::neg() {
+  using fintamath::neg;
+
+  re = neg(re);
+  im = neg(im);
+
   return *this;
 }
 
-std::unique_ptr<INumber> Complex::parseNonComplexNumber(const std::string &str) {
-  static auto numberParser = [] {
-    detail::Parser<std::unique_ptr<INumber>> parser;
-    parser.registerType<Integer>();
-    parser.registerType<Rational>();
-    parser.registerType<Real>();
-    return parser;
-  }();
+SharedRef<INumber> Complex::parseNonComplexNumber(const std::string &str) {
+  if (str.find('.') != std::string::npos) {
+    auto rational = makeShared<Rational>(str);
+    return castChecked<INumber>(unwrapp(std::move(rational)));
+  }
 
-  return numberParser
-      .parseFirst(str)
-      .value_or(std::unique_ptr<INumber>{});
+  auto integer = makeShared<Integer>(str);
+  return castChecked<INumber>(unwrapp(std::move(integer)));
 }
-
 }

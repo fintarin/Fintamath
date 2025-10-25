@@ -5,10 +5,11 @@
 #include "fintamath/expressions/ExpressionFunctions.hpp"
 
 using namespace fintamath;
+using namespace fintamath::detail;
 
 namespace {
 
-constexpr size_t functionsNum = 10'000;
+constexpr size_t functionsNum = 5'000;
 
 std::string getAddExprStr() {
   std::string str = "x";
@@ -18,12 +19,12 @@ std::string getAddExprStr() {
   return str;
 }
 
-std::string getAddVariadicStr() {
+std::string getMinStr() {
   std::string str = "x";
   repeat(functionsNum - 1, [&str] {
     str += ",x";
   });
-  return "add(" + str + ")";
+  return "min(" + str + ")";
 }
 
 std::string getSinExprStr() {
@@ -48,23 +49,23 @@ static void BM_ParseSimplifyAddExpression(benchmark::State &state) {
   const std::string str = getAddExprStr();
 
   for (auto _ : state) {
-    benchmark::DoNotOptimize(Expression(str).toMinimalObject());
+    benchmark::DoNotOptimize(simplify(Expression(str)));
   }
 }
 
-static void BM_ParseAddVariadicExpression(benchmark::State &state) {
-  const std::string str = getAddVariadicStr();
+static void BM_ParseMinExpression(benchmark::State &state) {
+  const std::string str = getMinStr();
 
   for (auto _ : state) {
     benchmark::DoNotOptimize(Expression(str));
   }
 }
 
-static void BM_ParseSimplifyAddVariadicExpression(benchmark::State &state) {
-  const std::string str = getAddVariadicStr();
+static void BM_ParseSimplifyMinExpression(benchmark::State &state) {
+  const std::string str = getMinStr();
 
   for (auto _ : state) {
-    benchmark::DoNotOptimize(Expression(str).toMinimalObject());
+    benchmark::DoNotOptimize(simplify(Expression(str)));
   }
 }
 
@@ -80,14 +81,14 @@ static void BM_ParseSimplifySinExpression(benchmark::State &state) {
   const std::string str = getSinExprStr();
 
   for (auto _ : state) {
-    benchmark::DoNotOptimize(Expression(str).toMinimalObject());
+    benchmark::DoNotOptimize(simplify(Expression(str)));
   }
 }
 
 BENCHMARK(BM_ParseAddExpression)->Unit(benchmark::TimeUnit::kMillisecond);
 BENCHMARK(BM_ParseSimplifyAddExpression)->Unit(benchmark::TimeUnit::kMillisecond);
-BENCHMARK(BM_ParseAddVariadicExpression)->Unit(benchmark::TimeUnit::kMillisecond);
-BENCHMARK(BM_ParseSimplifyAddVariadicExpression)->Unit(benchmark::TimeUnit::kMillisecond);
+BENCHMARK(BM_ParseMinExpression)->Unit(benchmark::TimeUnit::kMillisecond);
+BENCHMARK(BM_ParseSimplifyMinExpression)->Unit(benchmark::TimeUnit::kMillisecond);
 BENCHMARK(BM_ParseSinExpression)->Unit(benchmark::TimeUnit::kMillisecond);
 BENCHMARK(BM_ParseSimplifySinExpression)->Unit(benchmark::TimeUnit::kMillisecond);
 

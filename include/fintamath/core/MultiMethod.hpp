@@ -1,56 +1,71 @@
 #pragma once
 
 #include <functional>
+#include <optional>
 #include <tuple>
 #include <unordered_map>
 
 #include "fintamath/core/Hash.hpp"
 #include "fintamath/core/MathObjectClass.hpp"
-#include "fintamath/core/MathObjectUtils.hpp"
 
 namespace fintamath::detail {
 
 template <typename Signature>
 class MultiMethod;
 
-template <typename Res, typename... ArgsBase>
-class MultiMethod<Res(ArgsBase...)> final {
+template <typename ResBase, typename... ArgsBase>
+class MultiMethod<ResBase(ArgsBase...)> final {
+public:
   template <typename>
   using ArgId = MathObjectClass;
 
   using CallbackId = std::tuple<ArgId<ArgsBase>...>;
 
-  using Callback = std::function<Res(ArgsBase...)>;
-
-  using IdToCallbackMap = std::unordered_map<CallbackId, Callback, Hash<CallbackId>>;
+  using CallbackBase = std::function<ResBase(ArgsBase...)>;
 
 public:
   template <typename... Args>
     requires(sizeof...(Args) == sizeof...(ArgsBase))
-  void add(const auto &func) {
-    idToCallbackMap[CallbackId(Args::getClassStatic()...)] = [func](const ArgsBase &...args) {
-      return func(cast<Args>(args)...);
-    };
+  void add(auto func) {
+    constexpr auto funcId = CallbackId(Args::getClassStatic()...);
+
+    [[maybe_unused]] const auto emplaceRes = idToFunctionMap.try_emplace(
+      funcId,
+      [func = std::move(func)](ArgsBase... args) -> ResBase {
+        return func(castChecked<Args>(args)...);
+      }
+    );
+    assert(emplaceRes.second);
   }
 
   template <typename... Args>
     requires(sizeof...(Args) == sizeof...(ArgsBase))
-  Res operator()(Args &&...args) const {
-    if (auto iter = idToCallbackMap.find(CallbackId(args.getClass()...)); iter != idToCallbackMap.end()) {
+  std::optional<ResBase> operator()(Args &&...args) const {
+    const CallbackId funcId = getFunctionId(args...);
+
+    if (auto iter = idToFunctionMap.find(funcId); iter != idToFunctionMap.end()) {
       return iter->second(std::forward<Args>(args)...);
     }
 
     return {};
   }
 
+private:
   template <typename... Args>
-    requires(sizeof...(Args) == sizeof...(ArgsBase))
-  bool contains(const Args &...args) const {
-    return idToCallbackMap.contains(CallbackId(args.getClass()...));
+  static CallbackId getFunctionId(const Args &...args) {
+    if constexpr ((IsSmartReference<Args> && ...)) {
+      return CallbackId(args->getClass()...);
+    }
+    else {
+      return CallbackId(args.getClass()...);
+    }
   }
 
 private:
-  IdToCallbackMap idToCallbackMap;
+  using IdToCallbackMap = std::unordered_map<CallbackId, CallbackBase, Hash<CallbackId>>;
+
+private:
+  IdToCallbackMap idToFunctionMap;
 };
 
 }

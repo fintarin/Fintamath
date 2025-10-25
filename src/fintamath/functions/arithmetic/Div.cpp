@@ -1,32 +1,32 @@
 #include "fintamath/functions/arithmetic/Div.hpp"
 
-#include <memory>
+#include <fmt/format.h>
 
-#include "fintamath/core/IArithmetic.hpp"
-#include "fintamath/core/IMathObject.hpp"
-#include "fintamath/core/MathObjectUtils.hpp"
-#include "fintamath/functions/FunctionArguments.hpp"
-#include "fintamath/literals/constants/ComplexInf.hpp"
-#include "fintamath/literals/constants/Undefined.hpp"
-#include "fintamath/numbers/Integer.hpp"
+#include "fintamath/functions/FunctionUtils.hpp"
+#include "fintamath/numbers/INumber.hpp"
 
 namespace fintamath {
 
-FINTAMATH_CLASS_IMPLEMENTATION(Div)
-
-std::unique_ptr<IMathObject> Div::call(const ArgumentRefVector &argVect) const {
-  const auto &lhs = cast<IArithmetic>(argVect.front().get());
-  const auto &rhs = cast<IArithmetic>(argVect.back().get());
-
-  if (lhs == Integer(0) && rhs == Integer(0)) {
-    return Undefined{}.clone();
+FINTAMATH_FUNCTION_CLASS_IMPLEMENTATION(
+  Div,
+  {
+    .name = "/",
+    .argClasses = {INumber::getClassStatic(), INumber::getClassStatic()},
+    .returnClass = INumber::getClassStatic(),
+    .operatorDeclaration = OperatorDeclaration{
+      .priority = OperatorPriority::Exponentiation,
+    },
   }
+)
 
-  if (rhs == Integer(0)) {
-    return ComplexInf{}.clone();
-  }
+std::string Div::toString() const noexcept {
+  using detail::argumentToString;
 
-  return lhs / rhs;
+  const IFunction::Declaration &decl = getDeclaration();
+  const std::string leftArgStr = argumentToString(decl, getArgLeft());
+  const std::string rightArgStr = argumentToString(decl, getArgRight());
+
+  return fmt::format("{}{}{}", leftArgStr, decl.name, rightArgStr);
 }
 
 }

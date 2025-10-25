@@ -1,6 +1,7 @@
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
+#include "fintamath/core/MathObjectUtils.hpp"
 #include "fintamath/exceptions/InvalidInputException.hpp"
 #include "fintamath/exceptions/UndefinedException.hpp"
 #include "fintamath/numbers/Complex.hpp"
@@ -9,31 +10,6 @@ using namespace fintamath;
 
 TEST(ComplexTests, constructorTest) {
   EXPECT_EQ(Complex(), 0);
-}
-
-TEST(ComplexTests, moveTest) {
-  auto a = Complex(3);
-  EXPECT_EQ(a.toString(), "3");
-
-  auto b = std::move(a);
-  EXPECT_TRUE(b.toString() == "3" && &a != &b);
-
-  a = std::move(b);
-  EXPECT_TRUE(a.toString() == "3" && &a != &b);
-
-  a = std::move(a);
-  EXPECT_TRUE(a.toString() == "3" && &a == &a);
-}
-
-TEST(ComplexTests, copyTest) {
-  auto a = Complex("3");
-  EXPECT_EQ(a.toString(), "3");
-
-  const auto b = a;
-  EXPECT_TRUE(a == b && &a != &b);
-
-  a = b;
-  EXPECT_TRUE(a == b && &a != &b);
 }
 
 TEST(ComplexTests, stringConstructorTest) {
@@ -56,81 +32,119 @@ TEST(ComplexTests, stringConstructorTest) {
   EXPECT_EQ(Complex("1.I").toString(), "I");
 
   EXPECT_THAT(
-      [] { Complex(""); },
-      testing::ThrowsMessage<InvalidInputException>(
-          testing::StrEq(R"(Unable to parse Complex from "")")));
+    [] { Complex(""); },
+    testing::ThrowsMessage<InvalidInputException>(
+      testing::StrEq(R"(Unable to parse Complex from "")")
+    )
+  );
   EXPECT_THAT(
-      [] { Complex("--10"); },
-      testing::ThrowsMessage<InvalidInputException>(
-          testing::StrEq(R"(Unable to parse Complex from "--10")")));
+    [] { Complex("--10"); },
+    testing::ThrowsMessage<InvalidInputException>(
+      testing::StrEq(R"(Unable to parse Complex from "--10")")
+    )
+  );
   EXPECT_THAT(
-      [] { Complex("test"); },
-      testing::ThrowsMessage<InvalidInputException>(
-          testing::StrEq(R"(Unable to parse Complex from "test")")));
+    [] { Complex("test"); },
+    testing::ThrowsMessage<InvalidInputException>(
+      testing::StrEq(R"(Unable to parse Complex from "test")")
+    )
+  );
   EXPECT_THAT(
-      [] { Complex("+"); },
-      testing::ThrowsMessage<InvalidInputException>(
-          testing::StrEq(R"(Unable to parse Complex from "+")")));
+    [] { Complex("+"); },
+    testing::ThrowsMessage<InvalidInputException>(
+      testing::StrEq(R"(Unable to parse Complex from "+")")
+    )
+  );
   EXPECT_THAT(
-      [] { Complex("939849.0-0023"); },
-      testing::ThrowsMessage<InvalidInputException>(
-          testing::StrEq(R"(Unable to parse Complex from "939849.0-0023")")));
+    [] { Complex("939849.0-0023"); },
+    testing::ThrowsMessage<InvalidInputException>(
+      testing::StrEq(R"(Unable to parse Complex from "939849.0-0023")")
+    )
+  );
   EXPECT_THAT(
-      [] { Complex("a"); },
-      testing::ThrowsMessage<InvalidInputException>(
-          testing::StrEq(R"(Unable to parse Complex from "a")")));
+    [] { Complex("a"); },
+    testing::ThrowsMessage<InvalidInputException>(
+      testing::StrEq(R"(Unable to parse Complex from "a")")
+    )
+  );
   EXPECT_THAT(
-      [] { Complex("a.1"); },
-      testing::ThrowsMessage<InvalidInputException>(
-          testing::StrEq(R"(Unable to parse Complex from "a.1")")));
+    [] { Complex("a.1"); },
+    testing::ThrowsMessage<InvalidInputException>(
+      testing::StrEq(R"(Unable to parse Complex from "a.1")")
+    )
+  );
   EXPECT_THAT(
-      [] { Complex("1.a"); },
-      testing::ThrowsMessage<InvalidInputException>(
-          testing::StrEq(R"(Unable to parse Complex from "1.a")")));
+    [] { Complex("1.a"); },
+    testing::ThrowsMessage<InvalidInputException>(
+      testing::StrEq(R"(Unable to parse Complex from "1.a")")
+    )
+  );
   EXPECT_THAT(
-      [] { Complex("1a.1"); },
-      testing::ThrowsMessage<InvalidInputException>(
-          testing::StrEq(R"(Unable to parse Complex from "1a.1")")));
+    [] { Complex("1a.1"); },
+    testing::ThrowsMessage<InvalidInputException>(
+      testing::StrEq(R"(Unable to parse Complex from "1a.1")")
+    )
+  );
   EXPECT_THAT(
-      [] { Complex("1.1a"); },
-      testing::ThrowsMessage<InvalidInputException>(
-          testing::StrEq(R"(Unable to parse Complex from "1.1a")")));
+    [] { Complex("1.1a"); },
+    testing::ThrowsMessage<InvalidInputException>(
+      testing::StrEq(R"(Unable to parse Complex from "1.1a")")
+    )
+  );
   EXPECT_THAT(
-      [] { Complex(".1."); },
-      testing::ThrowsMessage<InvalidInputException>(
-          testing::StrEq(R"(Unable to parse Complex from ".1.")")));
+    [] { Complex(".1."); },
+    testing::ThrowsMessage<InvalidInputException>(
+      testing::StrEq(R"(Unable to parse Complex from ".1.")")
+    )
+  );
   EXPECT_THAT(
-      [] { Complex("."); },
-      testing::ThrowsMessage<InvalidInputException>(
-          testing::StrEq(R"(Unable to parse Complex from ".")")));
+    [] { Complex("."); },
+    testing::ThrowsMessage<InvalidInputException>(
+      testing::StrEq(R"(Unable to parse Complex from ".")")
+    )
+  );
   EXPECT_THAT(
-      [] { Complex("--10.-1"); },
-      testing::ThrowsMessage<InvalidInputException>(
-          testing::StrEq(R"(Unable to parse Complex from "--10.-1")")));
+    [] { Complex("--10.-1"); },
+    testing::ThrowsMessage<InvalidInputException>(
+      testing::StrEq(R"(Unable to parse Complex from "--10.-1")")
+    )
+  );
   EXPECT_THAT(
-      [] { Complex("10.-1"); },
-      testing::ThrowsMessage<InvalidInputException>(
-          testing::StrEq(R"(Unable to parse Complex from "10.-1")")));
+    [] { Complex("10.-1"); },
+    testing::ThrowsMessage<InvalidInputException>(
+      testing::StrEq(R"(Unable to parse Complex from "10.-1")")
+    )
+  );
   EXPECT_THAT(
-      [] { Complex("1-0.1"); },
-      testing::ThrowsMessage<InvalidInputException>(
-          testing::StrEq(R"(Unable to parse Complex from "1-0.1")")));
+    [] { Complex("1-0.1"); },
+    testing::ThrowsMessage<InvalidInputException>(
+      testing::StrEq(R"(Unable to parse Complex from "1-0.1")")
+    )
+  );
   EXPECT_THAT(
-      [] { Complex("10-.1"); },
-      testing::ThrowsMessage<InvalidInputException>(
-          testing::StrEq(R"(Unable to parse Complex from "10-.1")")));
+    [] { Complex("10-.1"); },
+    testing::ThrowsMessage<InvalidInputException>(
+      testing::StrEq(R"(Unable to parse Complex from "10-.1")")
+    )
+  );
   EXPECT_THAT(
-      [] { Complex("10.--1"); },
-      testing::ThrowsMessage<InvalidInputException>(
-          testing::StrEq(R"(Unable to parse Complex from "10.--1")")));
+    [] { Complex("10.--1"); },
+    testing::ThrowsMessage<InvalidInputException>(
+      testing::StrEq(R"(Unable to parse Complex from "10.--1")")
+    )
+  );
   EXPECT_THAT(
-      [] { Complex("1.10.1"); },
-      testing::ThrowsMessage<InvalidInputException>(
-          testing::StrEq(R"(Unable to parse Complex from "1.10.1")")));
+    [] { Complex("1.10.1"); },
+    testing::ThrowsMessage<InvalidInputException>(
+      testing::StrEq(R"(Unable to parse Complex from "1.10.1")")
+    )
+  );
   EXPECT_THAT(
-      [] { Complex("0II"); },
-      testing::ThrowsMessage<InvalidInputException>(
-          testing::StrEq(R"(Unable to parse Complex from "0II")")));
+    [] { Complex("0II"); },
+    testing::ThrowsMessage<InvalidInputException>(
+      testing::StrEq(R"(Unable to parse Complex from "0II")")
+    )
+  );
 }
 
 TEST(ComplexTests, intIntConstructorTest) {
@@ -162,35 +176,30 @@ TEST(ComplexTests, numberNumberConstructorTest) {
   EXPECT_EQ(Complex(Integer(3), Real("2.2")).toString(), "3 + 2.2 I");
   EXPECT_EQ(Complex(Real("2.2"), Rational(2, 3)).toString(), "2.2 + 2/3 I");
   EXPECT_EQ(Complex(Rational(3, 2), Real("2.2")).toString(), "3/2 + 2.2 I");
+}
 
-  EXPECT_THAT(
-      [] { Complex(Complex(), Complex()); },
-      testing::ThrowsMessage<InvalidInputException>(
-          testing::StrEq("Nested Complex numbers are not allowed")));
-  EXPECT_THAT(
-      [] { Complex(Complex(), Integer()); },
-      testing::ThrowsMessage<InvalidInputException>(
-          testing::StrEq("Nested Complex numbers are not allowed")));
-  EXPECT_THAT(
-      [] { Complex(Integer(), Complex()); },
-      testing::ThrowsMessage<InvalidInputException>(
-          testing::StrEq("Nested Complex numbers are not allowed")));
-  EXPECT_THAT(
-      [] { Complex(Complex(), Rational()); },
-      testing::ThrowsMessage<InvalidInputException>(
-          testing::StrEq("Nested Complex numbers are not allowed")));
-  EXPECT_THAT(
-      [] { Complex(Rational(), Complex()); },
-      testing::ThrowsMessage<InvalidInputException>(
-          testing::StrEq("Nested Complex numbers are not allowed")));
-  EXPECT_THAT(
-      [] { Complex(Complex(), Real()); },
-      testing::ThrowsMessage<InvalidInputException>(
-          testing::StrEq("Nested Complex numbers are not allowed")));
-  EXPECT_THAT(
-      [] { Complex(Real(), Complex()); },
-      testing::ThrowsMessage<InvalidInputException>(
-          testing::StrEq("Nested Complex numbers are not allowed")));
+TEST(ComplexTests, numberNumberRefConstructorTest) {
+  EXPECT_EQ(Complex(makeShared<Integer>(2), makeShared<Integer>(1)).toString(), "2 + I");
+  EXPECT_EQ(Complex(makeShared<Integer>(2), makeShared<Integer>(-1)).toString(), "2 - I");
+  EXPECT_EQ(Complex(makeShared<Integer>(-2), makeShared<Integer>(1)).toString(), "-2 + I");
+  EXPECT_EQ(Complex(makeShared<Integer>(-2), makeShared<Integer>(-1)).toString(), "-2 - I");
+
+  EXPECT_EQ(Complex(makeShared<Rational>(2, 3), makeShared<Rational>(1, 2)).toString(), "2/3 + 1/2 I");
+  EXPECT_EQ(Complex(makeShared<Rational>(2, 3), makeShared<Rational>(-1, 2)).toString(), "2/3 - 1/2 I");
+  EXPECT_EQ(Complex(makeShared<Rational>(-2, 3), makeShared<Rational>(1, 2)).toString(), "-2/3 + 1/2 I");
+  EXPECT_EQ(Complex(makeShared<Rational>(-2, 3), makeShared<Rational>(-1, 2)).toString(), "-2/3 - 1/2 I");
+
+  EXPECT_EQ(Complex(makeShared<Real>("2.2"), makeShared<Real>("2.3545")).toString(), "2.2 + 2.3545 I");
+  EXPECT_EQ(Complex(makeShared<Real>("-2.2"), makeShared<Real>("2.3545")).toString(), "-2.2 + 2.3545 I");
+  EXPECT_EQ(Complex(makeShared<Real>("2.2"), makeShared<Real>("-2.3545")).toString(), "2.2 - 2.3545 I");
+  EXPECT_EQ(Complex(makeShared<Real>("-2.2"), makeShared<Real>("-2.3545")).toString(), "-2.2 - 2.3545 I");
+
+  EXPECT_EQ(Complex(makeShared<Rational>(2, 3), makeShared<Integer>(2)).toString(), "2/3 + 2 I");
+  EXPECT_EQ(Complex(makeShared<Integer>(3), makeShared<Rational>(2, 3)).toString(), "3 + 2/3 I");
+  EXPECT_EQ(Complex(makeShared<Real>("2.2"), makeShared<Integer>(2)).toString(), "2.2 + 2 I");
+  EXPECT_EQ(Complex(makeShared<Integer>(3), makeShared<Real>("2.2")).toString(), "3 + 2.2 I");
+  EXPECT_EQ(Complex(makeShared<Real>("2.2"), makeShared<Rational>(2, 3)).toString(), "2.2 + 2/3 I");
+  EXPECT_EQ(Complex(makeShared<Rational>(3, 2), makeShared<Real>("2.2")).toString(), "3/2 + 2.2 I");
 }
 
 TEST(ComplexTests, integerConstructorTest) {
@@ -521,13 +530,17 @@ TEST(ComplexTests, divideAssignmentOperatorTest) {
   EXPECT_EQ(Complex(-738, 10) /= Complex(-5, 2), Complex(Rational(3710, 29), Rational(1426, 29)));
 
   EXPECT_THAT(
-      [] { Complex(0, 0) /= Complex(0, 0); },
-      testing::ThrowsMessage<UndefinedException>(
-          testing::StrEq(R"(div(0, 0) is undefined (division by zero))")));
+    [] { Complex(0, 0) /= Complex(0, 0); },
+    testing::ThrowsMessage<UndefinedException>(
+      testing::StrEq(R"(div(0, 0) is undefined (division by zero))")
+    )
+  );
   EXPECT_THAT(
-      [] { Complex(2, 3) /= Complex(0, 0); },
-      testing::ThrowsMessage<UndefinedException>(
-          testing::StrEq(R"(div(2 + 3 I, 0) is undefined (division by zero))")));
+    [] { Complex(2, 3) /= Complex(0, 0); },
+    testing::ThrowsMessage<UndefinedException>(
+      testing::StrEq(R"(div(2 + 3 I, 0) is undefined (division by zero))")
+    )
+  );
 }
 
 TEST(ComplexTests, integerDivideAssignmentOperatorTest) {
@@ -690,257 +703,29 @@ TEST(ComplexTests, intFriendNotEqualOperatorTest) {
   EXPECT_FALSE(500 != Complex(500));
 }
 
-TEST(ComplexTests, lessOperatorTest) {
-  EXPECT_FALSE(Complex(0, 0) < Complex(0, 0));
-  EXPECT_TRUE(Complex(0, 0) < Complex(0, 1));
-  EXPECT_TRUE(Complex(0, 0) < Complex(1, 0));
-  EXPECT_TRUE(Complex(0, 0) < Complex(1, 1));
-
-  EXPECT_FALSE(Complex(1, 1) < Complex(1, 1));
-  EXPECT_TRUE(Complex(1, 1) < Complex(1, 2));
-  EXPECT_TRUE(Complex(1, 1) < Complex(2, 1));
-  EXPECT_TRUE(Complex(1, 1) < Complex(2, 2));
-
-  EXPECT_TRUE(Complex(1, 2) < Complex(2, 1));
-  EXPECT_FALSE(Complex(2, 1) < Complex(1, 2));
-
-  EXPECT_FALSE(Complex(0, 0) < Complex(0, -1));
-  EXPECT_FALSE(Complex(0, 0) < Complex(-1, 0));
-  EXPECT_FALSE(Complex(0, 0) < Complex(-1, -1));
-
-  EXPECT_FALSE(Complex(-1, -1) < Complex(-1, -1));
-  EXPECT_FALSE(Complex(-1, -1) < Complex(-1, -2));
-  EXPECT_FALSE(Complex(-1, -1) < Complex(-2, -1));
-  EXPECT_FALSE(Complex(-1, -1) < Complex(-2, -2));
-
-  EXPECT_FALSE(Complex(-1, -2) < Complex(-2, -1));
-  EXPECT_TRUE(Complex(-2, -1) < Complex(-1, -2));
-}
-
-TEST(ComplexTests, integerLessOperatorTest) {
-  EXPECT_TRUE(Complex(500, 1) < Integer(501));
-}
-
-TEST(ComplexTests, rationalLessOperatorTest) {
-  EXPECT_FALSE(Complex(Rational(1, 2), Integer(1)) < Rational(1, 3));
-}
-
-TEST(ComplexTests, realLessOperatorTest) {
-  EXPECT_TRUE(Complex(Real("2.2"), Integer(1)) < Real("2.3"));
-}
-
-TEST(ComplexTests, intLessOperatorTest) {
-  EXPECT_TRUE(Complex(500, 1) < 501);
-}
-
-TEST(ComplexTests, integerFriendLessOperatorTest) {
-  EXPECT_TRUE(Integer(500) < Complex(501, 1));
-}
-
-TEST(ComplexTests, rationalFriendLessOperatorTest) {
-  EXPECT_FALSE(Rational(1, 2) < Complex(Rational(1, 3), Integer(1)));
-}
-
-TEST(ComplexTests, realFriendLessOperatorTest) {
-  EXPECT_TRUE(Real("2.2") < Complex(Real("2.3"), Integer(1)));
-}
-
-TEST(ComplexTests, intFriendLessOperatorTest) {
-  EXPECT_TRUE(500 < Complex(501, 1));
-}
-
-TEST(ComplexTests, moreOperatorTest) {
-  EXPECT_FALSE(Complex(0, 0) > Complex(0, 0));
-  EXPECT_FALSE(Complex(0, 0) > Complex(0, 1));
-  EXPECT_FALSE(Complex(0, 0) > Complex(1, 0));
-  EXPECT_FALSE(Complex(0, 0) > Complex(1, 1));
-
-  EXPECT_FALSE(Complex(1, 1) > Complex(1, 1));
-  EXPECT_FALSE(Complex(1, 1) > Complex(1, 2));
-  EXPECT_FALSE(Complex(1, 1) > Complex(2, 1));
-  EXPECT_FALSE(Complex(1, 1) > Complex(2, 2));
-
-  EXPECT_FALSE(Complex(1, 2) > Complex(2, 1));
-  EXPECT_TRUE(Complex(2, 1) > Complex(1, 2));
-
-  EXPECT_TRUE(Complex(0, 0) > Complex(0, -1));
-  EXPECT_TRUE(Complex(0, 0) > Complex(-1, 0));
-  EXPECT_TRUE(Complex(0, 0) > Complex(-1, -1));
-
-  EXPECT_FALSE(Complex(-1, -1) > Complex(-1, -1));
-  EXPECT_TRUE(Complex(-1, -1) > Complex(-1, -2));
-  EXPECT_TRUE(Complex(-1, -1) > Complex(-2, -1));
-  EXPECT_TRUE(Complex(-1, -1) > Complex(-2, -2));
-
-  EXPECT_TRUE(Complex(-1, -2) > Complex(-2, -1));
-  EXPECT_FALSE(Complex(-2, -1) > Complex(-1, -2));
-}
-
-TEST(ComplexTests, integerMoreOperatorTest) {
-  EXPECT_FALSE(Complex(500, 1) > Integer(501));
-}
-
-TEST(ComplexTests, rationalMoreOperatorTest) {
-  EXPECT_TRUE(Complex(Rational(1, 2), Integer(1)) > Rational(1, 3));
-}
-
-TEST(ComplexTests, realMoreOperatorTest) {
-  EXPECT_FALSE(Complex(Real("2.2"), Integer(1)) > Real("2.3"));
-}
-
-TEST(ComplexTests, intMoreOperatorTest) {
-  EXPECT_FALSE(Complex(500, 1) > 501);
-}
-
-TEST(ComplexTests, integerFriendMoreOperatorTest) {
-  EXPECT_FALSE(Integer(500) > Complex(501, 1));
-}
-
-TEST(ComplexTests, rationalFriendMoreOperatorTest) {
-  EXPECT_TRUE(Rational(1, 2) > Complex(Rational(1, 3), Integer(1)));
-}
-
-TEST(ComplexTests, realFriendMoreOperatorTest) {
-  EXPECT_FALSE(Real("2.2") > Complex(Real("2.3"), Integer(1)));
-}
-
-TEST(ComplexTests, intFriendMoreOperatorTest) {
-  EXPECT_FALSE(500 > Complex(501, 1));
-}
-
-TEST(ComplexTests, lessEqvOperatorTest) {
-  EXPECT_TRUE(Complex(0, 0) <= Complex(0, 0));
-  EXPECT_TRUE(Complex(0, 0) <= Complex(0, 1));
-  EXPECT_TRUE(Complex(0, 0) <= Complex(1, 0));
-  EXPECT_TRUE(Complex(0, 0) <= Complex(1, 1));
-
-  EXPECT_TRUE(Complex(1, 1) <= Complex(1, 1));
-  EXPECT_TRUE(Complex(1, 1) <= Complex(1, 2));
-  EXPECT_TRUE(Complex(1, 1) <= Complex(2, 1));
-  EXPECT_TRUE(Complex(1, 1) <= Complex(2, 2));
-
-  EXPECT_TRUE(Complex(1, 2) <= Complex(2, 1));
-  EXPECT_FALSE(Complex(2, 1) <= Complex(1, 2));
-
-  EXPECT_FALSE(Complex(0, 0) <= Complex(0, -1));
-  EXPECT_FALSE(Complex(0, 0) <= Complex(-1, 0));
-  EXPECT_FALSE(Complex(0, 0) <= Complex(-1, -1));
-
-  EXPECT_TRUE(Complex(-1, -1) <= Complex(-1, -1));
-  EXPECT_FALSE(Complex(-1, -1) <= Complex(-1, -2));
-  EXPECT_FALSE(Complex(-1, -1) <= Complex(-2, -1));
-  EXPECT_FALSE(Complex(-1, -1) <= Complex(-2, -2));
-
-  EXPECT_FALSE(Complex(-1, -2) <= Complex(-2, -1));
-  EXPECT_TRUE(Complex(-2, -1) <= Complex(-1, -2));
-}
-
-TEST(ComplexTests, integerLessEqvOperatorTest) {
-  EXPECT_TRUE(Complex(500, 1) <= Integer(501));
-}
-
-TEST(ComplexTests, rationalLessEqvOperatorTest) {
-  EXPECT_FALSE(Complex(Rational(1, 2), Integer(1)) <= Rational(1, 3));
-}
-
-TEST(ComplexTests, realLessEqvOperatorTest) {
-  EXPECT_TRUE(Complex(Real("2.2"), Integer(1)) <= Real("2.3"));
-}
-
-TEST(ComplexTests, intLessEqvOperatorTest) {
-  EXPECT_TRUE(Complex(500, 1) <= 501);
-}
-
-TEST(ComplexTests, integerFriendLessEqvOperatorTest) {
-  EXPECT_TRUE(Integer(500) <= Complex(501, 1));
-}
-
-TEST(ComplexTests, rationalFriendLessEqvOperatorTest) {
-  EXPECT_FALSE(Rational(1, 2) <= Complex(Rational(1, 3), Integer(1)));
-}
-
-TEST(ComplexTests, realFriendLessEqvOperatorTest) {
-  EXPECT_TRUE(Real("2.2") <= Complex(Real("2.3"), Integer(1)));
-}
-
-TEST(ComplexTests, intFriendLessEqvOperatorTest) {
-  EXPECT_TRUE(500 <= Complex(501, 1));
-}
-
-TEST(ComplexTests, moreEqvOperatorTest) {
-  EXPECT_TRUE(Complex(0, 0) >= Complex(0, 0));
-  EXPECT_FALSE(Complex(0, 0) >= Complex(0, 1));
-  EXPECT_FALSE(Complex(0, 0) >= Complex(1, 0));
-  EXPECT_FALSE(Complex(0, 0) >= Complex(1, 1));
-
-  EXPECT_TRUE(Complex(1, 1) >= Complex(1, 1));
-  EXPECT_FALSE(Complex(1, 1) >= Complex(1, 2));
-  EXPECT_FALSE(Complex(1, 1) >= Complex(2, 1));
-  EXPECT_FALSE(Complex(1, 1) >= Complex(2, 2));
-
-  EXPECT_FALSE(Complex(1, 2) >= Complex(2, 1));
-  EXPECT_TRUE(Complex(2, 1) >= Complex(1, 2));
-
-  EXPECT_TRUE(Complex(0, 0) >= Complex(0, -1));
-  EXPECT_TRUE(Complex(0, 0) >= Complex(-1, 0));
-  EXPECT_TRUE(Complex(0, 0) >= Complex(-1, -1));
-
-  EXPECT_TRUE(Complex(-1, -1) >= Complex(-1, -1));
-  EXPECT_TRUE(Complex(-1, -1) >= Complex(-1, -2));
-  EXPECT_TRUE(Complex(-1, -1) >= Complex(-2, -1));
-  EXPECT_TRUE(Complex(-1, -1) >= Complex(-2, -2));
-
-  EXPECT_TRUE(Complex(-1, -2) >= Complex(-2, -1));
-  EXPECT_FALSE(Complex(-2, -1) >= Complex(-1, -2));
-}
-
-TEST(ComplexTests, integerEqvMoreOperatorTest) {
-  EXPECT_FALSE(Complex(500, 1) >= Integer(501));
-}
-
-TEST(ComplexTests, rationalMoreEqvOperatorTest) {
-  EXPECT_TRUE(Complex(Rational(1, 2), Integer(1)) >= Rational(1, 3));
-}
-
-TEST(ComplexTests, realMoreEqvOperatorTest) {
-  EXPECT_FALSE(Complex(Real("2.2"), Integer(1)) >= Real("2.3"));
-}
-
-TEST(ComplexTests, intMoreEqvOperatorTest) {
-  EXPECT_FALSE(Complex(500, 1) >= 501);
-}
-
-TEST(ComplexTests, integerFriendMoreEqvOperatorTest) {
-  EXPECT_FALSE(Integer(500) >= Complex(501, 1));
-}
-
-TEST(ComplexTests, rationalFriendMoreEqvOperatorTest) {
-  EXPECT_TRUE(Rational(1, 2) >= Complex(Rational(1, 3), Integer(1)));
-}
-
-TEST(ComplexTests, realFriendMoreEqvOperatorTest) {
-  EXPECT_FALSE(Real("2.2") >= Complex(Real("2.3"), Integer(1)));
-}
-
-TEST(ComplexTests, intFriendMoreEqvOperatorTest) {
-  EXPECT_FALSE(500 >= Complex(501, 1));
-}
-
 TEST(ComplexTests, realTest) {
-  EXPECT_EQ(Complex(5, 2).real(), Integer(5));
-  EXPECT_EQ(Complex(55).real(), Integer(55));
-  EXPECT_EQ(Complex(-10, 100).real(), Integer(-10));
-  EXPECT_EQ(Complex(0, 100).real(), Integer(0));
+  EXPECT_EQ(*castChecked<Integer>(Complex(5, 2).real()), 5);
+  EXPECT_EQ(*castChecked<Integer>(Complex(55).real()), 55);
+  EXPECT_EQ(*castChecked<Integer>(Complex(-10, 100).real()), -10);
+  EXPECT_EQ(*castChecked<Integer>(Complex(0, 100).real()), 0);
+  EXPECT_EQ(*castChecked<Integer>(Complex(Rational(2, 2), Integer(1)).real()), 1);
 
-  EXPECT_TRUE(is<Integer>(Complex(Rational(2, 2), Integer(1)).real()));
+  EXPECT_EQ(castChecked<Rational>(Complex(Rational(1, 2)).real())->toString(), "1/2");
+  EXPECT_EQ(castChecked<Rational>(Complex(Rational(1, 2), Integer(1)).real())->toString(), "1/2");
+
+  EXPECT_EQ(castChecked<Real>(Complex(Real("0.5")).real())->toString(), "0.5");
+  EXPECT_EQ(castChecked<Real>(Complex(Real("0.5"), Integer(1)).real())->toString(), "0.5");
 }
 
 TEST(ComplexTests, imagTest) {
-  EXPECT_EQ(Complex(5, 2).imag(), Integer(2));
-  EXPECT_EQ(Complex(55).imag(), Integer(0));
-  EXPECT_EQ(Complex(-10, 100).imag(), Integer(100));
+  EXPECT_EQ(*castChecked<Integer>(Complex(5, 2).imag()), 2);
+  EXPECT_EQ(*castChecked<Integer>(Complex(55).imag()), 0);
+  EXPECT_EQ(*castChecked<Integer>(Complex(-10, 100).imag()), 100);
+  EXPECT_EQ(*castChecked<Integer>(Complex(Integer(1), Rational(2, 2)).imag()), 1);
 
-  EXPECT_TRUE(is<Integer>(Complex(Integer(1), Rational(2, 2)).imag()));
+  EXPECT_EQ(castChecked<Rational>(Complex(Integer(1), Rational(1, 2)).imag())->toString(), "1/2");
+
+  EXPECT_EQ(castChecked<Real>(Complex(Integer(1), Real("0.5")).imag())->toString(), "0.5");
 }
 
 TEST(ComplexTests, toStringTest) {
@@ -961,18 +746,14 @@ TEST(ComplexTests, toStringTest) {
   EXPECT_EQ(Complex(-2, -2).toString(), "-2 - 2 I");
 }
 
-TEST(ComplexTests, simplifyTest) {
-  EXPECT_TRUE(is<Complex>(Complex(5, 2).toMinimalObject()));
-  EXPECT_TRUE(is<Integer>(Complex(55, 0).toMinimalObject()));
-  EXPECT_TRUE(is<Integer>(Complex(Rational(5, 5), Integer(0)).toMinimalObject()));
-  EXPECT_TRUE(is<Rational>(Complex(Rational(5, 2), Integer(0)).toMinimalObject()));
-  EXPECT_TRUE(is<Real>(Complex(Real("5.2"), Integer(0)).toMinimalObject()));
+TEST(ComplexTests, isZeroTest) {
+  EXPECT_TRUE(Complex(0).isZero());
+  EXPECT_TRUE(Complex(0, 0).isZero());
 
-  EXPECT_EQ(Complex(5, 2).toMinimalObject()->toString(), "5 + 2 I");
-  EXPECT_EQ(Complex(55, 0).toMinimalObject()->toString(), "55");
-  EXPECT_EQ(Complex(Rational(5, 5), Integer(0)).toMinimalObject()->toString(), "1");
-  EXPECT_EQ(Complex(Rational(5, 2), Integer(0)).toMinimalObject()->toString(), "5/2");
-  EXPECT_EQ(Complex(Real("5.2"), Integer(0)).toMinimalObject()->toString(), "5.2");
+  EXPECT_FALSE(Complex(1).isZero());
+  EXPECT_FALSE(Complex(1, 0).isZero());
+  EXPECT_FALSE(Complex(0, 1).isZero());
+  EXPECT_FALSE(Complex(1, 1).isZero());
 }
 
 TEST(ComplexTests, getPrecisionTest) {

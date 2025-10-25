@@ -2,6 +2,7 @@
 
 #include "fintamath/expressions/Expression.hpp"
 #include "fintamath/expressions/ExpressionFunctions.hpp"
+#include "fintamath/numbers/Integer.hpp"
 
 using namespace fintamath;
 
@@ -11,7 +12,7 @@ static void BM_PolynomialPower(benchmark::State &state) {
 
   for (auto _ : state) {
     const Expression res = pow(expr, power);
-    benchmark::DoNotOptimize(res.toMinimalObject()->toString());
+    benchmark::DoNotOptimize(simplify(res).toString());
   }
 }
 

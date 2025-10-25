@@ -2,32 +2,32 @@
 
 #include <cassert>
 #include <concepts>
-#include <functional>
-#include <memory>
-#include <type_traits>
 
+#include "fintamath/core/CoreUtils.hpp"
 #include "fintamath/core/MathObjectClass.hpp"
+#include "fintamath/core/Pointers.hpp"
+#include "fintamath/core/Qualifiers.hpp"
+#include "fintamath/exceptions/BadCastException.hpp"
 
 namespace fintamath {
 
 class IMathObject;
 
 constexpr bool is(const MathObjectClass to, const MathObjectClass from) noexcept {
-  for (MathObjectClass parent = from; parent; parent = parent->getParent()) {
-    if (parent == to) {
-      return true;
-    }
-  }
-
-  return false;
+  return from && from->is(to);
 }
 
-template <std::derived_from<IMathObject> To, std::derived_from<IMathObject> From>
+template <std::derived_from<IMathObject> To>
+constexpr bool is(const MathObjectClass from) noexcept {
+  return is(To::getClassStatic(), from);
+}
+
+template <std::derived_from<IMathObject> To, detail::DerivedFromNoQualifiers<IMathObject> From>
 inline bool is(const From &from) noexcept {
-  if constexpr (std::is_base_of_v<To, From>) {
+  if constexpr (std::derived_from<From, To>) {
     return true;
   }
-  else if constexpr (!std::is_base_of_v<From, To>) {
+  else if constexpr (!std::derived_from<To, From>) {
     return false;
   }
   else {
@@ -35,106 +35,58 @@ inline bool is(const From &from) noexcept {
   }
 }
 
-template <std::derived_from<IMathObject> To, std::derived_from<IMathObject> From>
+template <std::derived_from<IMathObject> To, detail::DerivedFromNoQualifiers<IMathObject> From>
 inline bool is(const From *from) noexcept {
-  if (!from) {
-    return false;
-  }
-
-  return is<To>(*from);
+  return from && is<To>(*from);
 }
 
-template <std::derived_from<IMathObject> To, std::derived_from<IMathObject> From>
-inline bool is(const std::unique_ptr<From> &from) noexcept {
+template <std::derived_from<IMathObject> To, detail::DerivedFromWithElementType<IMathObject> From>
+inline bool is(const From &from) noexcept {
   return is<To>(from.get());
 }
 
-template <std::derived_from<IMathObject> To, std::derived_from<IMathObject> From>
-inline bool is(const std::shared_ptr<From> &from) noexcept {
-  return is<To>(from.get());
-}
+template <std::derived_from<IMathObject> To, detail::DerivedFromNoQualifiers<IMathObject> From>
+inline decltype(auto) cast(From *from) noexcept {
+  using ResultType = detail::CopyQualifiersFromToType<From, To>;
 
-template <std::derived_from<IMathObject> To, std::derived_from<IMathObject> From>
-inline bool is(const std::shared_ptr<const From> &from) noexcept {
-  return is<To>(from.get());
-}
-
-template <std::derived_from<IMathObject> To, std::derived_from<IMathObject> From>
-inline bool is(const std::reference_wrapper<From> &from) noexcept {
-  return is<To>(from.get());
-}
-
-template <std::derived_from<IMathObject> To, std::derived_from<IMathObject> From>
-inline bool is(const std::reference_wrapper<const From> &from) noexcept {
-  return is<To>(from.get());
-}
-
-template <std::derived_from<IMathObject> To, std::derived_from<IMathObject> From>
-inline const To &cast(const From &from) noexcept {
-  assert(is<To>(from));
-  return static_cast<const To &>(from);
-}
-
-template <std::derived_from<IMathObject> To, std::derived_from<IMathObject> From>
-inline To &cast(From &from) noexcept {
-  assert(is<To>(from));
-  return static_cast<To &>(from);
-}
-
-template <std::derived_from<IMathObject> To, std::derived_from<IMathObject> From>
-inline const To *cast(const From *from) noexcept {
   if (!is<To>(from)) {
-    return {};
+    return static_cast<ResultType *>(nullptr);
   }
 
-  return static_cast<const To *>(from);
+  return static_cast<ResultType *>(from);
 }
 
-template <std::derived_from<IMathObject> To, std::derived_from<IMathObject> From>
-inline To *cast(From *from) noexcept {
+template <std::derived_from<IMathObject> To, detail::DerivedFromWithElementType<IMathObject> From>
+inline auto cast(From &&from) noexcept {
+  using ResultType = detail::CopyQualifiersFromToType<typename detail::RemoveQualifiers<From>::ElementType, To>;
+
   if (!is<To>(from)) {
-    return {};
+    return SharedPtr<ResultType>{};
   }
 
-  return static_cast<To *>(from);
+  return SharedPtr<ResultType>(staticPointerCast<ResultType>(std::forward<From>(from)));
 }
 
-template <std::derived_from<IMathObject> To, std::derived_from<IMathObject> From>
-inline std::unique_ptr<To> cast(std::unique_ptr<From> &&from) noexcept {
+template <std::derived_from<IMathObject> To, detail::DerivedFromNoQualifiers<IMathObject> From>
+inline decltype(auto) castChecked(From &&from) {
+  using ResultType = detail::CopyQualifiersFromToType<From, To>;
+
   if (!is<To>(from)) {
-    from.reset();
-    return {};
+    throw BadCastException(from.getClass()->getName(), To::getClassStatic()->getName());
   }
 
-  From *fromRawPtr = from.release();
-  auto *toRawPtr = static_cast<To *>(fromRawPtr);
-  return std::unique_ptr<To>(toRawPtr);
+  return static_cast<ResultType>(std::forward<From>(from));
 }
 
-template <std::derived_from<IMathObject> To, std::derived_from<IMathObject> From>
-inline std::shared_ptr<const To> cast(const std::shared_ptr<const From> &from) noexcept {
+template <std::derived_from<IMathObject> To, detail::DerivedFromWithElementType<IMathObject> From>
+inline auto castChecked(From &&from) {
+  using ResultType = detail::CopyQualifiersFromToType<typename detail::RemoveQualifiers<From>::ElementType, To>;
+
   if (!is<To>(from)) {
-    return {};
+    throw BadCastException(from->getClass()->getName(), To::getClassStatic()->getName());
   }
 
-  return std::static_pointer_cast<const To>(from);
+  return SharedRef<ResultType>(staticPointerCast<ResultType>(std::forward<From>(from)));
 }
-
-template <std::derived_from<IMathObject> To, std::derived_from<IMathObject> From>
-inline std::shared_ptr<To> cast(const std::shared_ptr<From> &from) noexcept {
-  if (!is<To>(from)) {
-    return {};
-  }
-
-  return std::static_pointer_cast<To>(from);
-}
-
-template <typename Comparator>
-struct ToStringComparator {
-  template <typename T>
-  bool operator()(const T &lhs, const T &rhs) const noexcept {
-    return Comparator{}(lhs.toString(), rhs.toString());
-  }
-};
 
 }

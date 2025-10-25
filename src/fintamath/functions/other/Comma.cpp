@@ -1,20 +1,26 @@
 #include "fintamath/functions/other/Comma.hpp"
 
-#include <memory>
-
-#include <fmt/core.h>
-
-#include "fintamath/core/IMathObject.hpp"
-#include "fintamath/functions/FunctionArguments.hpp"
-
 namespace fintamath {
 
-FINTAMATH_CLASS_IMPLEMENTATION(Comma)
+FINTAMATH_FUNCTION_CLASS_IMPLEMENTATION(
+  Comma,
+  {
+    .name = ",",
+    .argClasses = {IMathObject::getClassStatic()},
+    .returnClass = IMathObject::getClassStatic(),
+    .operatorDeclaration = OperatorDeclaration{
+      .priority = OperatorPriority::Comma,
+    },
+    .isVariadic = true,
+  }
+)
 
-std::unique_ptr<IMathObject> Comma::call(const ArgumentRefVector & /*argVect*/) const {
-  throw InvalidInputException(fmt::format(
-      R"(Calling {} directly is not allowed)",
-      getClassStatic()->getName()));
+IFunction::ArgVector Comma::toFunctionArgs() const {
+  if (std::optional compressedArgs = compressArgs()) {
+    return *compressedArgs;
+  }
+
+  return getArgsVariadic();
 }
 
 }

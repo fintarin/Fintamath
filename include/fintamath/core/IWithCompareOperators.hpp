@@ -1,0 +1,31 @@
+#pragma once
+
+#include <compare>
+
+#include "fintamath/core/CoreUtils.hpp"
+#include "fintamath/core/IWithEqualsOperators.hpp"
+
+namespace fintamath {
+
+template <typename Derived>
+class IWithCompareOperators : public IWithEqualsOperators<Derived> {
+
+public:
+  ~IWithCompareOperators() override = default;
+
+  friend std::strong_ordering operator<=>(const Derived &lhs, const Derived &rhs) {
+    const auto &lhsParent = static_cast<const IWithCompareOperators<Derived> &>(lhs);
+    return lhsParent.compare(rhs);
+  }
+
+protected:
+  virtual std::strong_ordering compare(const Derived &rhs) const noexcept = 0;
+};
+
+template <typename Lhs, detail::ConvertibleToAndNotSameAs<Lhs> Rhs>
+  requires(std::derived_from<Lhs, IWithCompareOperators<Lhs>>)
+inline std::strong_ordering operator<=>(const Lhs &lhs, const Rhs &rhs) {
+  return lhs <=> Lhs(rhs);
+}
+
+}

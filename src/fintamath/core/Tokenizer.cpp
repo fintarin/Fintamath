@@ -4,34 +4,46 @@
 #include <regex>
 #include <string>
 
-#include "fintamath/core/CoreUtils.hpp"
-
 namespace fintamath::detail {
 
-TokenVector Tokenizer::tokenize(std::string str) {
+void Token::clear() {
+  name.clear();
+  type = TokenType::Unknown;
+}
+
+Tokens Tokenizer::tokenize(std::string str) {
   handleSpaces(str);
 
-  TokenVector tokens;
+  Tokens tokens;
+  Token unknownToken;
   Token numberToken;
-  Token specialToken;
 
   for (const char ch : str) {
-    if (isDigitOrPoint(ch)) {
-      appendToken(tokens, specialToken, true);
-      numberToken.push_back(ch);
+    if (ch >= '0' && ch <= '9') {
+      appendToken(tokens, unknownToken);
+      numberToken.name.push_back(ch);
+
+      if (numberToken.type != TokenType::Decimal) {
+        numberToken.type = TokenType::Integer;
+      }
     }
-    else if (isSpace(ch)) {
-      appendToken(tokens, specialToken, true);
-      appendToken(tokens, numberToken, false);
+    else if (ch == '.') {
+      appendToken(tokens, unknownToken);
+      numberToken.name.push_back(ch);
+      numberToken.type = TokenType::Decimal;
+    }
+    else if (ch == ' ') {
+      appendToken(tokens, unknownToken);
+      appendToken(tokens, numberToken);
     }
     else {
-      appendToken(tokens, numberToken, false);
-      specialToken.push_back(ch);
+      appendToken(tokens, numberToken);
+      unknownToken.name.push_back(ch);
     }
   }
 
-  appendToken(tokens, numberToken, false);
-  appendToken(tokens, specialToken, true);
+  appendToken(tokens, numberToken);
+  appendToken(tokens, unknownToken);
 
   return tokens;
 }
@@ -40,26 +52,37 @@ void Tokenizer::registerToken(const std::string_view tokenName) {
   getRegisteredTokens().add(tokenName);
 }
 
-bool Tokenizer::appendToken(TokenVector &tokens, Token &token, const bool shouldSplit) {
-  if (token.empty()) {
+bool Tokenizer::appendToken(Tokens &tokens, Token &token) {
+  if (token.name.empty()) {
     return false;
   }
 
-  if (!shouldSplit) {
-    tokens.emplace_back(token);
-    token.clear();
+  if (token.type != TokenType::Unknown) {
+    tokens.emplace_back(std::move(token));
     return true;
   }
 
   size_t i = 0;
-  while (i < token.size()) {
-    constexpr size_t minTokenSize = 1;
-    const size_t tokenSize = std::max(getRegisteredTokens().getPrefixSize(token, i), minTokenSize);
-    tokens.emplace_back(token.substr(i, tokenSize));
+  while (i < token.name.size()) {
+    size_t tokenSize = getRegisteredTokens().getPrefixSize(token.name, i);
+    const bool isTokenRegistered = tokenSize > 0;
+    if (!isTokenRegistered) {
+      tokenSize++;
+    }
+
+    std::string name = token.name.substr(i, tokenSize);
+    TokenType type = isTokenRegistered ? TokenType::Registered : getUnregisteredTokenType(name);
+    tokens.emplace_back(Token{
+      .name = std::move(name),
+      .type = type,
+    });
+
     i += tokenSize;
   }
 
-  token.clear();
+  token.name.clear();
+  token.type = TokenType::Unknown;
+
   return true;
 }
 
@@ -67,12 +90,17 @@ void Tokenizer::handleSpaces(std::string &str) {
   str = std::regex_replace(str, std::regex(R"([\s\r\n]+)"), " ");
 }
 
-bool Tokenizer::isDigitOrPoint(const char ch) {
-  return ch == '.' || (ch >= '0' && ch <= '9');
-}
-
-bool Tokenizer::isSpace(const char ch) {
-  return ch == ' ';
+TokenType Tokenizer::getUnregisteredTokenType(const std::string &tokenName) {
+  if (tokenName.size() == 1 && tokenName.front() >= 'a' && tokenName.front() <= 'z') {
+    return TokenType::Variable;
+  }
+  if (tokenName == "(") {
+    return TokenType::RoundBracketOpen;
+  }
+  if (tokenName == ")") {
+    return TokenType::RoundBracketClose;
+  }
+  return TokenType::Unknown;
 }
 
 PrefixTrie &Tokenizer::getRegisteredTokens() {

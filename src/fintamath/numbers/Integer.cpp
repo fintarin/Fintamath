@@ -7,7 +7,7 @@
 #include <string_view>
 #include <utility>
 
-#include <fmt/core.h>
+#include <fmt/format.h>
 
 #include "fintamath/exceptions/InvalidInputException.hpp"
 #include "fintamath/exceptions/UndefinedException.hpp"
@@ -17,32 +17,36 @@ namespace fintamath {
 
 FINTAMATH_CLASS_IMPLEMENTATION(Integer)
 
-using namespace detail;
-
 Integer::Integer(Backend inBackend) : backend(std::move(inBackend)) {
 }
 
-Integer::Integer(const std::string_view str) try {
+Integer::Integer(const std::string_view str) {
+  constexpr auto throwInvalidInputException = [](const std::string_view invalidStr) {
+    throw InvalidInputException(fmt::format(
+      "Unable to parse {} from \"{}\"",
+      getClassStatic()->getName(),
+      invalidStr
+    ));
+  };
+
   if (str.empty()) {
-    throw InvalidInputException("");
+    throwInvalidInputException(str);
   }
 
   try {
-    backend.assign(removeLeadingZeroes(std::string(str)));
+    backend.assign(detail::removeLeadingZeroes(std::string(str)));
   }
   catch (const std::runtime_error &) {
-    throw InvalidInputException("");
+    throwInvalidInputException(str);
   }
 }
-catch (const InvalidInputException &) {
-  throw InvalidInputException(fmt::format(
-      R"(Unable to parse {} from "{}")",
-      getClassStatic()->getName(),
-      str));
+
+std::string Integer::toString() const noexcept {
+  return backend.str();
 }
 
-std::string Integer::toString() const {
-  return backend.str();
+bool Integer::isZero() const noexcept {
+  return backend.is_zero();
 }
 
 int Integer::sign() const {
@@ -53,11 +57,15 @@ const Integer::Backend &Integer::getBackend() const noexcept {
   return backend;
 }
 
-bool Integer::equals(const Integer &rhs) const {
+bool Integer::equals(const SharedRef<IMathObject> &self, const SharedRef<IMathObject> &rhs) const noexcept {
+  return Super::equals(self, rhs);
+}
+
+bool Integer::equals(const Integer &rhs) const noexcept {
   return backend == rhs.backend;
 }
 
-std::strong_ordering Integer::compare(const Integer &rhs) const {
+std::strong_ordering Integer::compare(const Integer &rhs) const noexcept {
   return backend.compare(rhs.backend) <=> 0;
 }
 
@@ -66,29 +74,30 @@ Integer &Integer::add(const Integer &rhs) {
   return *this;
 }
 
-Integer &Integer::substract(const Integer &rhs) {
+Integer &Integer::sub(const Integer &rhs) {
   backend -= rhs.backend;
   return *this;
 }
 
-Integer &Integer::multiply(const Integer &rhs) {
+Integer &Integer::mul(const Integer &rhs) {
   backend *= rhs.backend;
   return *this;
 }
 
-Integer &Integer::divide(const Integer &rhs) {
+Integer &Integer::div(const Integer &rhs) {
   if (rhs == 0) {
     throw UndefinedException(fmt::format(
-        R"(div({}, {}) is undefined (division by zero))",
-        toString(),
-        rhs.toString()));
+      "div({}, {}) is undefined (division by zero)",
+      toString(),
+      rhs.toString()
+    ));
   }
 
   backend /= rhs.backend;
   return *this;
 }
 
-Integer &Integer::negate() {
+Integer &Integer::neg() {
   backend = -backend;
   return *this;
 }
@@ -96,9 +105,10 @@ Integer &Integer::negate() {
 Integer &Integer::mod(const Integer &rhs) {
   if (rhs == 0) {
     throw UndefinedException(fmt::format(
-        R"(mod({}, {}) is undefined (modulo by zero))",
-        toString(),
-        rhs.toString()));
+      "mod({}, {}) is undefined (modulo by zero)",
+      toString(),
+      rhs.toString()
+    ));
   }
 
   backend %= rhs.backend;
@@ -123,9 +133,10 @@ Integer &Integer::bitXor(const Integer &rhs) {
 Integer &Integer::bitLeftShift(const Integer &rhs) {
   if (rhs < 0) {
     throw UndefinedException(fmt::format(
-        R"(bitLeftShift({}, {}) is undefined (negative shift))",
-        toString(),
-        rhs.toString()));
+      "bitLeftShift({}, {}) is undefined (negative shift)",
+      toString(),
+      rhs.toString()
+    ));
   }
 
   backend <<= static_cast<int64_t>(rhs.backend);
@@ -135,9 +146,10 @@ Integer &Integer::bitLeftShift(const Integer &rhs) {
 Integer &Integer::bitRightShift(const Integer &rhs) {
   if (rhs < 0) {
     throw UndefinedException(fmt::format(
-        R"(bitRightShift({}, {}) is undefined (negative shift))",
-        toString(),
-        rhs.toString()));
+      "bitRightShift({}, {}) is undefined (negative shift)",
+      toString(),
+      rhs.toString()
+    ));
   }
 
   backend >>= static_cast<int64_t>(rhs.backend);
@@ -230,6 +242,35 @@ Integer Integer::operator--(int) {
   Integer res = *this;
   decrease();
   return res;
+}
+
+const SharedRef<Integer>& Integer::getZero() {
+  static const SharedRef<Integer> zero = makeShared<Integer>(0);
+  return zero;
+}
+
+const SharedRef<Integer>& Integer::getOne() {
+  static const SharedRef<Integer> one = makeShared<Integer>(1);
+  return one;
+}
+
+const SharedRef<Integer>& Integer::getNegOne() {
+  static const SharedRef<Integer> neg = makeShared<Integer>(-1);
+  return neg;
+}
+
+void Integer::registerDefaultObject() const {
+  registerEqualsFunction<Integer>();
+  registerLessFunction<Integer>();
+  registerGreaterFunction<Integer>();
+  registerLessEqualsFunction<Integer>();
+  registerGreaterEqualsFunction<Integer>();
+  registerAddFunction<Integer>();
+  registerSubFunction<Integer>();
+  registerMulFunction<Integer>();
+  registerNegFunction<Integer>();
+
+  // registerDivFunction is called in Rational 
 }
 
 }

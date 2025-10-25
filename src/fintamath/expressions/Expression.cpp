@@ -1,580 +1,440 @@
 #include "fintamath/expressions/Expression.hpp"
 
-#include <algorithm>
-#include <cstddef>
-#include <cstdint>
-#include <memory>
-#include <optional>
-#include <ranges>
-#include <stack>
-#include <string>
-#include <string_view>
-#include <utility>
-#include <vector>
+#include <fmt/format.h>
 
-#include <fmt/core.h>
-
-#include "fintamath/core/Cache.hpp"
-#include "fintamath/core/IMathObject.hpp"
-#include "fintamath/core/MathObjectClass.hpp"
+#include "fintamath/constants/IConstant.hpp"
 #include "fintamath/core/MathObjectUtils.hpp"
+#include "fintamath/core/Overload.hpp"
 #include "fintamath/core/Tokenizer.hpp"
 #include "fintamath/exceptions/InvalidInputException.hpp"
-#include "fintamath/expressions/ExpressionUtils.hpp"
-#include "fintamath/expressions/FunctionExpression.hpp"
-#include "fintamath/expressions/IExpression.hpp"
-#include "fintamath/functions/FunctionArguments.hpp"
-#include "fintamath/functions/FunctionUtils.hpp"
-#include "fintamath/functions/IFunction.hpp"
-#include "fintamath/functions/IOperator.hpp"
-#include "fintamath/functions/arithmetic/Add.hpp"
-#include "fintamath/functions/arithmetic/Div.hpp"
-#include "fintamath/functions/arithmetic/Mul.hpp"
-#include "fintamath/functions/arithmetic/MulOper.hpp"
-#include "fintamath/functions/arithmetic/Neg.hpp"
-#include "fintamath/functions/arithmetic/Sub.hpp"
 #include "fintamath/functions/other/Comma.hpp"
-#include "fintamath/functions/other/Factorial.hpp"
-#include "fintamath/literals/Variable.hpp"
-#include "fintamath/literals/constants/IConstant.hpp"
-#include "fintamath/numbers/IntegerFunctions.hpp"
-#include "fintamath/numbers/Real.hpp"
+#include "fintamath/numbers/Integer.hpp"
+#include "fintamath/numbers/Rational.hpp"
+#include "fintamath/variables/Variable.hpp"
 
 namespace fintamath {
 
 FINTAMATH_CLASS_IMPLEMENTATION(Expression)
 
-using namespace detail;
-
-Expression::Expression() : child(Integer(0).clone()) {
+Expression::Expression() : arg(Integer::getZero()) {
 }
 
-Expression::Expression(const std::string &str) : child(parseRawExpr(str)) {
+Expression::Expression(SharedRef<IMathObject> inArg) : arg(unwrapp(std::move(inArg))) {
 }
 
-Expression::Expression(const ArgumentPtr &obj) : child(compress(obj)) {
+Expression::Expression(const IMathObject &obj) : arg(unwrapp(obj)) {}
+
+Expression::Expression(IMathObject &&obj) : arg(unwrapp(std::move(obj))) {}
+
+Expression::Expression(const int64_t val) : Expression(makeShared<Integer>(val)) {
 }
 
-Expression::Expression(const IMathObject &obj) : Expression(obj.clone()) {
+Expression::Expression(const std::string &str) : Expression(parseExpression(str)) {
 }
 
-Expression::Expression(const int64_t val) : child(Integer(val).clone()) {
+std::string Expression::toString() const noexcept {
+  return arg->toString();
 }
 
-std::string Expression::toString() const {
-  simplifyMutable();
-  return stringCached;
+SharedPtr<IMathObject> Expression::unwrappSelf() const noexcept {
+  return arg;
 }
 
-Expression approximate(const Expression &rhs, const unsigned precision) {
-  const Real::ScopedSetPrecision setPrecision(precision);
-
-  static Cache<unsigned, Integer> cache([](const unsigned inPrecision) {
-    static const Integer powBase = 10;
-    return pow(powBase, inPrecision);
-  });
-
-  Expression approxExpr = rhs;
-  Expression::approximateChild(approxExpr.child);
-  Expression::setPrecisionChild(approxExpr.child, precision, cache[precision]);
-  approxExpr.updateStringMutable();
-
-  return approxExpr;
+SharedRef<IMathObject> Expression::getArgument() const noexcept {
+  return arg;
 }
 
-const std::shared_ptr<IFunction> &Expression::getFunction() const {
-  static const std::shared_ptr<IFunction> func;
-  return func;
-}
+bool Expression::equals(const SharedRef<IMathObject> & /*self*/, const SharedRef<IMathObject> &rhs) const noexcept {
+  using fintamath::equals;
 
-const ArgumentPtrVector &Expression::getChildren() const {
-  simplifyMutable();
-  childrenCached.front() = child;
-  return childrenCached;
-}
-
-void Expression::setChildren(const ArgumentPtrVector &childVect) {
-  if (childVect.size() != 1) {
-    throw InvalidInputException(fmt::format(
-        R"(Unable to set {} {} children (expected 1))",
-        childVect.size(),
-        getClassStatic()->getName()));
+  if (const auto rhsExpr = cast<Expression>(rhs)) {
+    return equals(arg, rhsExpr->arg);
   }
 
-  *this = Expression(childVect.front());
+  return equals(arg, rhs);
 }
 
-void Expression::setVariables(const std::vector<std::pair<Variable, ArgumentPtr>> &varsToVals) {
-  simplifyMutable();
-  IExpression::setVariables(varsToVals);
-}
-
-void Expression::setVariable(const Variable &var, const Expression &val) {
-  setVariables({{var, val.child}});
-}
-
-ArgumentPtr Expression::simplify() const {
-  simplifyMutable();
-  return child;
-}
-
-void Expression::simplifyMutable() const {
-  if (isSimplified) {
-    return;
-  }
-
-  ArgumentPtr prevChild = child;
-  simplifyChild(child);
-
-  while (*child != *prevChild) {
-    prevChild = child;
-    simplifyChild(child);
-  }
-
-  isSimplified = true;
-  updateStringMutable();
-}
-
-void Expression::updateStringMutable() const {
-  stringCached = child->toString();
-}
-
-std::unique_ptr<IMathObject> parseRawExpr(const std::string &str) try {
-  auto tokens = Tokenizer::tokenize(str);
-  auto terms = Expression::tokensToTerms(tokens);
-  auto objects = Expression::termsToObjects(terms);
-  auto expr = Expression::objectsToExpr(objects);
-  return expr;
-}
-catch (const InvalidInputException &exc) {
-  std::string message = exc.what();
-  message[0] = static_cast<char>(std::tolower(message[0]));
-
-  throw InvalidInputException(fmt::format(
-      R"(Unable to parse an expression from "{}" ({}))",
-      str,
-      message));
-}
-
-TermVector Expression::tokensToTerms(TokenVector &tokens) {
+Expression::TokenToTermVector Expression::parseTokensToTerms(detail::Tokens &tokens) {
   if (tokens.empty()) {
     throw InvalidInputException("empty input");
   }
 
-  TermVector terms(tokens.size());
+  TokenToTermVector tokensToTerms(tokens.size());
 
-  for (size_t i = 0U; i < terms.size(); i++) {
-    terms[i] = parseTerm(tokens[i]);
+  for (size_t i = 0; i < tokensToTerms.size(); i++) {
+    auto &token = tokens[i];
+    std::optional<Term> term = parseTerm(token);
+    tokensToTerms[i] = {
+      .token = std::move(token),
+      .term = std::move(term)
+    };
   }
 
-  fixOperatorTypes(terms);
-  insertMultiplications(terms);
-  collapseFactorials(terms);
+  // fixOperatorTypes(tokensToTerms);
+  // insertMultiplications(tokensToTerms);
+  // collapseFactorials(tokensToTerms);
 
-  return terms;
+  return tokensToTerms;
 }
 
 // Use the shunting yard algorithm
 // https://en.m.wikipedia.org/wiki/Shunting_yard_algorithm
-ObjectStack Expression::termsToObjects(TermVector &terms) {
-  ObjectStack objects;
-  FunctionTermStack functions;
+Expression::TermStack Expression::parseTermsRPN(TokenToTermVector &tokensToTerms) {
+  TermStack outTermStack;
+  FunctionTermStack funcTermStack;
 
-  for (auto &term : terms) {
-    if (!term.value) {
-      if (term.name == "(") {
-        functions.emplace(std::move(term), std::optional<IOperator::Priority>{});
+  for (auto &[token, term] : tokensToTerms) {
+    if (!term) {
+      if (token.type == detail::TokenType::RoundBracketOpen) {
+        funcTermStack.emplace();
       }
-      else if (term.name == ")") {
-        moveFunctionTermsToObjects(objects, functions, {});
+      else if (token.type == detail::TokenType::RoundBracketClose) {
+        moveFunctionTerms(outTermStack, funcTermStack, nullptr);
 
-        if (functions.empty()) {
+        if (funcTermStack.empty()) {
           throw InvalidInputException("bracket mismatch");
         }
 
-        functions.pop();
+        funcTermStack.pop();
       }
       else {
-        throw InvalidInputException(
-            fmt::format(R"(invalid term "{}")",
-                        term.name));
-      }
-    }
-    else if (is<IFunction>(term.value)) {
-      std::optional<IOperator::Priority> priority;
-
-      if (const auto *oper = cast<IOperator>(term.value.get())) {
-        moveFunctionTermsToObjects(objects, functions, oper);
-        priority = oper->getPriority();
+        throw InvalidInputException(fmt::format("invalid term \"{}\"", token.name));
       }
 
-      functions.emplace(std::move(term), priority);
+      continue;
     }
-    else {
-      objects.emplace(std::move(term.value));
-    }
+
+    std::visit(
+      detail::Overload{
+        [&](SharedRef<IMathObject> &argTerm) {
+          outTermStack.emplace(std::move(argTerm));
+        },
+        [&](FunctionTerm &funcTerm) {
+          if (funcTerm.operatorPriority) {
+            moveFunctionTerms(outTermStack, funcTermStack, &funcTerm);
+          }
+
+          funcTermStack.emplace(std::move(funcTerm));
+        },
+      },
+      *term
+    );
   }
 
-  moveFunctionTermsToObjects(objects, functions, {});
+  moveFunctionTerms(outTermStack, funcTermStack, nullptr);
 
-  if (!functions.empty()) {
+  if (!funcTermStack.empty()) {
     throw InvalidInputException("bracket mismatch");
   }
 
-  return objects;
+  return outTermStack;
 }
 
-std::unique_ptr<IMathObject> Expression::objectsToExpr(ObjectStack &objects) {
-  if (objects.empty()) {
+SharedRef<IMathObject> Expression::parseExpression(TermStack &termsRPN) {
+  if (termsRPN.empty()) {
     throw InvalidInputException("incomplete expression inside brackets");
   }
 
-  std::unique_ptr<IMathObject> arg = std::move(objects.top());
-  objects.pop();
+  Term term = std::move(termsRPN.top());
+  termsRPN.pop();
 
-  if (is<IFunction>(arg)) {
-    auto func = cast<IFunction>(std::move(arg));
-    const ArgumentPtr rhsChild = objectsToExpr(objects);
+  SharedRef<IMathObject> outArg = std::visit(
+    detail::Overload{
+      [&](SharedRef<IMathObject> &argTerm) {
+        return std::move(argTerm);
+      },
+      [&](FunctionTerm &funcTerm) {
+        if (funcTerm.operatorPriority) {
+          return parseOperator(termsRPN, funcTerm);
+        }
 
-    if (isBinaryOperator(func.get())) {
-      const ArgumentPtr lhsChild = objectsToExpr(objects);
-      return makeExprWithValidation(*func, {lhsChild, rhsChild});
+        return parseFunction(termsRPN, funcTerm);
+      },
+    },
+    term
+  );
+
+  return outArg;
+}
+
+SharedRef<IMathObject> Expression::parseExpression(const std::string &str) {
+  try {
+    detail::Tokens tokens = detail::Tokenizer::tokenize(str);
+    TokenToTermVector tokensToTerms = Expression::parseTokensToTerms(tokens);
+    TermStack termsRPN = Expression::parseTermsRPN(tokensToTerms);
+    return parseExpression(termsRPN);
+  }
+  catch (const InvalidInputException &exc) {
+    std::string message = exc.what();
+    message[0] = static_cast<char>(std::tolower(message[0]));
+
+    throw InvalidInputException(fmt::format(
+      "Unable to parse an expression from \"{}\" ({})",
+      str,
+      message
+    ));
+  }
+}
+
+std::optional<Expression::Term> Expression::parseTerm(const detail::Token &token) {
+  switch (token.type) {
+    case detail::TokenType::Variable: {
+      return makeShared<Variable>(token.name);
     }
-
-    ArgumentPtrVector children = unwrapComma(rhsChild);
-
-    if (!func->isVariadic() && func->getArgumentClasses().size() != children.size()) {
-      std::string funcStr = func->toString();
-      func = findFunction(funcStr, children.size());
-
-      if (!func) {
-        throw InvalidInputException(fmt::format(
-            R"(function "{}" with {} arguments not found)",
-            funcStr,
-            children.size()));
+    case detail::TokenType::Integer: {
+      return makeShared<Integer>(token.name);
+    }
+    case detail::TokenType::Decimal: {
+      return makeShared<Rational>(token.name);
+    }
+    case detail::TokenType::Registered: {
+      if (const IFunction::FunctionMakers *functionMakers = IFunction::parseFunctionMakers(token.name)) {
+        return FunctionTerm{
+          .functionMakers = *functionMakers,
+          .operatorPriority = getOperatorPriority(*functionMakers),
+        };
       }
+      if (SharedPtr<IConstant> constant = IConstant::parseConstant(token.name)) {
+        return constant.toRef();
+      }
+      throw InvalidInputException(fmt::format("invalid term {}", token.name));
     }
-
-    return makeExprWithValidation(*func, std::move(children));
-  }
-
-  return arg;
-}
-
-std::unique_ptr<IFunction> Expression::findFunction(const std::string &str, const size_t argNum) {
-  for (auto &func : IFunction::parse(str)) {
-    if (func->getArgumentClasses().size() == argNum) {
-      return std::move(func);
+    default: {
+      return std::nullopt;
     }
   }
-
-  return {};
 }
 
-auto Expression::findOperator(const std::string &str, const IOperator::Priority priority) -> std::unique_ptr<IOperator> {
-  for (auto &oper : IOperator::parse(str)) {
-    if (oper->getPriority() == priority) {
-      return std::move(oper);
+SharedRef<IMathObject> Expression::parseOperator(TermStack &argTermsRPN, const FunctionTerm &funcTerm) {
+  size_t expectedArgsSize = 0;
+  for (const auto &maker : funcTerm.functionMakers.get()) {
+    const IFunction::Declaration &makerDecl = maker.getDeclaration();
+    if (makerDecl.operatorDeclaration->priority != funcTerm.operatorPriority) {
+      continue;
+    }
+
+    if (expectedArgsSize > 0) {
+      throw InvalidInputException("Ambiguous operator"); // TODO!!!
+    }
+
+    const size_t variadicOperArgSize = 2;
+    expectedArgsSize = makerDecl.isVariadic ? variadicOperArgSize : makerDecl.argClasses.size();
+  }
+
+  std::vector<SharedRef<IMathObject>> args;
+  while (!argTermsRPN.empty() && args.size() != expectedArgsSize) {
+    args.emplace_back(parseExpression(argTermsRPN));
+  }
+  std::ranges::reverse(args);
+
+  SharedPtr<IFunction> outOper;
+  for (const auto &maker : funcTerm.functionMakers.get()) {
+    if (!maker.doArgsMatch(args)) {
+      continue;
+    }
+
+    if (outOper) {
+      throw InvalidInputException("Ambiguous operator"); // TODO!!!
+    }
+
+    outOper = maker.make(std::move(args));
+  }
+
+  if (!outOper) {
+    throw InvalidInputException("Operator args are invalid"); // TODO!!!
+  }
+
+  return outOper.toRef();
+}
+
+SharedRef<IMathObject> Expression::parseFunction(TermStack &argTermsRPN, const FunctionTerm &funcTerm) {
+  SharedRef<IMathObject> parsedArg = parseExpression(argTermsRPN);
+  const auto comma = cast<Comma>(parsedArg);
+  auto funcArgs = comma ? comma->toFunctionArgs() : std::vector<SharedRef<IMathObject>>{parsedArg};
+
+  SharedPtr<IFunction> outFunc;
+  for (const auto &maker : funcTerm.functionMakers.get()) {
+    if (!maker.doArgsMatch(funcArgs)) {
+      continue;
+    }
+
+    if (outFunc) {
+      throw InvalidInputException("Ambiguous function"); // TODO!!!
+    }
+
+    outFunc = maker.make(std::move(funcArgs));
+  }
+
+  if (!outFunc) {
+    throw InvalidInputException("Function args are invalid"); // TODO!!!
+  }
+
+  return outFunc.toRef();
+}
+
+std::optional<OperatorPriority> Expression::getOperatorPriority(const IFunction::FunctionMakers &functionMakers) {
+  std::optional<OperatorPriority> outPriority;
+
+  for (const auto &maker : functionMakers) {
+    const IFunction::Declaration &decl = maker.getDeclaration();
+    if (decl.operatorDeclaration && (!outPriority || *outPriority < decl.operatorDeclaration->priority)) {
+      outPriority = decl.operatorDeclaration->priority;
     }
   }
 
-  return {};
+  return outPriority;
 }
 
-Term Expression::parseTerm(const std::string &str) {
-  static auto termValueParser = [] {
-    Parser<std::unique_ptr<IMathObject>> parser;
-    parser.registerType<IFunction>();
-    parser.registerType<ILiteral>();
-    parser.registerType<INumber>();
-    return parser;
-  }();
-
-  Term term = {str, {}};
-
-  if (auto termValue = termValueParser.parseFirst(str)) {
-    term.value = std::move(*termValue);
-  }
-
-  return term;
-}
-
-void Expression::moveFunctionTermsToObjects(ObjectStack &objects, std::stack<FunctionTerm> &functions, const IOperator *nextOper) {
-  if (isPrefixOperator(nextOper)) {
+void Expression::moveFunctionTerms(TermStack &outTermStack, FunctionTermStack &functionTermStack, const FunctionTerm *nextFunctionTerm) {
+  if (nextFunctionTerm && nextFunctionTerm->operatorPriority == OperatorPriority::PrefixUnary) {
     return;
   }
 
-  while (!functions.empty() &&
-         functions.top().term.name != "(" &&
-         (!nextOper ||
-          !functions.top().priority ||
-          *functions.top().priority <= nextOper->getPriority())) {
+  while (!functionTermStack.empty() &&
+         functionTermStack.top() &&
+         (!nextFunctionTerm ||
+          !functionTermStack.top()->operatorPriority ||
+          *functionTermStack.top()->operatorPriority <= nextFunctionTerm->operatorPriority)) {
 
-    objects.emplace(std::move(functions.top().term.value));
-    functions.pop();
+    outTermStack.emplace(std::move(*functionTermStack.top()));
+    functionTermStack.pop();
   }
 }
 
-void Expression::insertMultiplications(TermVector &terms) {
-  static const ArgumentPtr mul = MulOper{}.clone();
+// void Expression::insertMultiplications(TermVector &terms) {
+//   static const ArgumentPtr mul = MulOper{}.clone();
 
-  for (size_t i = 1; i < terms.size(); i++) {
-    if (canNextTermBeBinaryOperator(terms[i - 1]) &&
-        canPrevTermBeBinaryOperator(terms[i])) {
+//   for (size_t i = 1; i < terms.size(); i++) {
+//     if (canNextTermBeBinaryOperator(terms[i - 1]) &&
+//         canPrevTermBeBinaryOperator(terms[i])) {
 
-      Term term(mul->toString(), mul->clone());
-      terms.insert(terms.begin() + static_cast<ptrdiff_t>(i), std::move(term));
-      i++;
-    }
-  }
-}
+//       Term term(mul->toString(), mul->clone());
+//       terms.insert(terms.begin() + static_cast<ptrdiff_t>(i), std::move(term));
+//       i++;
+//     }
+//   }
+// }
 
-void Expression::fixOperatorTypes(TermVector &terms) {
-  if (auto &term = terms.front();
-      is<IOperator>(term.value) &&
-      !isPrefixOperator(term.value.get())) {
+// void Expression::fixOperatorTypes(TermVector &terms) {
+//   if (auto &term = terms.front();
+//       is<IOperator>(term.value) &&
+//       !isPrefixOperator(term.value.get())) {
 
-    term.value = findOperator(term.name, IOperator::Priority::PrefixUnary);
+//     term.value = findOperator(term.name, IOperator::Priority::PrefixUnary);
 
-    if (!term.value) {
-      throw InvalidInputException(fmt::format(
-          R"(incomplite expression with operator "{}")",
-          term.name));
-    }
-  }
+//     if (!term.value) {
+//       throw InvalidInputException(fmt::format(
+//         R"(incomplite expression with operator "{}")",
+//         term.name
+//       ));
+//     }
+//   }
 
-  if (auto &term = terms.back();
-      is<IOperator>(term.value) &&
-      !isPostfixOperator(term.value.get())) {
+//   if (auto &term = terms.back();
+//       is<IOperator>(term.value) &&
+//       !isPostfixOperator(term.value.get())) {
 
-    term.value = findOperator(term.name, IOperator::Priority::PostfixUnary);
+//     term.value = findOperator(term.name, IOperator::Priority::PostfixUnary);
 
-    if (!term.value) {
-      throw InvalidInputException(fmt::format(
-          R"(incomplite expression with operator "{}")",
-          term.name));
-    }
-  }
+//     if (!term.value) {
+//       throw InvalidInputException(fmt::format(
+//         R"(incomplite expression with operator "{}")",
+//         term.name
+//       ));
+//     }
+//   }
 
-  if (terms.size() < 3) {
-    return;
-  }
+//   if (terms.size() < 3) {
+//     return;
+//   }
 
-  for (size_t i = 1; i + 1 < terms.size(); i++) {
-    auto &term = terms[i];
-    const auto &termPrev = terms[i - 1];
+//   for (size_t i = 1; i + 1 < terms.size(); i++) {
+//     auto &term = terms[i];
+//     const auto &termPrev = terms[i - 1];
 
-    if (is<IOperator>(term.value) &&
-        !isPrefixOperator(term.value.get()) &&
-        !canNextTermBeBinaryOperator(termPrev)) {
+//     if (is<IOperator>(term.value) &&
+//         !isPrefixOperator(term.value.get()) &&
+//         !canNextTermBeBinaryOperator(termPrev)) {
 
-      term.value = findOperator(term.name, IOperator::Priority::PrefixUnary);
+//       term.value = findOperator(term.name, IOperator::Priority::PrefixUnary);
 
-      if (!term.value) {
-        throw InvalidInputException(fmt::format(
-            R"(incomplite expression with operator "{}")",
-            term.name));
-      }
-    }
-  }
+//       if (!term.value) {
+//         throw InvalidInputException(fmt::format(
+//           R"(incomplite expression with operator "{}")",
+//           term.name
+//         ));
+//       }
+//     }
+//   }
 
-  for (size_t i = terms.size() - 2; i > 0; i--) {
-    auto &term = terms[i];
-    const auto &termNext = terms[i + 1];
+//   for (size_t i = terms.size() - 2; i > 0; i--) {
+//     auto &term = terms[i];
+//     const auto &termNext = terms[i + 1];
 
-    if (is<IOperator>(term.value) &&
-        !isPostfixOperator(term.value.get()) &&
-        !canPrevTermBeBinaryOperator(termNext)) {
+//     if (is<IOperator>(term.value) &&
+//         !isPostfixOperator(term.value.get()) &&
+//         !canPrevTermBeBinaryOperator(termNext)) {
 
-      term.value = findOperator(term.name, IOperator::Priority::PostfixUnary);
+//       term.value = findOperator(term.name, IOperator::Priority::PostfixUnary);
 
-      if (!term.value) {
-        throw InvalidInputException(fmt::format(
-            R"(incomplite expression with operator "{}")",
-            term.name));
-      }
-    }
-  }
-}
+//       if (!term.value) {
+//         throw InvalidInputException(fmt::format(
+//           R"(incomplite expression with operator "{}")",
+//           term.name
+//         ));
+//       }
+//     }
+//   }
+// }
 
-void Expression::collapseFactorials(TermVector &terms) {
-  for (size_t i = 1; i + 1 < terms.size(); i++) {
-    auto &term = terms[i];
-    const auto &termNext = terms[i + 1];
+// void Expression::collapseFactorials(TermVector &terms) {
+//   for (size_t i = 1; i + 1 < terms.size(); i++) {
+//     auto &term = terms[i];
+//     const auto &termNext = terms[i + 1];
 
-    if (is<Factorial>(term.value) && is<Factorial>(termNext.value)) {
-      const auto &oldFactorial = cast<Factorial>(*term.value);
-      term.value = Factorial(oldFactorial.getOrder() + 1).clone();
+//     if (is<Factorial>(term.value) && is<Factorial>(termNext.value)) {
+//       const auto &oldFactorial = cast<Factorial>(*term.value);
+//       term.value = Factorial(oldFactorial.getOrder() + 1).clone();
 
-      terms.erase(terms.begin() + static_cast<ptrdiff_t>(i) + 1);
-      i--;
-    }
-  }
-}
+//       terms.erase(terms.begin() + static_cast<ptrdiff_t>(i) + 1);
+//       i--;
+//     }
+//   }
+// }
 
-bool Expression::canNextTermBeBinaryOperator(const Term &term) {
-  return !(isPrefixOperator(term.value.get()) ||
-           isBinaryOperator(term.value.get()) ||
-           isNonOperatorFunction(term.value.get()) ||
-           term.name == "(" ||
-           term.name == ",");
-}
+// bool Expression::canNextTermBeBinaryOperator(const Term &term) {
+//   return !(isPrefixOperator(term.value.get()) || isBinaryOperator(term.value.get()) || isNonOperatorFunction(term.value.get()) || term.name == "(" || term.name == ",");
+// }
 
-bool Expression::canPrevTermBeBinaryOperator(const Term &term) {
-  return !(isPostfixOperator(term.value.get()) ||
-           isBinaryOperator(term.value.get()) ||
-           term.name == ")" ||
-           term.name == ",");
-}
+// bool Expression::canPrevTermBeBinaryOperator(const Term &term) {
+//   return !(isPostfixOperator(term.value.get()) || isBinaryOperator(term.value.get()) || term.name == ")" || term.name == ",");
+// }
 
-bool Expression::isBinaryOperator(const IMathObject *val) {
-  const auto *oper = cast<IOperator>(val);
-  return oper && oper->getArgumentClasses().size() == 2;
-}
+// bool Expression::isBinaryOperator(const IMathObject *val) {
+//   const auto *oper = cast<IOperator>(val);
+//   return oper && oper->getArgumentClasses().size() == 2;
+// }
 
-bool Expression::isPrefixOperator(const IMathObject *val) {
-  const auto *oper = cast<IOperator>(val);
-  return oper && oper->getPriority() == IOperator::Priority::PrefixUnary;
-}
+// bool Expression::isPrefixOperator(const IMathObject *val) {
+//   const auto *oper = cast<IOperator>(val);
+//   return oper && oper->getPriority() == IOperator::Priority::PrefixUnary;
+// }
 
-bool Expression::isPostfixOperator(const IMathObject *val) {
-  const auto *oper = cast<IOperator>(val);
-  return oper && oper->getPriority() == IOperator::Priority::PostfixUnary;
-}
+// bool Expression::isPostfixOperator(const IMathObject *val) {
+//   const auto *oper = cast<IOperator>(val);
+//   return oper && oper->getPriority() == IOperator::Priority::PostfixUnary;
+// }
 
-bool Expression::isNonOperatorFunction(const IMathObject *val) {
-  return is<IFunction>(val) && !is<IOperator>(val);
-}
+// bool Expression::isNonOperatorFunction(const IMathObject *val) {
+//   return is<IFunction>(val) && !is<IOperator>(val);
+// }
 
-ArgumentPtrVector Expression::unwrapComma(const ArgumentPtr &child) {
-  if (const auto childExpr = cast<IExpression>(child);
-      childExpr &&
-      is<Comma>(childExpr->getFunction())) {
-
-    const ArgumentPtr &lhs = childExpr->getChildren().front();
-    const ArgumentPtr &rhs = childExpr->getChildren().back();
-
-    ArgumentPtrVector children = unwrapComma(lhs);
-    children.push_back(rhs);
-    return children;
+std::vector<SharedRef<IMathObject>> Expression::unwrappComma(SharedRef<IMathObject> inArg) {
+  if (const auto comma = cast<Comma>(inArg)) {
+    return comma->toFunctionArgs();
   }
 
-  return {child};
-}
-
-ArgumentPtr Expression::compress(const ArgumentPtr &child) {
-  if (const auto expr = cast<Expression>(child)) {
-    return expr->child;
-  }
-
-  return child;
-}
-
-Expression::ExpressionMaker &Expression::getExpressionMaker() {
-  static ExpressionMaker map;
-  return map;
-}
-
-void Expression::validateFunctionArgs(const IFunction &func, const ArgumentPtrVector &args) {
-  const ArgumentTypeVector &expectedArgTypes = func.getArgumentClasses();
-
-  if (args.size() != expectedArgTypes.size()) {
-    if (!func.isVariadic()) {
-      throw InvalidInputException(fmt::format(
-          R"(Unable to call {} "{}" with {} argument{} (expected {}))",
-          func.getClass()->getName(),
-          func.toString(),
-          args.size(),
-          args.size() != 1 ? "s" : "",
-          func.getArgumentClasses().size()));
-    }
-
-    if (args.empty()) {
-      throw InvalidInputException(fmt::format(
-          R"(Unable to call {} "{}" with 0 arguments (expected > 0))",
-          func.getClass()->getName(),
-          func.toString()));
-    }
-  }
-
-  const bool doesArgSizeMatch = !func.isVariadic() && args.size() == expectedArgTypes.size();
-  MathObjectClass expectedClass = expectedArgTypes.front();
-
-  for (size_t i = 0; i < args.size(); i++) {
-    const ArgumentPtr &arg = args[i];
-
-    if (doesArgSizeMatch) {
-      expectedClass = expectedArgTypes[i];
-    }
-
-    if (auto [argClass, doesMatch] = doesArgMatch(expectedClass, arg); !doesMatch) {
-      throw InvalidInputException(fmt::format(
-          R"(Unable to call {} "{}" with argument #{} {} "{}" (expected {}))",
-          func.getClass()->getName(),
-          func.toString(),
-          i,
-          argClass->getName(),
-          arg->toString(),
-          expectedClass->getName()));
-    }
-  }
-}
-
-std::pair<MathObjectClass, bool> Expression::doesArgMatch(const MathObjectClass &expectedClass, const ArgumentPtr &arg) {
-  if (const auto childExpr = cast<IExpression>(arg)) {
-    const MathObjectClass argReturnClass = childExpr->getFunction()->getReturnClass();
-
-    if (argReturnClass != Variable::getClassStatic() &&
-        !is(expectedClass, argReturnClass) &&
-        !is(argReturnClass, expectedClass)) {
-
-      return {argReturnClass, false};
-    }
-  }
-  else if (const auto argConst = cast<IConstant>(arg)) {
-    if (const MathObjectClass argReturnClass = argConst->getReturnClass();
-        !is(expectedClass, argReturnClass) &&
-        !is(argReturnClass, expectedClass)) {
-
-      return {argReturnClass, false};
-    }
-  }
-  else {
-    if (const MathObjectClass argClass = arg->getClass();
-        argClass != Variable::getClassStatic() &&
-        !is(expectedClass, argClass)) {
-
-      return {argClass, false};
-    }
-  }
-
-  return {arg->getClass(), true};
-}
-
-namespace detail {
-
-std::unique_ptr<IMathObject> makeExpr(const IFunction &func, ArgumentPtrVector args) {
-  if (func.isVariadic() && args.size() == 1) {
-    return std::move(args.front())->clone();
-  }
-
-  if (const auto strToConstr = Expression::getExpressionMaker().find(func.getClass());
-      strToConstr != Expression::getExpressionMaker().end()) {
-
-    if (auto expr = strToConstr->second(std::move(args))) {
-      return expr;
-    }
-  }
-
-  return FunctionExpression(func, std::move(args)).clone();
-}
-
-std::unique_ptr<IMathObject> makeExprWithValidation(const IFunction &func, ArgumentPtrVector args) {
-  std::ranges::transform(args, args.begin(), &Expression::compress);
-  Expression::validateFunctionArgs(func, args);
-  return makeExpr(func, std::move(args));
-}
-
+  return {std::move(inArg)};
 }
 
 }

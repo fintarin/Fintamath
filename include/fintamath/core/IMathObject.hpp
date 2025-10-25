@@ -1,66 +1,77 @@
 #pragma once
 
-#include <concepts>
-#include <memory>
 #include <ostream>
 #include <string>
-#include <utility>
 
-#include "fintamath/core/Converter.hpp"
-#include "fintamath/core/MathObjectBody.hpp"
+#include "fintamath/core/CoreUtils.hpp"
+#include "fintamath/core/InterfaceBody.hpp"
 #include "fintamath/core/MathObjectClass.hpp"
-#include "fintamath/core/MathObjectUtils.hpp"
-#include "fintamath/core/None.hpp"
-#include "fintamath/core/Parser.hpp"
+#include "fintamath/core/Pointers.hpp"
 
 namespace fintamath {
 
 class IMathObject {
-  FINTAMATH_PARENT_CLASS_BODY(IMathObject, None)
+  FINTAMATH_INTERFACE_BODY(IMathObject, std::nullptr_t)
 
 public:
-  virtual ~IMathObject() noexcept = default;
+  virtual ~IMathObject() = default;
 
-  virtual std::unique_ptr<IMathObject> clone() const & = 0;
+  virtual constexpr MathObjectClass getClass() const noexcept = 0;
 
-  virtual std::unique_ptr<IMathObject> clone() && = 0;
+  virtual std::string toString() const noexcept;
 
-  virtual std::string toString() const {
-    return std::string(getClass()->getName());
-  }
+  virtual UniqueRef<IMathObject> cloneSelf() const & noexcept = 0;
 
-  virtual std::unique_ptr<IMathObject> toMinimalObject() const {
-    return clone();
-  }
+  virtual UniqueRef<IMathObject> cloneSelf() && noexcept = 0;
 
-  virtual MathObjectClass getClass() const noexcept = 0;
+  virtual SharedPtr<IMathObject> unwrappSelf() const noexcept;
 
-  friend bool operator==(const IMathObject &lhs, const IMathObject &rhs) {
-    if (&lhs == &rhs) {
-      return true;
-    }
+  template <typename T>
+  friend UniqueRef<IMathObject> clone(T &&arg);
 
-    return lhs.equalsAbstract(rhs);
-  }
+  template <typename T>
+  friend SharedRef<IMathObject> unwrapp(T &&arg);
+
+  friend bool equals(const SharedRef<IMathObject> &lhs, const SharedRef<IMathObject> &rhs) noexcept;
 
 protected:
-  virtual bool equalsAbstract(const IMathObject &rhs) const = 0;
+  virtual bool equals(const SharedRef<IMathObject> &self, const SharedRef<IMathObject> &rhs) const noexcept = 0;
+
+  virtual const IMathObject &getDefaultObject() const noexcept = 0;
+
+  virtual void registerDefaultObject() const;
 };
 
-template <typename Derived>
-class IMathObjectCRTP : public IMathObject {
-#define I_MATH_OBJECT_CRTP IMathObjectCRTP
-#include "fintamath/core/IMathObjectCRTP.hpp"
-#undef I_MATH_OBJECT_CRTP
-};
+bool equals(const SharedRef<IMathObject> &lhs, const SharedRef<IMathObject> &rhs) noexcept;
 
-template <std::derived_from<IMathObject> Lhs, ConvertibleToAndNotSameAs<Lhs> Rhs>
-bool operator==(const Lhs &lhs, const Rhs &rhs) {
-  return lhs == Lhs(rhs);
+std::ostream &operator<<(std::ostream &out, const IMathObject &rhs);
+
+template <typename T>
+UniqueRef<IMathObject> clone(T &&arg) {
+  if constexpr (detail::IsSmartReference<T>) {
+    return std::forward<T>(arg)->cloneSelf();
+  }
+  else {
+    return std::forward<T>(arg).cloneSelf();
+  }
 }
 
-inline std::ostream &operator<<(std::ostream &out, const IMathObject &rhs) {
-  return out << rhs.toString();
+template <typename T>
+SharedRef<IMathObject> unwrapp(T &&arg) {
+  if constexpr (detail::IsSmartReference<T>) {
+    if (auto unwrapped = arg->unwrappSelf()) {
+      return unwrapped.toRef();
+    }
+
+    return std::forward<T>(arg);
+  }
+  else {
+    if (auto unwrapped = arg.unwrappSelf()) {
+      return unwrapped.toRef();
+    }
+
+    return std::forward<T>(arg).cloneSelf();
+  }
 }
 
 }

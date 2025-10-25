@@ -1,6 +1,7 @@
 #include <benchmark/benchmark.h>
 
-#include "fintamath/literals/constants/IConstant.hpp"
+#include "fintamath/constants/IConstant.hpp"
+#include "fintamath/core/MathObjectUtils.hpp"
 #include "fintamath/numbers/Integer.hpp"
 
 using namespace fintamath;
@@ -27,7 +28,7 @@ static void BM_DynamicCast(benchmark::State &state) {
   }
 }
 
-BENCHMARK(BM_FintamathCast);
-BENCHMARK(BM_DynamicCast);
+BENCHMARK(BM_FintamathCast)->Unit(benchmark::TimeUnit::kNanosecond);
+BENCHMARK(BM_DynamicCast)->Unit(benchmark::TimeUnit::kNanosecond);
 
 BENCHMARK_MAIN();

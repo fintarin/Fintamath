@@ -1,25 +1,21 @@
 #include "fintamath/functions/arithmetic/Add.hpp"
 
-#include <memory>
-#include <ranges>
-
-#include "fintamath/core/IArithmetic.hpp"
-#include "fintamath/core/IMathObject.hpp"
-#include "fintamath/core/MathObjectUtils.hpp"
-#include "fintamath/functions/FunctionArguments.hpp"
+#include "fintamath/numbers/INumber.hpp"
 
 namespace fintamath {
 
-FINTAMATH_CLASS_IMPLEMENTATION(Add)
-
-std::unique_ptr<IMathObject> Add::call(const ArgumentRefVector &argVect) const {
-  auto res = cast<IArithmetic>(argVect.front().get().clone());
-
-  for (const auto &arg : argVect | std::views::drop(1)) {
-    res = *res + cast<IArithmetic>(arg.get());
+FINTAMATH_FUNCTION_CLASS_IMPLEMENTATION(
+  Add,
+  {
+    .name = "+",
+    .argClasses = {INumber::getClassStatic()},
+    .returnClass = INumber::getClassStatic(),
+    .operatorDeclaration = OperatorDeclaration{
+      .priority = OperatorPriority::Addition,
+      .isAssociative = true,
+    },
+    .isVariadic = true,
   }
-
-  return res;
-}
+)
 
 }
