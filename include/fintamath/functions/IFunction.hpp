@@ -5,6 +5,7 @@
 
 #include <functional>
 #include <optional>
+#include <span>
 #include <unordered_map>
 
 namespace fintamath {
@@ -36,6 +37,12 @@ class IFunction : public IMathObject {
   FINTAMATH_INTERFACE_BODY(IFunction, IMathObject)
 
 public:
+  using ArgSpan = std::span<const SharedRef<IMathObject>>;
+
+  using ArgSpanMutable = std::span<SharedRef<IMathObject>>;
+
+  using ArgVector = std::vector<SharedRef<IMathObject>>;
+
   struct OperatorDeclaration {
     OperatorPriority priority = OperatorPriority::Exponentiation;
     bool isAssociative = false;
@@ -43,21 +50,19 @@ public:
 
   struct Declaration {
     std::string name;
-    std::vector<MathObjectClass> argumentClasses;
+    std::vector<MathObjectClass> argClasses;
     MathObjectClass returnClass = nullptr;
     std::optional<OperatorDeclaration> operatorDeclaration = std::nullopt;
     bool isVariadic = false;
   };
 
-  using Arguments = std::vector<SharedRef<IMathObject>>;
-
   class FunctionMaker {
   public:
     FunctionMaker(const IFunction &inDefaultFunc);
 
-    SharedRef<IFunction> make(Arguments inArgs) const;
+    SharedRef<IFunction> make(ArgVector args) const;
 
-    bool doArgumentsMatch(const Arguments &inArgs) const noexcept;
+    bool doArgsMatch(ArgSpan args) const noexcept;
 
     const Declaration &getDeclaration() const noexcept;
 
@@ -70,15 +75,11 @@ public:
   using FunctionMakers = std::vector<FunctionMaker>;
 
 public:
-  IFunction() = default;
-
-  explicit IFunction(const Declaration &inDeclaration, Arguments inArgs);
-
   virtual const Declaration &getDeclaration() const noexcept = 0;
 
-  std::string toString() const noexcept override;
+  virtual ArgSpan getArgs() const noexcept = 0;
 
-  const Arguments &getArguments() const noexcept;
+  std::string toString() const noexcept override;
 
   static const FunctionMakers *parseFunctionMakers(const std::string &str);
 
@@ -87,11 +88,15 @@ public:
   static void solve(SharedRef<IMathObject> &arg);
 
   static void approximate(SharedRef<IMathObject> &arg);
-
+  
 protected:
-  virtual SharedRef<IFunction> makeSelf(Arguments inArgs) const = 0;
+  IFunction() = default;
 
-  virtual SharedPtr<IMathObject> compressSelf() const;
+  explicit IFunction(const Declaration &inDeclaration, ArgSpan inArgs);
+
+  virtual SharedRef<IFunction> makeSelf(ArgVector args) const = 0;
+
+  virtual SharedRef<IFunction> makeSelf(ArgSpan args) const = 0;
 
   virtual SharedPtr<IMathObject> preSimplifySelf() const;
 
@@ -111,104 +116,58 @@ private:
 private:
   bool hasUndefined() const noexcept;
 
-  static bool doArgumentsMatch(const Declaration &decl, const Arguments &args) noexcept;
+  static bool doArgsMatch(const Declaration &decl, const ArgSpan &args) noexcept;
 
-  static bool doArgumentsMatchNonVariadic(const Declaration &decl, const Arguments &args) noexcept;
+  static bool doArgsMatchNonVariadic(const Declaration &decl, const ArgSpan &args) noexcept;
 
-  static bool doArgumentsMatchVariadic(const Declaration &decl, const Arguments &args) noexcept;
+  static bool doArgsMatchVariadic(const Declaration &decl, const ArgSpan &args) noexcept;
 
-  static bool doesArgumentMatch(MathObjectClass expectedClass, const SharedRef<IMathObject> &arg) noexcept;
-
-  static Arguments unwrappArguments(Arguments args) noexcept;
-
-  static void compress(SharedRef<IMathObject> &arg);
+  static bool doesArgMatch(MathObjectClass expectedClass, const SharedRef<IMathObject> &arg) noexcept;
 
   static void preSimplify(SharedRef<IMathObject> &arg);
 
   template <typename ModifySelfCallback, typename ModifyCallback, typename PreviousModifyCallback>
   static void modify(SharedRef<IMathObject> &arg, const ModifySelfCallback &modifySelf, const ModifyCallback &modify, const PreviousModifyCallback &prevModify, FunctionState stateAfterModify);
 
-  template <typename ModifyCallback>
-  static void modifyFunctionArguments(SharedRef<IFunction> &func, const ModifyCallback &modify);
-
   static NameToFunctionMakersMap &getNameToFunctionMakersMap();
 
 private:
-  Arguments args;
-
   mutable FunctionState state = FunctionState::Raw;
-
-  static std::mutex modifyStateMutex;
 };
 
 template <std::derived_from<IFunction> T>
-SharedRef<T> makeShared(std::initializer_list<IFunction::Arguments::value_type> inArgs) {
-  return makeShared<T>(IFunction::Arguments(inArgs));
+SharedRef<T> makeShared(typename T::Args args) {
+  return makeShared<T>(T(std::move(args)));
 }
 
 template <typename ModifySelfCallback, typename ModifyCallback, typename PreviousModifyCallback>
 inline void IFunction::modify(SharedRef<IMathObject> &arg, const ModifySelfCallback &modifySelf, const ModifyCallback &modify, const PreviousModifyCallback &prevModify, FunctionState stateAfterModify) {
-  auto funcPtr = cast<IFunction>(arg);
-  if (!funcPtr || funcPtr->state >= stateAfterModify) {
+  auto func = cast<IFunction>(arg);
+  if (func && func->state >= stateAfterModify) {
     return;
   }
 
   prevModify(arg);
 
-  if (arg != funcPtr) {
-    funcPtr = cast<IFunction>(arg);
-
-    if (!funcPtr) {
-      return;
-    }
-  }
-
-  auto func = std::move(funcPtr).toRef();
-  modifyFunctionArguments(func, modify);
-  arg = func;
-
-  if (auto resPtr = modifySelf(*func)) {
-    auto res = std::move(resPtr).toRef();
-    modify(res);
-    arg = std::move(res);
-  }
-  else {
-    const std::lock_guard lock(modifyStateMutex);
-    func->state = std::max(stateAfterModify, func->state);
-  }
-}
-
-template <typename ModifyCallback>
-inline void IFunction::modifyFunctionArguments(SharedRef<IFunction> &func, const ModifyCallback &modify) {
-  const Arguments &oldArgs = func->getArguments();
-  std::optional<Arguments> newArgsFound;
-  size_t argIndex = 0;
-
-  for (; argIndex < oldArgs.size(); argIndex++) {
-    const SharedRef<IMathObject> &oldArg = oldArgs[argIndex];
-    SharedRef<IMathObject> newArg = oldArg;
-    modify(newArg);
-
-    if (newArg != oldArg) {
-      newArgsFound = oldArgs;
-      (*newArgsFound)[argIndex] = newArg;
-      break;
-    }
-  }
-
-  if (!newArgsFound) {
+  if (!func) {
     return;
   }
 
-  Arguments &newArgs = *newArgsFound;
+  for (;;) {
+    func = cast<IFunction>(arg);
+    if (!func) {
+      modify(arg);
+      break;
+    }
 
-  argIndex++;
+    SharedPtr<IMathObject> res = modifySelf(*func);
+    if (!res) {
+      func->state = stateAfterModify;
+      break;
+    }
 
-  for (; argIndex < newArgs.size(); argIndex++) {
-    modify(newArgs[argIndex]);
+    arg = res.toRef();
   }
-
-  func = func->makeSelf(std::move(newArgs));
 }
 
 }

@@ -9,14 +9,14 @@ FINTAMATH_FUNCTION_CLASS_IMPLEMENTATION(
   AddF,
   {
     .name = "add",
-    .argumentClasses = {INumber::getClassStatic()},
+    .argClasses = {INumber::getClassStatic()},
     .returnClass = INumber::getClassStatic(),
     .isVariadic = true,
   }
 )
 
 SharedPtr<IMathObject> AddF::preSimplifySelf() const {
-  return makeShared<Add>(getArguments());
+  return makeShared<Add>(getArgs());
 }
 
 }

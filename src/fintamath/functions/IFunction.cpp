@@ -16,20 +16,18 @@
 
 namespace fintamath {
 
-std::mutex IFunction::modifyStateMutex;
-
 FINTAMATH_INTERFACE_IMPLEMENTATION(IFunction)
 
 IFunction::FunctionMaker::FunctionMaker(const IFunction &inDefaultFunc)
     : defaultFunc(inDefaultFunc) {
 }
 
-SharedRef<IFunction> IFunction::FunctionMaker::make(Arguments inArgs) const {
+SharedRef<IFunction> IFunction::FunctionMaker::make(ArgVector inArgs) const {
   return defaultFunc.get().makeSelf(std::move(inArgs));
 }
 
-bool IFunction::FunctionMaker::doArgumentsMatch(const Arguments &inArgs) const noexcept {
-  return IFunction::doArgumentsMatch(getDeclaration(), inArgs);
+bool IFunction::FunctionMaker::doArgsMatch(ArgSpan inArgs) const noexcept {
+  return IFunction::doArgsMatch(getDeclaration(), inArgs);
 }
 
 const IFunction::Declaration &IFunction::FunctionMaker::getDeclaration() const noexcept {
@@ -40,10 +38,8 @@ MathObjectClass IFunction::FunctionMaker::getClass() const noexcept {
   return defaultFunc.get().getClass();
 }
 
-IFunction::IFunction(const Declaration &inDeclaration, Arguments inArgs)
-    : args(unwrappArguments(std::move(inArgs))) {
-
-  if (!doArgumentsMatch(inDeclaration, args)) {
+IFunction::IFunction(const Declaration &inDeclaration, ArgSpan inArgs) {
+  if (!doArgsMatch(inDeclaration, inArgs)) {
     throw InvalidInputException("Invalid args"); // TODO!!!
   }
 }
@@ -56,29 +52,17 @@ std::string IFunction::toString() const noexcept {
 
   std::string outStr = std::move(name);
 
-  for (const auto &arg : getArguments()) {
+  for (const auto &arg : getArgs()) {
     outStr += " " + arg->toString();
   }
 
   return "(" + outStr + ")";
 }
 
-const IFunction::Arguments &IFunction::getArguments() const noexcept {
-  return args;
-}
-
 const IFunction::FunctionMakers *IFunction::parseFunctionMakers(const std::string &str) {
   const NameToFunctionMakersMap &nameToMakersMap = getNameToFunctionMakersMap();
   const auto iter = nameToMakersMap.find(str);
   return iter != nameToMakersMap.end() ? &iter->second : nullptr;
-}
-
-void IFunction::compress(SharedRef<IMathObject> &arg) {
-  if (auto func = cast<IFunction>(arg)) {
-    if (auto compressed = func->compressSelf()) {
-      arg = compressed.toRef();
-    }
-  }
 }
 
 void IFunction::preSimplify(SharedRef<IMathObject> &arg) {
@@ -93,7 +77,7 @@ void IFunction::preSimplify(SharedRef<IMathObject> &arg) {
     arg,
     preSimplifySelfCallback,
     &preSimplify,
-    compress,
+    [](const SharedRef<IMathObject> &) {},
     FunctionState::PreSimplify
   );
 }
@@ -140,10 +124,6 @@ void IFunction::approximate(SharedRef<IMathObject> &arg) {
   );
 }
 
-SharedPtr<IMathObject> IFunction::compressSelf() const {
-  return nullptr;
-}
-
 SharedPtr<IMathObject> IFunction::preSimplifySelf() const {
   return nullptr;
 }
@@ -161,11 +141,11 @@ SharedPtr<IMathObject> IFunction::approximateSelf() const {
 }
 
 bool IFunction::equals(const SharedRef<IMathObject> & /*self*/, const SharedRef<IMathObject> &rhs) const noexcept {
+  using detail::areContainersEqual;
   using fintamath::equals;
 
   if (const auto rhsFunc = cast<IFunction>(rhs)) {
-    return getClass() == rhsFunc->getClass() &&
-           detail::areContainersEqual(args, rhsFunc->args, &equals);
+    return getClass() == rhsFunc->getClass() && areContainersEqual(getArgs(), rhsFunc->getArgs(), &equals);
   }
 
   return false;
@@ -174,7 +154,7 @@ bool IFunction::equals(const SharedRef<IMathObject> & /*self*/, const SharedRef<
 void IFunction::registerDefaultObject() const {
   const Declaration &decl = getDeclaration();
 
-  assert(!decl.name.empty() && decl.returnClass && !decl.argumentClasses.empty());
+  assert(!decl.name.empty() && decl.returnClass && !decl.argClasses.empty());
 
   detail::Tokenizer::registerToken(decl.name);
 
@@ -183,6 +163,7 @@ void IFunction::registerDefaultObject() const {
 }
 
 bool IFunction::hasUndefined() const noexcept {
+  const auto args = getArgs();
   return std::ranges::find_if(
            args,
            [](const auto &selfArg) {
@@ -191,18 +172,18 @@ bool IFunction::hasUndefined() const noexcept {
          ) != args.end();
 }
 
-bool IFunction::doArgumentsMatch(const Declaration &decl, const Arguments &args) noexcept {
-  return decl.isVariadic ? doArgumentsMatchVariadic(decl, args)
-                         : doArgumentsMatchNonVariadic(decl, args);
+bool IFunction::doArgsMatch(const Declaration &decl, const ArgSpan &args) noexcept {
+  return decl.isVariadic ? doArgsMatchVariadic(decl, args)
+                         : doArgsMatchNonVariadic(decl, args);
 }
 
-bool IFunction::doArgumentsMatchNonVariadic(const Declaration &decl, const Arguments &args) noexcept {
-  if (decl.argumentClasses.size() != args.size()) {
+bool IFunction::doArgsMatchNonVariadic(const Declaration &decl, const ArgSpan &args) noexcept {
+  if (decl.argClasses.size() != args.size()) {
     return false;
   }
 
   for (size_t i = 0; i < args.size(); i++) {
-    if (!doesArgumentMatch(decl.argumentClasses[i], args[i])) {
+    if (!doesArgMatch(decl.argClasses[i], args[i])) {
       return false;
     }
   }
@@ -210,19 +191,19 @@ bool IFunction::doArgumentsMatchNonVariadic(const Declaration &decl, const Argum
   return true;
 }
 
-bool IFunction::doArgumentsMatchVariadic(const Declaration &decl, const Arguments &args) noexcept {
+bool IFunction::doArgsMatchVariadic(const Declaration &decl, const ArgSpan &args) noexcept {
   if (args.empty()) {
     return false;
   }
 
   return std::ranges::all_of(args, [&decl](const SharedRef<IMathObject> &arg) {
-    return std::ranges::all_of(decl.argumentClasses, [&arg](MathObjectClass expectedClass) {
-      return doesArgumentMatch(expectedClass, arg);
+    return std::ranges::all_of(decl.argClasses, [&arg](MathObjectClass expectedClass) {
+      return doesArgMatch(expectedClass, arg);
     });
   });
 }
 
-bool IFunction::doesArgumentMatch(MathObjectClass expectedClass, const SharedRef<IMathObject> &arg) noexcept {
+bool IFunction::doesArgMatch(MathObjectClass expectedClass, const SharedRef<IMathObject> &arg) noexcept {
   const MathObjectClass argClass = arg->getClass();
 
   if (is(expectedClass, argClass) || is<Variable>(argClass)) {
@@ -238,14 +219,6 @@ bool IFunction::doesArgumentMatch(MathObjectClass expectedClass, const SharedRef
   }
 
   return false;
-}
-
-IFunction::Arguments IFunction::unwrappArguments(Arguments args) noexcept {
-  for (auto &arg : args) {
-    arg = unwrapp(arg);
-  }
-
-  return args;
 }
 
 IFunction::NameToFunctionMakersMap &IFunction::getNameToFunctionMakersMap() {

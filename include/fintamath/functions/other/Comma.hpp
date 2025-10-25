@@ -9,7 +9,7 @@ class Comma : public IFunctionVariadic {
   FINTAMATH_FUNCTION_CLASS_BODY(Comma, IFunctionVariadic)
 
 public:
-  Arguments toFunctionArguments() const;
+  ArgVector toFunctionArgs() const;
 };
 
 }

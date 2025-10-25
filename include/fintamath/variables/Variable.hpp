@@ -10,10 +10,9 @@ namespace fintamath {
 class Variable : public IMathObject, IWithEqualsOperators<Variable> {
   FINTAMATH_CLASS_BODY(Variable, IMathObject)
 
-protected:
+public:
   Variable() = default;
 
-public:
   explicit Variable(std::string_view inName);
 
   explicit Variable(std::string_view inName, Integer inIndex);
@@ -26,7 +25,7 @@ protected:
   bool equals(const Variable &rhs) const noexcept override;
 
 private:
-  std::string name;
+  char name = 'x';
 
   std::optional<Integer> index;
 };

@@ -37,8 +37,6 @@ protected:
   bool equals(const SharedRef<IMathObject> &self, const SharedRef<IMathObject> &rhs) const noexcept override;
 
 private:
-  using Arguments = IFunction::Arguments;
-
   struct FunctionTerm {
     std::reference_wrapper<const IFunction::FunctionMakers> functionMakers;
     std::optional<OperatorPriority> operatorPriority;
@@ -79,7 +77,7 @@ private:
 
   static void moveFunctionTerms(TermStack &outTermStack, FunctionTermStack &functionTermStack, const FunctionTerm *nextFunctionTerm);
 
-  static Arguments unwrappComma(SharedRef<IMathObject> arg);
+  static std::vector<SharedRef<IMathObject>> unwrappComma(SharedRef<IMathObject> arg);
 
 private:
   SharedRef<IMathObject> arg;

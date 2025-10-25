@@ -9,14 +9,18 @@ protected:                                                        \
   Class() = default;                                              \
                                                                   \
 public:                                                           \
-  explicit Class(Arguments inArgs);                               \
+  explicit Class(Args inArgs);                                    \
+                                                                  \
+  explicit Class(ArgSpan inArgs);                                 \
                                                                   \
   const Declaration &getDeclaration() const noexcept override;    \
                                                                   \
   static const Declaration &getDeclarationStatic() noexcept;      \
                                                                   \
 protected:                                                        \
-  SharedRef<IFunction> makeSelf(Arguments inArgs) const override; \
+  SharedRef<IFunction> makeSelf(ArgVector inArgs) const override; \
+                                                                  \
+  SharedRef<IFunction> makeSelf(ArgSpan inArgs) const override;   \
                                                                   \
 private:                                                          \
   FINTAMATH_EXPORT static const Declaration declaration##Class;
@@ -26,8 +30,11 @@ private:                                                          \
                                                                          \
   FINTAMATH_CLASS_IMPLEMENTATION(Class)                                  \
                                                                          \
-  Class::Class(Arguments inArgs)                                         \
+  Class::Class(Args inArgs)                                              \
       : Super(getDeclarationStatic(), std::move(inArgs)) {}              \
+                                                                         \
+  Class::Class(ArgSpan inArgs)                                           \
+      : Super(getDeclarationStatic(), inArgs) {}                         \
                                                                          \
   const IFunction::Declaration &Class::getDeclaration() const noexcept { \
     return declaration##Class;                                           \
@@ -37,6 +44,10 @@ private:                                                          \
     return declaration##Class;                                           \
   }                                                                      \
                                                                          \
-  SharedRef<IFunction> Class::makeSelf(Arguments inArgs) const {         \
+  SharedRef<IFunction> Class::makeSelf(ArgVector inArgs) const {         \
     return makeShared<Class>(std::move(inArgs));                         \
+  }                                                                      \
+                                                                         \
+  SharedRef<IFunction> Class::makeSelf(ArgSpan inArgs) const {           \
+    return makeShared<Class>(inArgs);                                    \
   }

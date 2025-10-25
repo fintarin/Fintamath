@@ -12,13 +12,13 @@ FINTAMATH_FUNCTION_CLASS_IMPLEMENTATION(
   Sin,
   {
     .name = "sin",
-    .argumentClasses = {INumber::getClassStatic()},
+    .argClasses = {INumber::getClassStatic()},
     .returnClass = INumber::getClassStatic(),
   }
 )
 
 SharedPtr<IMathObject> Sin::approximateSelf() const {
-  const auto real = convert<Real>(getArguments().front());
+  const auto real = convert<Real>(getArgs().front());
   if (!real) {
     return nullptr;
   }

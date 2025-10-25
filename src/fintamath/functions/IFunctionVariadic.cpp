@@ -9,6 +9,7 @@
 #include "fintamath/core/MathObjectUtils.hpp"
 #include "fintamath/functions/FunctionUtils.hpp"
 #include "fintamath/functions/IFunction.hpp"
+#include "fintamath/variables/Variable.hpp"
 
 namespace fintamath {
 
@@ -19,22 +20,37 @@ std::string IFunctionVariadic::ArgumentStringData::join() && {
   return delimiter;
 }
 
+IFunctionVariadic::IFunctionVariadic() : args({makeShared<Variable>()}) {
+}
+
+IFunctionVariadic::IFunctionVariadic(const Declaration &inDeclaration, Args inArgs)
+    : IFunction(inDeclaration, inArgs),
+      args(std::move(inArgs)) {
+
+  for (auto &arg : args) {
+    arg = unwrapp(arg);
+  }
+}
+
+IFunctionVariadic::IFunctionVariadic(const Declaration &inDeclaration, ArgSpan inArgs)
+    : IFunctionVariadic(inDeclaration, Args(inArgs.begin(), inArgs.end())) {
+}
+
 std::string IFunctionVariadic::toString() const noexcept {
   const IFunction::Declaration &selfDecl = getDeclaration();
-  const Arguments &selfArgs = getArguments();
 
-  std::string argsStr = getArgumentStringData(selfArgs.front(), nullptr).join();
+  std::string argsStr = getArgumentStringData(args.front(), nullptr).join();
 
   if (!selfDecl.operatorDeclaration) {
-    for (size_t i = 1; i < selfArgs.size(); i++) {
-      argsStr += getArgumentStringData(selfArgs[i], selfArgs[i - 1]).join();
+    for (size_t i = 1; i < args.size(); i++) {
+      argsStr += getArgumentStringData(args[i], args[i - 1]).join();
     }
 
     return fmt::format("{}({})", selfDecl.name, argsStr);
   }
 
-  for (size_t i = 1; i < selfArgs.size(); i++) {
-    argsStr += getArgumentStringData(selfArgs[i], selfArgs[i - 1]).join();
+  for (size_t i = 1; i < args.size(); i++) {
+    argsStr += getArgumentStringData(args[i], args[i - 1]).join();
 
     // TODO!!!
     // if (argStr.size() > 2 && argStr[0] == ' ' && std::isdigit(argStr[1]) && std::isdigit(argsStr.back())) {
@@ -43,6 +59,14 @@ std::string IFunctionVariadic::toString() const noexcept {
   }
 
   return argsStr;
+}
+
+IFunction::ArgSpan IFunctionVariadic::getArgs() const noexcept {
+  return args;
+}
+
+IFunctionVariadic::Args IFunctionVariadic::getArgsVariadic() const noexcept {
+  return args;
 }
 
 IFunctionVariadic::ArgumentStringData IFunctionVariadic::getArgumentStringData(const SharedRef<IMathObject> &arg, const SharedPtr<IMathObject> &prevArg) const {
@@ -68,39 +92,35 @@ IFunctionVariadic::ArgumentStringData IFunctionVariadic::getArgumentStringData(c
   };
 }
 
-IFunctionVariadic::SimplifyFunctions IFunctionVariadic::getFunctionsForPreSimplify() const {
+IFunctionVariadic::ModifyFunctions IFunctionVariadic::getFunctionsForPreSimplify() const {
   return {};
 }
 
-IFunctionVariadic::SimplifyFunctions IFunctionVariadic::getFunctionsForSimplify() const {
+IFunctionVariadic::ModifyFunctions IFunctionVariadic::getFunctionsForSimplify() const {
   return {};
-}
-
-SharedPtr<IMathObject> IFunctionVariadic::compressSelf() const {
-  if (std::optional compressedArgs = compressArguments()) {
-    return makeSelf(std::move(*compressedArgs));
-  }
-  return nullptr;
 }
 
 SharedPtr<IMathObject> IFunctionVariadic::preSimplifySelf() const {
+  std::optional<IFunctionVariadic::Args> compressedArgs = compressArgs();
+  if (compressedArgs) {
+    return makeSelf(std::move(*compressedArgs));
+  }
+
   return nullptr;
 
-  // using detail::useSimplifyFunctions;
-  // return useSimplifyFunctions(getFunctionsForPreSimplify(), getArguments());
+  // using detail::useModifyFunctions;
+  // return useModifyFunctions(getFunctionsForPreSimplify(), getArguments());
 }
 
 SharedPtr<IMathObject> IFunctionVariadic::simplifySelf() const {
   return nullptr;
-  // using detail::useSimplifyFunctions;
-  // return useSimplifyFunctions(getFunctionsForSimplify(), getArguments());
+  // using detail::useModifyFunctions;
+  // return useModifyFunctions(getFunctionsForSimplify(), getArguments());
 }
 
 SharedPtr<IMathObject> IFunctionVariadic::unwrappSelf() const noexcept {
-  const Arguments &selfArgs = getArguments();
-
-  if (selfArgs.size() == 1) {
-    return selfArgs.front();
+  if (args.size() == 1) {
+    return args.front();
   }
 
   return nullptr;
@@ -110,22 +130,21 @@ void IFunctionVariadic::registerDefaultObject() const {
   Super::registerDefaultObject();
 
   [[maybe_unused]] const auto &decl = getDeclaration();
-  assert(decl.argumentClasses.size() == 1 && decl.isVariadic);
+  assert(decl.argClasses.size() == 1 && decl.isVariadic);
 }
 
-std::optional<IFunction::Arguments> IFunctionVariadic::compressArguments() const {
+std::optional<IFunctionVariadic::Args> IFunctionVariadic::compressArgs() const {
   const MathObjectClass selfClass = getClass();
-  const Arguments &selfArgs = getArguments();
-  size_t selfArgIndex = 0;
-  std::optional<Arguments> outArgs;
+  size_t argIndex = 0;
+  std::optional<Args> outArgs;
 
-  for (; selfArgIndex < selfArgs.size(); selfArgIndex++) {
-    const SharedRef<IMathObject> &arg = selfArgs[selfArgIndex];
+  for (; argIndex < args.size(); argIndex++) {
+    const SharedRef<IMathObject> &arg = args[argIndex];
 
     if (is(selfClass, arg->getClass())) {
-      outArgs = Arguments(
-        selfArgs.begin(),
-        selfArgs.begin() + static_cast<ptrdiff_t>(selfArgIndex)
+      outArgs = Args(
+        args.begin(),
+        args.begin() + static_cast<ptrdiff_t>(argIndex)
       );
 
       appendVariadicFunctionArguments(castChecked<IFunction>(*arg), selfClass, *outArgs);
@@ -138,10 +157,10 @@ std::optional<IFunction::Arguments> IFunctionVariadic::compressArguments() const
     return outArgs;
   }
 
-  selfArgIndex++;
+  argIndex++;
 
-  for (; selfArgIndex < selfArgs.size(); selfArgIndex++) {
-    appendVariadicFunctionArgument(selfArgs[selfArgIndex], selfClass, *outArgs);
+  for (; argIndex < args.size(); argIndex++) {
+    appendVariadicFunctionArgument(args[argIndex], selfClass, *outArgs);
   }
 
   return outArgs;
@@ -193,8 +212,8 @@ std::optional<IFunction::Arguments> IFunctionVariadic::compressArguments() const
 //     const bool isResSimplified = res != nullptr;
 
 //     if (!res) {
-//       res = isPostSimplify ? useSimplifyFunctions(getFunctionsForPostSimplify(), *func, children[i - 1], children[i])
-//                            : useSimplifyFunctions(getFunctionsForPreSimplify(), *func, children[i - 1], children[i]);
+//       res = isPostSimplify ? useModifyFunctions(getFunctionsForPostSimplify(), *func, children[i - 1], children[i])
+//                            : useModifyFunctions(getFunctionsForPreSimplify(), *func, children[i - 1], children[i]);
 //     }
 
 //     if (!res) {
@@ -246,15 +265,15 @@ std::optional<IFunction::Arguments> IFunctionVariadic::compressArguments() const
 //   }
 // }
 
-// IFunctionVariadic::SimplifyFunctionVector IFunctionVariadic::getFunctionsForPreSimplify() const {
+// IFunctionVariadic::ModifyFunctionVector IFunctionVariadic::getFunctionsForPreSimplify() const {
 //   return {};
 // }
 
-// IFunctionVariadic::SimplifyFunctionVector IFunctionVariadic::getFunctionsForPostSimplify() const {
+// IFunctionVariadic::ModifyFunctionVector IFunctionVariadic::getFunctionsForPostSimplify() const {
 //   return {};
 // }
 
-void IFunctionVariadic::appendVariadicFunctionArgument(const SharedRef<IMathObject> &arg, const MathObjectClass &selfClass, Arguments &outArgs) {
+void IFunctionVariadic::appendVariadicFunctionArgument(const SharedRef<IMathObject> &arg, const MathObjectClass &selfClass, Args &outArgs) {
   if (is(selfClass, arg->getClass())) {
     appendVariadicFunctionArguments(castChecked<IFunction>(*arg), selfClass, outArgs);
   }
@@ -263,8 +282,8 @@ void IFunctionVariadic::appendVariadicFunctionArgument(const SharedRef<IMathObje
   }
 }
 
-void IFunctionVariadic::appendVariadicFunctionArguments(const IFunction &func, const MathObjectClass &selfClass, Arguments &outArgs) noexcept {
-  const Arguments &args = func.getArguments();
+void IFunctionVariadic::appendVariadicFunctionArguments(const IFunction &func, const MathObjectClass &selfClass, Args &outArgs) noexcept {
+  const ArgSpan &args = func.getArgs();
 
   outArgs.reserve(outArgs.size() + args.size());
 

@@ -8,7 +8,7 @@ FINTAMATH_FUNCTION_CLASS_IMPLEMENTATION(
   Mul,
   {
     .name = "*",
-    .argumentClasses = {INumber::getClassStatic()},
+    .argClasses = {INumber::getClassStatic()},
     .returnClass = INumber::getClassStatic(),
     .operatorDeclaration = OperatorDeclaration{
       .priority = OperatorPriority::Multiplication,

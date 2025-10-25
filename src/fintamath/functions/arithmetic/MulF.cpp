@@ -9,14 +9,14 @@ FINTAMATH_FUNCTION_CLASS_IMPLEMENTATION(
   MulF,
   {
     .name = "mul",
-    .argumentClasses = {INumber::getClassStatic()},
+    .argClasses = {INumber::getClassStatic()},
     .returnClass = INumber::getClassStatic(),
     .isVariadic = true,
   }
 )
 
 SharedPtr<IMathObject> MulF::preSimplifySelf() const {
-  return makeShared<Mul>(getArguments());
+  return makeShared<Mul>(getArgs());
 }
 
 }

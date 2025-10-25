@@ -6,8 +6,8 @@
 
 namespace fintamath::detail {
 
-template <typename... Args, typename SimplifyFunctions>
-SharedPtr<IMathObject> useSimplifyFunctions(const SimplifyFunctions &simplFuncs, const Args &...args) {
+template <typename... Args, typename ModifyFunctions>
+SharedPtr<IMathObject> useModifyFunctions(const ModifyFunctions &simplFuncs, const Args &...args) {
   for (const auto &simplFunc : simplFuncs) {
     if (auto res = simplFunc(args...)) {
       return res;

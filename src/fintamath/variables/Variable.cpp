@@ -23,7 +23,7 @@ Variable::Variable(std::string_view inName) {
     ));
   }
 
-  name = std::string(inName);
+  name = inName.front();
 }
 
 Variable::Variable(std::string_view inName, Integer inIndex) : Variable(inName) {
@@ -42,7 +42,7 @@ std::string Variable::toString() const noexcept {
   if (index) {
     return fmt::format("{}_{}", name, index->toString());
   }
-  return name;
+  return std::string(1, name);
 }
 
 bool Variable::equals(const SharedRef<IMathObject> & /*self*/, const SharedRef<IMathObject> &rhs) const noexcept {

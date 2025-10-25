@@ -6,7 +6,7 @@ FINTAMATH_FUNCTION_CLASS_IMPLEMENTATION(
   Comma,
   {
     .name = ",",
-    .argumentClasses = {IMathObject::getClassStatic()},
+    .argClasses = {IMathObject::getClassStatic()},
     .returnClass = IMathObject::getClassStatic(),
     .operatorDeclaration = OperatorDeclaration{
       .priority = OperatorPriority::Comma,
@@ -15,12 +15,12 @@ FINTAMATH_FUNCTION_CLASS_IMPLEMENTATION(
   }
 )
 
-IFunction::Arguments Comma::toFunctionArguments() const {
-  if (std::optional compressedArgs = compressArguments()) {
+IFunction::ArgVector Comma::toFunctionArgs() const {
+  if (std::optional compressedArgs = compressArgs()) {
     return *compressedArgs;
   }
 
-  return getArguments();
+  return getArgsVariadic();
 }
 
 }

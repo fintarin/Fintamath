@@ -1,7 +1,6 @@
 #include "fintamath/functions/FunctionUtils.hpp"
 
 #include <fmt/format.h>
-#include <ranges>
 #include <string>
 
 #include "fintamath/constants/ComplexInf.hpp"
@@ -10,7 +9,6 @@
 #include "fintamath/core/MathObjectUtils.hpp"
 #include "fintamath/functions/IFunction.hpp"
 #include "fintamath/numbers/Complex.hpp"
-#include "fintamath/numbers/Rational.hpp"
 #include "fintamath/numbers/Real.hpp"
 
 namespace fintamath::detail {
@@ -270,7 +268,7 @@ std::optional<ArgumentOperatorData> getArgumentOperatorData(const SharedRef<IMat
     }
 
     return ArgumentOperatorData{
-      .argsCount = decl.argumentClasses.size(),
+      .argsCount = decl.argClasses.size(),
       .priority = decl.operatorDeclaration->priority,
     };
   }

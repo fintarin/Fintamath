@@ -7,16 +7,30 @@
 #include "fintamath/core/MathObjectUtils.hpp"
 #include "fintamath/functions/FunctionUtils.hpp"
 #include "fintamath/functions/IFunction.hpp"
+#include "fintamath/variables/Variable.hpp"
 
 namespace fintamath {
 
 FINTAMATH_INTERFACE_IMPLEMENTATION(IFunctionUnary)
 
+IFunctionUnary::IFunctionUnary() : args({makeShared<Variable>()}) {
+}
+
+IFunctionUnary::IFunctionUnary(const Declaration &inDeclaration, Args inArgs)
+    : IFunction(inDeclaration, inArgs),
+      args(std::move(inArgs)) {
+}
+
+IFunctionUnary::IFunctionUnary(const Declaration &inDeclaration, ArgSpan inArgs)
+    : IFunction(inDeclaration, inArgs),
+      args({unwrapp(inArgs.front())}) {
+}
+
 std::string IFunctionUnary::toString() const noexcept {
   using detail::argumentToString;
 
   const Declaration &decl = getDeclaration();
-  const std::string argStr = argumentToString(decl, getArgument());
+  const std::string argStr = argumentToString(decl, getArg());
 
   if (!decl.operatorDeclaration) {
     return fmt::format("{}({})", decl.name, argStr);
@@ -32,33 +46,37 @@ std::string IFunctionUnary::toString() const noexcept {
   }
 }
 
-const SharedRef<IMathObject> &IFunctionUnary::getArgument() const {
-  return getArguments()[0];
+IFunction::ArgSpan IFunctionUnary::getArgs() const noexcept {
+  return args;
 }
 
-IFunctionUnary::SimplifyFunctions IFunctionUnary::getFunctionsForPreSimplify() const {
+const SharedRef<IMathObject> &IFunctionUnary::getArg() const {
+  return getArgs()[0];
+}
+
+IFunctionUnary::ModifyFunctions IFunctionUnary::getFunctionsForPreSimplify() const {
   return {};
 }
 
-IFunctionUnary::SimplifyFunctions IFunctionUnary::getFunctionsForSimplify() const {
+IFunctionUnary::ModifyFunctions IFunctionUnary::getFunctionsForSimplify() const {
   return {};
 }
 
 SharedPtr<IMathObject> IFunctionUnary::preSimplifySelf() const {
-  using detail::useSimplifyFunctions;
-  return useSimplifyFunctions(getFunctionsForPreSimplify(), getArgument());
+  using detail::useModifyFunctions;
+  return useModifyFunctions(getFunctionsForPreSimplify(), getArg());
 }
 
 SharedPtr<IMathObject> IFunctionUnary::simplifySelf() const {
-  using detail::useSimplifyFunctions;
-  return useSimplifyFunctions(getFunctionsForSimplify(), getArgument());
+  using detail::useModifyFunctions;
+  return useModifyFunctions(getFunctionsForSimplify(), getArg());
 }
 
 void IFunctionUnary::registerDefaultObject() const {
   Super::registerDefaultObject();
 
   [[maybe_unused]] const auto &decl = getDeclaration();
-  assert(decl.argumentClasses.size() == 1 && !decl.isVariadic);
+  assert(decl.argClasses.size() == 1 && !decl.isVariadic);
 }
 
 }

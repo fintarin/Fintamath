@@ -6,6 +6,10 @@
 
 using namespace fintamath;
 
+TEST(VariableTest, defaultConstructorTest) {
+  EXPECT_EQ(Variable().toString(), "x");
+}
+
 TEST(VariableTest, stringIntegerConstructorTest) {
   EXPECT_EQ(Variable("a").toString(), "a");
   EXPECT_EQ(Variable("b").toString(), "b");

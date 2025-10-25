@@ -26,9 +26,11 @@ Expression::Expression(const IMathObject &obj) : arg(unwrapp(obj)) {}
 
 Expression::Expression(IMathObject &&obj) : arg(unwrapp(std::move(obj))) {}
 
-Expression::Expression(const int64_t val) : Expression(makeShared<Integer>(val)) {}
+Expression::Expression(const int64_t val) : Expression(makeShared<Integer>(val)) {
+}
 
-Expression::Expression(const std::string &str) : Expression(parseExpression(str)) {}
+Expression::Expression(const std::string &str) : Expression(parseExpression(str)) {
+}
 
 std::string Expression::toString() const noexcept {
   return arg->toString();
@@ -216,10 +218,10 @@ SharedRef<IMathObject> Expression::parseOperator(TermStack &argTermsRPN, const F
     }
 
     const size_t variadicOperArgSize = 2;
-    expectedArgsSize = makerDecl.isVariadic ? variadicOperArgSize : makerDecl.argumentClasses.size();
+    expectedArgsSize = makerDecl.isVariadic ? variadicOperArgSize : makerDecl.argClasses.size();
   }
 
-  Arguments args;
+  std::vector<SharedRef<IMathObject>> args;
   while (!argTermsRPN.empty() && args.size() != expectedArgsSize) {
     args.emplace_back(parseExpression(argTermsRPN));
   }
@@ -227,7 +229,7 @@ SharedRef<IMathObject> Expression::parseOperator(TermStack &argTermsRPN, const F
 
   SharedPtr<IFunction> outOper;
   for (const auto &maker : funcTerm.functionMakers.get()) {
-    if (!maker.doArgumentsMatch(args)) {
+    if (!maker.doArgsMatch(args)) {
       continue;
     }
 
@@ -248,11 +250,11 @@ SharedRef<IMathObject> Expression::parseOperator(TermStack &argTermsRPN, const F
 SharedRef<IMathObject> Expression::parseFunction(TermStack &argTermsRPN, const FunctionTerm &funcTerm) {
   SharedRef<IMathObject> parsedArg = parseExpression(argTermsRPN);
   const auto comma = cast<Comma>(parsedArg);
-  Arguments funcArgs = comma ? comma->toFunctionArguments() : Arguments{parsedArg};
+  auto funcArgs = comma ? comma->toFunctionArgs() : std::vector<SharedRef<IMathObject>>{parsedArg};
 
   SharedPtr<IFunction> outFunc;
   for (const auto &maker : funcTerm.functionMakers.get()) {
-    if (!maker.doArgumentsMatch(funcArgs)) {
+    if (!maker.doArgsMatch(funcArgs)) {
       continue;
     }
 
@@ -427,10 +429,9 @@ void Expression::moveFunctionTerms(TermStack &outTermStack, FunctionTermStack &f
 //   return is<IFunction>(val) && !is<IOperator>(val);
 // }
 
-Expression::Arguments Expression::unwrappComma(SharedRef<IMathObject> inArg) {
+std::vector<SharedRef<IMathObject>> Expression::unwrappComma(SharedRef<IMathObject> inArg) {
   if (const auto comma = cast<Comma>(inArg)) {
-    comma->toFunctionArguments();
-    return castChecked<IFunction>(*inArg).getArguments();
+    return comma->toFunctionArgs();
   }
 
   return {std::move(inArg)};
